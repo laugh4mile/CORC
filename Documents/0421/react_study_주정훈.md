@@ -62,22 +62,36 @@ class Welcome extends Component {
 }
 ```
 
-- prop 데이터의 타입 설정 가능
+## prop 데이터의 타입 설정 가능
 ```
 // prop-types install
-npm install --save
+// npm
+npm install --save prop-types
+// yarn
 yarn add prop-types
 
-// how to use
+// how to use on class Componenet
 import PropTypes from 'prop-types';
 
-class A extends Component {
+class A extends React.Component {
     static propTypes = {
         title: PropTypes.string,
         poster: PropTypes.string
     }
     ...
 }
+
+// how to use on function component
+function A(props) {
+    ...
+}
+
+A.propTypes = {
+    propName: PropTypes.string.isRequired,
+    propName2: PropTypes.number,
+    ...
+}
+
 ```
 
 ### Life Cycle
