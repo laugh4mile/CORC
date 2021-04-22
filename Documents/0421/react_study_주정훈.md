@@ -16,7 +16,7 @@ cd AppName
 
 프로젝트 실행
 <!-- npm -->
-npm run start
+npm start
 
 <!-- yarn -->
 yarn start
@@ -246,3 +246,34 @@ export default App;
 import 파일할 때 확장자가 다른 동일한 이름의 파일이 존재할 경우에는 에러가 발생.
 
 파일 이름을 다르게 명시하거나, 확장자명까지 붙여서 import !!
+
+
+# Routing
+
+별도로 제공하는 기능이 없음
+
+## npm 설치
+```
+// npm
+npm install react-router-dom
+// yarn
+yarn add react-router-dom
+```
+
+## 사용
+```
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+
+<BrowserRouter>
+    <Link to="/" >Home</Link>
+    <Link to="/about" >About</Link>
+    <Link to="/users" >Users</Link>
+    <Switch>
+        <Route path="/" component={Home} exact />
+        <Route path="/about" component={About} />
+        <Route path="/users>
+            <Users/>
+        <Route>
+    </Switch>
+</BrowserRouter>
+```
