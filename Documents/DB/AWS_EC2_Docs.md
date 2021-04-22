@@ -87,7 +87,7 @@ sudo service mysql restart
 
 ## Windows MySQL Workbench 설정
 
-![AWS%20EC2%20Docs%20a82bddd608bb4b3b8c58270c9330cfbd/Untitled.png](AWS%20EC2%20Docs%20a82bddd608bb4b3b8c58270c9330cfbd/Untitled.png)
+![Untitled](/uploads/ce37348a98392cfee6e55e366acb03b2/Untitled.png)
 
 1. 서버 추가
 2. 이름 설정
