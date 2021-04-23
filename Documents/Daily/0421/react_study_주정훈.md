@@ -22,6 +22,11 @@ npm start
 yarn start
 ```
 
+## VSCode 사용시 사용하면 괜찮을 Extension
+
+- ES7 React/Redux/GraphQL/React-Native snippets
+- Prettier - Code formatter
+
 # Component
 
 함수 컴포넌트(Function Component) 와 클래스 컴포넌트(Class Component)
@@ -277,3 +282,7 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
     </Switch>
 </BrowserRouter>
 ```
+
+# Reactjs 기반 웹 앱 개발시 사용할 만한 NPM Packages
+- react-router-dom
+- prop-types
