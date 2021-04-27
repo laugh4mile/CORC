@@ -33,3 +33,6 @@ TIP: 기본적으로 컨트랙트의 함수들의 첫 인자는 `ctx contractapi
     - 생성된 key는 PutState()의 key로 사용할 수 있다.
 - SplitCompositeKey(compositeKey string) (string, []string, error)
     - objectType, attributes를 분해해서 반환한다.
+- SetEvent(name string, payload []byte) error
+    - 트랜잭션의 유효성에 관계 없이 이벤트를 발생시킬 수 있다.
+    - 단일 이벤트만 트랜잭션에 포함될 수 있다.
