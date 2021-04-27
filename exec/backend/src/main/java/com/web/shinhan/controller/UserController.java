@@ -48,9 +48,8 @@ public class UserController {
 	@Autowired
 	ETCService etcService;
 
-	@ApiOperation(value = "회원가입", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
+	@ApiOperation(value = "사용자 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
 	@PostMapping
-//	public ResponseEntity<Boolean> regist(@RequestBody Map<String, String> map) {
 	public ResponseEntity<Boolean> regist(@RequestBody UserDto user) {
 		logger.info("regist - 호출");
 
@@ -59,7 +58,6 @@ public class UserController {
 
 		// 회원 정보 담기
 		user.setAccess_time(LocalDateTime.now());
-//		System.out.println(user);
 		// 회원가입
 		try {
 			userService.insertUser(user);

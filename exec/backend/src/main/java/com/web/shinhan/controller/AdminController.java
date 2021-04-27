@@ -1,5 +1,6 @@
 package com.web.shinhan.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +32,28 @@ public class AdminController {
 
 	@Autowired
 	UserService userService;
+
+	@ApiOperation(value = "사용자 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
+	@PostMapping
+	public ResponseEntity<Boolean> regist(@RequestBody UserDto user) {
+		logger.info("regist - 호출");
+
+		HttpStatus status = HttpStatus.ACCEPTED;
+		boolean flag = true;
+
+		// 회원 정보 담기
+		user.setAccess_time(LocalDateTime.now());
+		// 회원가입
+		try {
+			userService.insertUser(user);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Boolean>(flag, status);
+	}
 
 //	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보(이메일, 이름, 가입일, 권한, 프로필, 게시글 수, 댓글 수)을 반환한다.", response = HashMap.class)
 //	@GetMapping
@@ -59,7 +84,6 @@ public class AdminController {
 //	public Optional<Board> findOne(@PathVariable Long id) {
 //		return boardRep.findById(id);
 //	}
-	
 
 //	@ApiOperation(value = "회원 정보 조회", notes = "회원의 정보를 가지고 온다.", response = HashMap.class)
 //	@GetMapping
@@ -81,7 +105,7 @@ public class AdminController {
 //
 //		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 //	}
-	
+
 	@ApiOperation(value = "회원 탈퇴 처리", notes = "회원들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@DeleteMapping
 	public ResponseEntity<Boolean> deleteMembers(@RequestBody String[] targets) {

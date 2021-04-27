@@ -51,18 +51,17 @@ public class LoginController {
 		dto.setPassword(password);
 		// 로그인
 		try {
-//			System.out.println(dto);
-			UserDto loginUser = userService.login(dto);
+			boolean loginUser = userService.login(dto);
 			System.out.println("cont" + loginUser);
-			if (loginUser != null) {
+			if (loginUser) {
 				// jwt.io에서 확인
 				// 로그인 성공했다면 토큰을 생성한다
-				String token = jwtService.create(loginUser);
+				String token = jwtService.create(dto);
 				logger.trace("로그인 토큰정보 : {}", token);
 
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
 				resultMap.put("auth-token", token);
-				resultMap.put("user-email", loginUser.getEmail());
+				resultMap.put("user-email", email);
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
