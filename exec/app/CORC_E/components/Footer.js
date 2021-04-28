@@ -1,20 +1,24 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import HomeIcon from './icons/HomeIcon';
+import CardIcon from './icons/CardIcon';
+import BarCodeIcon from './icons/BarCodeIcon';
+import GearIcon from './icons/GearIcon';
 
 export default function Footer() {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Text>홈</Text>
+        <HomeIcon />
       </View>
       <View style={styles.contents}>
-        <Text>이용 내역</Text>
+        <CardIcon />
       </View>
       <View style={styles.contents}>
-        <Text>QR 스캔</Text>
+        <BarCodeIcon />
       </View>
       <View style={styles.contents}>
-        <Text>사용자 정보</Text>
+        <GearIcon />
       </View>
     </View>
   );
