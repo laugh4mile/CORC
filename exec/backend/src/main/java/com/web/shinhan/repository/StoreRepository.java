@@ -19,7 +19,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAn
 		QueryByExampleExecutor<Store> {
 	boolean existsByEmail(String email);
 
-	boolean existsByEmployeeNum(int employee_num);
+//	boolean existsByEmployeeNum(int employee_num);
 
 //	boolean findByStoreId(int storeId);
 
