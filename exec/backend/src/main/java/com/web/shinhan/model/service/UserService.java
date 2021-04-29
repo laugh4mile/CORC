@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,11 +134,17 @@ public class UserService {
 		return 0;
 	}
 
-	public boolean login(UserDto userDto) {
-		String encodedPassword = userRepository.findPwd(userDto.getEmail());
-		if (passwordEncoder.matches(userDto.getPassword(), encodedPassword)) {
-			userDto.setPassword(encodedPassword);
-			boolean result = userRepository.existsByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
+	public boolean login(UserDto user) {
+		User userInfo = userRepository.findByEmail(user.getEmail());
+		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+		String encodedPassword = userRepository.findPwd(user.getEmail());
+		if (passwordEncoder.matches(user.getPassword(), encodedPassword)) {
+			user.setPassword(encodedPassword);
+			boolean result = userRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
+			if (result) {
+				userDto.setAccessTime(user.getAccessTime());
+				userRepository.save(userDto.toEntity());
+			}
 			return result;
 		} else {
 			return false;

@@ -41,7 +41,7 @@ public class StoreController {
 	@Autowired
 	PaymentService paymentService;
 
-	@ApiOperation(value = "가맹점 목록 조회", notes = "회원들의 정보를 반환한다.", response = HashMap.class)
+	@ApiOperation(value = "가맹점 목록 조회", notes = "가맹점들의 정보를 반환한다.", response = HashMap.class)
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> findStoreList(@RequestParam String email, Pageable pageable)
 			throws Exception {
@@ -51,7 +51,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.OK;
 		Page<StoreDto> page = null;
 
-		// 회원 정보 조회
+		// 가맹점 정보 조회
 		try {
 			if (!email.equals("admin@admin.com")) {
 				resultMap.put("message", "Not a Admin Account");
@@ -69,7 +69,7 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "회원 정보 조회", notes = "회원의 정보를 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "가맹점 정보 조회", notes = "가맹점의 정보를 가지고 온다.", response = HashMap.class)
 	@GetMapping("/info")
 	public ResponseEntity<Map<String, Object>> findStoreInfo(@RequestParam int userId, HttpServletRequest req)
 			throws Exception {
@@ -78,7 +78,7 @@ public class StoreController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		// 회원 정보 조회
+		// 가맹점 정보 조회
 		try {
 			resultMap.put("info", storeService.findStoreInfo(userId));
 			status = HttpStatus.ACCEPTED;
@@ -90,7 +90,7 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment")
 	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable,
 			HttpServletRequest req) throws Exception {
@@ -100,7 +100,7 @@ public class StoreController {
 		Page<PaymentDto> page = null;
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		// 회원 정보 조회
+		// 가맹점 정보 조회
 		try {
 			resultMap.put("info", storeService.findStoreInfo(storeId));
 			page = paymentService.findStorePayment(storeId, pageable);
@@ -114,7 +114,7 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "사용자 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
 	@PostMapping("/regist")
 	public ResponseEntity<Boolean> registStore(@RequestBody StoreDto store) {
 		logger.info("regist - 호출");
@@ -122,10 +122,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = true;
 
-		// 회원 정보 담기
-//		store.setAccessTime(LocalDateTime.now());
-
-		// 회원가입
+		// 가맹점가입
 		try {
 			storeService.registStore(store);
 			status = HttpStatus.ACCEPTED;
@@ -137,7 +134,7 @@ public class StoreController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 정보 수정", notes = "가맹점의 정보를 수정한다.", response = Boolean.class)
 	@PutMapping("/modify")
 	public ResponseEntity<Boolean> modifyStoreInfo(@RequestBody StoreDto newDto) {
 		logger.info("modifyStoreInfo - 호출");
@@ -145,9 +142,9 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
-		// 회원 정보 조회
+		// 가맹점 정보 조회
 		String email = newDto.getEmail();
-		// 회원 소개 수정
+		// 가맹점 소개 수정
 		try {
 			flag = storeService.modifyStoreInfo(email, newDto);
 			status = HttpStatus.ACCEPTED;
@@ -159,7 +156,7 @@ public class StoreController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "회원 정지", notes = "회원들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 정지", notes = "가맹점들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@PutMapping("/allow")
 	public ResponseEntity<Boolean> allowStoreApplication(@RequestBody int[] storeIds) {
 		logger.info("allowStoreApplication - 호출");
@@ -167,7 +164,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
-		// 회원 탈퇴
+		// 가맹점 탈퇴
 		try {
 			for (int userId : storeIds) {
 				int active = storeService.allowStoreApplication(userId);
@@ -185,7 +182,7 @@ public class StoreController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "가맹점  신청 거부", notes = "회원들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 신청 거부", notes = "가맹점들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@PutMapping("/deny")
 	public ResponseEntity<Boolean> denyStoreApplication(@RequestBody int[] storeIds) {
 		logger.info("denyStoreApplication - 호출");
@@ -193,7 +190,6 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
-		// 회원 탈퇴
 		try {
 			for (int storeId : storeIds) {
 				int active = storeService.denyStoreApplication(storeId);

@@ -125,6 +125,7 @@ public class AdminController {
 
 		// 회원 정보 담기
 		user.setAccessTime(LocalDateTime.now());
+		user.setLimitTime(LocalDateTime.now().plusDays(30));
 
 		// 회원가입
 		try {
@@ -189,6 +190,32 @@ public class AdminController {
 		Page<PaymentDto> paymentList = paymentService.findAll(pageable);
 
 		return new ResponseEntity<Page<PaymentDto>>(paymentList, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "결제 내역", notes = "모든 결제 내역을 반환한다.", response = Boolean.class)
+	@GetMapping("/payment/confirm")
+	public ResponseEntity<Boolean> confirmPayment(@RequestBody int[] userIds) {
+		logger.info("confirmPayment - 호출, ");
+
+		HttpStatus status = HttpStatus.ACCEPTED;
+		boolean flag = false;
+
+		try {
+//			int cnt = 0;
+			for (int userId : userIds) {
+				flag = paymentService.confirmPayment(userId);
+				if (!flag) {
+					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+				}
+//				cnt++;
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Boolean>(flag, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "회원 한도 수정", notes = "회원의 한도를 수정한다.", response = Boolean.class)

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -31,6 +32,8 @@ public interface UserRepository
 	String findPwd(String email);
 
 	boolean existsByEmailAndPassword(String email, String password);
+
+//	Page<User> findAll(Pageable pageable, Sort by);
 
 //	@Query("insert into user(employee_num, email, user_name, password, department, position, contact, days, balance, card_limit, active, access_time) values (:employee_num, :email, :user_name, :password, :department, :position, :contact, :days, :balance, :card_limit, :active, :access_time)")
 //	UserDto regist(UserDto userDto);
