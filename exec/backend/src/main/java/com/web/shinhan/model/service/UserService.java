@@ -1,7 +1,6 @@
 package com.web.shinhan.model.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.web.shinhan.entity.User;
+import com.web.shinhan.model.AdminDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.UserMapper;
+import com.web.shinhan.repository.AdminRepository;
 import com.web.shinhan.repository.UserRepository;
 
 @Service
@@ -26,6 +27,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private AdminRepository adminRepository;
+
 	private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
 	@Transactional
@@ -34,13 +38,12 @@ public class UserService {
 		return users.map(UserDto::of);
 	}
 
-	public UserDto findUserInfo(String email) {
-		User userInfo = userRepository.findByEmail(email);
+	public UserDto findUserInfo(int userId) {
+		User userInfo = userRepository.findByUserId(userId);
 		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
 		return userDto;
 	}
 
-	// insert
 	@Transactional
 	public void insertUser(UserDto userDto) {
 		String encodePassword = passwordEncoder.encode(userDto.getPassword());
@@ -58,15 +61,46 @@ public class UserService {
 		return result;
 	}
 
-//	public boolean modifyUserInfo(UserDto userDto) {
-////		boolean result = userRepository.existsByEmployee_num(userDto);
-//		return true;
-//	}
+	public boolean modifyUserInfo(String email, UserDto newDto) {
+		User userInfo = userRepository.findByEmail(email);
+		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+		String encodePassword = passwordEncoder.encode(newDto.getPassword());
+		userDto.setEmployeeNum(newDto.getEmployeeNum());
+		userDto.setPassword(encodePassword);
+		userDto.setUserName(newDto.getUserName());
+		userDto.setDepartment(newDto.getDepartment());
+		userDto.setPosition(newDto.getPosition());
+		userDto.setContact(newDto.getContact());
+		userDto.setDays(newDto.getDays());
+		userDto.setBalance(newDto.getBalance());
+		userDto.setCardLimit(newDto.getCardLimit());
+		userDto.setAccessTime(newDto.getAccessTime());
+		userDto.setActive(newDto.getActive());
+		userRepository.save(userDto.toEntity());
+		newDto.setPassword(encodePassword);
+		newDto.setUserId(userDto.getUserId());
+		if (newDto.equals(userDto)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Transactional
+	public boolean modifyCardLimit(int userId, int limit) {
+		User user = userRepository.findByUserId(userId);
+		if (user.getActive() != 0) {
+			UserDto userDto = mapper.INSTANCE.userToDto(user);
+			userDto.setCardLimit(limit);
+			userRepository.save(userDto.toEntity());
+			return true;
+		}
+		return false;
+	}
 
 	@Transactional
 	public int banUser(int userId) {
 		User user = userRepository.findByUserId(userId);
-		if (user.getActive() != 0) {
+		if (user.getActive() != 2) {
 			UserDto userDto = mapper.INSTANCE.userToDto(user);
 			userDto.setActive(2);
 			userRepository.save(userDto.toEntity());
@@ -87,11 +121,34 @@ public class UserService {
 		return 0;
 	}
 
+	@Transactional
+	public int activateUser(int userId) {
+		User user = userRepository.findByUserId(userId);
+		if (user.getActive() != 1) {
+			UserDto userDto = mapper.INSTANCE.userToDto(user);
+			userDto.setActive(1);
+			userRepository.save(userDto.toEntity());
+			return 1;
+		}
+		return 0;
+	}
+
 	public boolean login(UserDto userDto) {
 		String encodedPassword = userRepository.findPwd(userDto.getEmail());
 		if (passwordEncoder.matches(userDto.getPassword(), encodedPassword)) {
 			userDto.setPassword(encodedPassword);
 			boolean result = userRepository.existsByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
+			return result;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean loginAdmin(AdminDto admin) {
+		String encodedPassword = adminRepository.findPwd(admin.getEmail());
+		if (passwordEncoder.matches(admin.getPassword(), encodedPassword)) {
+			admin.setPassword(encodedPassword);
+			boolean result = adminRepository.existsByEmailAndPassword(admin.getEmail(), admin.getPassword());
 			return result;
 		} else {
 			return false;

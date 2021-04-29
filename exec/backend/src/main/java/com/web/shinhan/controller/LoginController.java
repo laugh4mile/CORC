@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.shinhan.model.AdminDto;
+import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.ETCService;
 import com.web.shinhan.model.service.JwtService;
+import com.web.shinhan.model.service.StoreService;
 import com.web.shinhan.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,11 +40,52 @@ public class LoginController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private StoreService storeService;
+
 	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
-	@PostMapping("/confirm/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password,
+	@PostMapping("/web")
+	public ResponseEntity<Map<String, Object>> webLogin(@RequestParam String email, @RequestParam String password,
 			HttpServletResponse response, HttpSession session) {
-		logger.info("login - 호출");
+		logger.info("webLogin - 호출");
+
+		HttpStatus status = null;
+		Map<String, Object> resultMap = new HashMap<>();
+
+		AdminDto admin = new AdminDto();
+		admin.setEmail(email);
+		admin.setPassword(password);
+
+		try {
+			boolean loginUser = userService.loginAdmin(admin);
+			if (loginUser) {
+				// jwt.io에서 확인
+				// 로그인 성공했다면 토큰을 생성한다
+				String token = jwtService.createAdmin(admin);
+				logger.trace("로그인 토큰정보 : {}", token);
+
+				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
+				resultMap.put("auth-token", token);
+				resultMap.put("admin-email", email);
+				status = HttpStatus.ACCEPTED;
+			} else {
+				resultMap.put("message", "로그인 실패");
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
+	@PostMapping("/user")
+	public ResponseEntity<Map<String, Object>> userLogin(@RequestParam String email, @RequestParam String password,
+			HttpServletResponse response, HttpSession session) {
+		logger.info("webLogin - 호출");
 
 		HttpStatus status = null;
 		Map<String, Object> resultMap = new HashMap<>();
@@ -52,11 +96,48 @@ public class LoginController {
 		// 로그인
 		try {
 			boolean loginUser = userService.login(dto);
-			System.out.println("cont" + loginUser);
 			if (loginUser) {
 				// jwt.io에서 확인
 				// 로그인 성공했다면 토큰을 생성한다
 				String token = jwtService.create(dto);
+				logger.trace("로그인 토큰정보 : {}", token);
+
+				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
+				resultMap.put("auth-token", token);
+				resultMap.put("user-email", email);
+				status = HttpStatus.ACCEPTED;
+			} else {
+				resultMap.put("message", "로그인 실패");
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "가맹점 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
+	@PostMapping("/store")
+	public ResponseEntity<Map<String, Object>> storeLogin(@RequestParam String email, @RequestParam String password,
+			HttpServletResponse response, HttpSession session) {
+		logger.info("storeLogin - 호출");
+
+		HttpStatus status = null;
+		Map<String, Object> resultMap = new HashMap<>();
+
+		StoreDto dto = new StoreDto();
+		dto.setEmail(email);
+		dto.setPassword(password);
+		// 로그인
+		try {
+			boolean loginUser = storeService.login(dto);
+			if (loginUser) {
+				// jwt.io에서 확인
+				// 로그인 성공했다면 토큰을 생성한다
+				String token = jwtService.createStore(dto);
 				logger.trace("로그인 토큰정보 : {}", token);
 
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다

@@ -29,28 +29,21 @@ public class PaymentService {
 	private final PaymentMapper mapper = Mappers.getMapper(PaymentMapper.class);
 
 	@Transactional
-	public Page<PaymentDto> findAllPayment(int userId, Pageable pageable) {
-		Page<Payment> payments = paymentRepository.findAll(userId, pageable);
+	public Page<PaymentDto> findUserPayment(int userId, Pageable pageable) {
+		Page<Payment> payments = paymentRepository.findAllByUserId(userId, pageable);
 		return payments.map(PaymentDto::of);
 	}
 
-//	public UserDto getUserPayment(String email) {
-//		User userInfo = paymentRepository.findByEmail(email);
-//		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
-//		return userDto;
-//	}
+	@Transactional
+	public Page<PaymentDto> findAll(Pageable pageable) {
+		Page<Payment> payments = paymentRepository.findAll(pageable);
+		return payments.map(PaymentDto::of);
+	}
 
-	// insert
-//	@Transactional
-//	public void insertUser(UserDto userDto) {
-//		String encodePassword = passwordEncoder.encode(userDto.getPassword());
-//		userDto.setPassword(encodePassword);
-//		paymentRepository.save(userDto.toEntity());
-//	}
-
-//	public boolean updateUserInfo(UserDto userDto) {
-//		boolean result = userRepository.existsByEmployee_num(employee_num);
-//		return result;
-//	}
+	@Transactional
+	public Page<PaymentDto> findStorePayment(int storeId, Pageable pageable) {
+		Page<Payment> payments = paymentRepository.findAllByStoreId(storeId, pageable);
+		return payments.map(PaymentDto::of);
+	}
 
 }

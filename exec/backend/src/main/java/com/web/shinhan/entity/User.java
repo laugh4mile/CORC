@@ -32,11 +32,12 @@ public class User {
 	private int cardLimit;
 	private int active;
 	private LocalDateTime accessTime;
+	private LocalDateTime limitTime;
 
 	@Builder
 	public User(int userId, int employeeNum, String email, String userName, String password, String department,
 			String position, String contact, String days, int balance, int cardLimit, int active,
-			LocalDateTime accessTime) {
+			LocalDateTime accessTime, LocalDateTime limitTime) {
 		this.userId = userId;
 		this.employeeNum = employeeNum;
 		this.email = email;
@@ -50,6 +51,7 @@ public class User {
 		this.cardLimit = cardLimit;
 		this.active = active;
 		this.accessTime = accessTime;
+		this.limitTime = limitTime;
 	}
 
 	@Override
@@ -59,7 +61,5 @@ public class User {
 				+ contact + ", days=" + days + ", balance=" + balance + ", cardLimit=" + cardLimit + ", active="
 				+ active + ", accessTime=" + accessTime + "]";
 	}
-	
-	
 
 }

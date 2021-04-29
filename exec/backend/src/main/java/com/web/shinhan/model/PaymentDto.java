@@ -32,14 +32,25 @@ public class PaymentDto {
 	}
 
 	public Payment toEntity() {
-		return Payment.builder().paymentId(paymentId).userId(userId).storeId(storeId).total(total).date(date)
-				.status(status).build();
+		return Payment.builder()
+				.paymentId(paymentId)
+				.userId(userId)
+				.storeId(storeId)
+				.total(total)
+				.date(date)
+				.status(status)
+				.build();
 	}
 
 	public static PaymentDto of(Payment payment) {
-		return PaymentDto.builder().paymentId(payment.getPaymentId()).userId(payment.getUserId())
-				.storeId(payment.getStoreId()).total(payment.getTotal()).date(payment.getDate())
-				.status(payment.getStatus()).build();
+		return PaymentDto.builder()
+				.paymentId(payment.getPaymentId())
+				.userId(payment.getUserId())
+				.storeId(payment.getStoreId())
+				.total(payment.getTotal())
+				.date(payment.getDate())
+				.status(payment.getStatus())
+				.build();
 	}
 
 }

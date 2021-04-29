@@ -31,6 +31,7 @@ public interface UserRepository
 	String findPwd(String email);
 
 	boolean existsByEmailAndPassword(String email, String password);
+
 //	@Query("insert into user(employee_num, email, user_name, password, department, position, contact, days, balance, card_limit, active, access_time) values (:employee_num, :email, :user_name, :password, :department, :position, :contact, :days, :balance, :card_limit, :active, :access_time)")
 //	UserDto regist(UserDto userDto);
 

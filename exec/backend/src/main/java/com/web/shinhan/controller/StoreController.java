@@ -1,6 +1,5 @@
 package com.web.shinhan.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,34 +22,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.UserDto;
+import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.service.PaymentService;
-import com.web.shinhan.model.service.UserService;
+import com.web.shinhan.model.service.StoreService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/store")
 @CrossOrigin(origins = { "*" })
-public class AdminController {
+public class StoreController {
 
-	public static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	public static final Logger logger = LoggerFactory.getLogger(StoreController.class);
 
 	@Autowired
-	UserService userService;
+	StoreService storeService;
 
 	@Autowired
 	PaymentService paymentService;
 
-	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보를 반환한다.", response = HashMap.class)
-	@GetMapping("/user/list")
-	public ResponseEntity<Map<String, Object>> findUserList(@RequestParam String email, Pageable pageable)
+	@ApiOperation(value = "가맹점 목록 조회", notes = "회원들의 정보를 반환한다.", response = HashMap.class)
+	@GetMapping("/list")
+	public ResponseEntity<Map<String, Object>> findStoreList(@RequestParam String email, Pageable pageable)
 			throws Exception {
 		logger.info("findMembers - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.OK;
-		Page<UserDto> page = null;
+		Page<StoreDto> page = null;
 
 		// 회원 정보 조회
 		try {
@@ -59,7 +58,7 @@ public class AdminController {
 				status = HttpStatus.METHOD_NOT_ALLOWED;
 				return new ResponseEntity<Map<String, Object>>(resultMap, status);
 			}
-			page = userService.findAllUser(pageable);
+			page = storeService.findAllStore(pageable);
 			resultMap.put("userList", page);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
@@ -71,8 +70,8 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "회원 정보 조회", notes = "회원의 정보를 가지고 온다.", response = HashMap.class)
-	@GetMapping("user/info")
-	public ResponseEntity<Map<String, Object>> findUserInfo(@RequestParam int userId, HttpServletRequest req)
+	@GetMapping("/info")
+	public ResponseEntity<Map<String, Object>> findStoreInfo(@RequestParam int userId, HttpServletRequest req)
 			throws Exception {
 		logger.info("findUserInfo - 호출");
 
@@ -81,7 +80,7 @@ public class AdminController {
 
 		// 회원 정보 조회
 		try {
-			resultMap.put("info", userService.findUserInfo(userId));
+			resultMap.put("info", storeService.findStoreInfo(userId));
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -92,8 +91,8 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/user/payment")
-	public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId, Pageable pageable,
+	@GetMapping("/payment")
+	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable,
 			HttpServletRequest req) throws Exception {
 		logger.info("findUserPayment - 호출");
 
@@ -103,8 +102,8 @@ public class AdminController {
 
 		// 회원 정보 조회
 		try {
-			resultMap.put("info", userService.findUserInfo(userId));
-			page = paymentService.findUserPayment(userId, pageable);
+			resultMap.put("info", storeService.findStoreInfo(storeId));
+			page = paymentService.findStorePayment(storeId, pageable);
 			resultMap.put("paymentList", page);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -116,19 +115,19 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "사용자 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
-	@PostMapping("/user/regist")
-	public ResponseEntity<Boolean> registUser(@RequestBody UserDto user) {
+	@PostMapping("/regist")
+	public ResponseEntity<Boolean> registStore(@RequestBody StoreDto store) {
 		logger.info("regist - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = true;
 
 		// 회원 정보 담기
-		user.setAccessTime(LocalDateTime.now());
+//		store.setAccessTime(LocalDateTime.now());
 
 		// 회원가입
 		try {
-			userService.insertUser(user);
+			storeService.registStore(store);
 			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,31 +137,10 @@ public class AdminController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이메일로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
-	@PostMapping("/check/email")
-	public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
-		logger.info("emailCheck - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-
-		return new ResponseEntity<Boolean>(userService.emailCheck(email), status);
-	}
-
-	@ApiOperation(value = "사번 중복 체크", notes = "같은 사번으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
-	@PostMapping("/check/employeenum")
-	public ResponseEntity<Boolean> employeenumCheck(@RequestParam int employee_num) {
-		logger.info("employeenumCheck - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-
-		return new ResponseEntity<Boolean>(userService.employeenumCheck(employee_num), status);
-
-	}
-
 	@ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정한다.", response = Boolean.class)
-	@PutMapping("/modify/user")
-	public ResponseEntity<Boolean> modifyUserInfo(@RequestBody UserDto newDto) {
-		logger.info("modifyUserInfo - 호출");
+	@PutMapping("/modify")
+	public ResponseEntity<Boolean> modifyStoreInfo(@RequestBody StoreDto newDto) {
+		logger.info("modifyStoreInfo - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
@@ -171,45 +149,7 @@ public class AdminController {
 		String email = newDto.getEmail();
 		// 회원 소개 수정
 		try {
-			flag = userService.modifyUserInfo(email, newDto);
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Boolean>(flag, status);
-	}
-
-	@ApiOperation(value = "결제 내역", notes = "모든 결제 내역을 반환한다.", response = Boolean.class)
-	@GetMapping("/payment")
-	public ResponseEntity<Page<PaymentDto>> findAllPayment(Pageable pageable) {
-		logger.info("findPayment - 호출, ");
-
-		Page<PaymentDto> paymentList = paymentService.findAll(pageable);
-
-		return new ResponseEntity<Page<PaymentDto>>(paymentList, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "회원 한도 수정", notes = "회원의 한도를 수정한다.", response = Boolean.class)
-	@PutMapping("/modify/limit")
-	public ResponseEntity<Boolean> modifyCardLimit(@RequestBody int[] userIds, int[] limits) {
-		logger.info("modifyCardLimit - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
-
-		// 회원 소개 수정
-		try {
-			int cnt = 0;
-			for (int userId : userIds) {
-				int limit = limits[cnt];
-				flag = userService.modifyCardLimit(userId, limit);
-				if (!flag) {
-					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-				}
-				cnt++;
-			}
+			flag = storeService.modifyStoreInfo(email, newDto);
 			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,17 +160,17 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "회원 정지", notes = "회원들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
-	@PutMapping("/user/ban")
-	public ResponseEntity<Boolean> banUser(@RequestBody int[] userIds) {
-		logger.info("banUser - 호출");
+	@PutMapping("/allow")
+	public ResponseEntity<Boolean> allowStoreApplication(@RequestBody int[] storeIds) {
+		logger.info("allowStoreApplication - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
 		// 회원 탈퇴
 		try {
-			for (int userId : userIds) {
-				int active = userService.banUser(userId);
+			for (int userId : storeIds) {
+				int active = storeService.allowStoreApplication(userId);
 				if (active == 0) {
 					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
 				}
@@ -245,44 +185,18 @@ public class AdminController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "회원 탈퇴 처리", notes = "회원들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
-	@PutMapping("/user/delete")
-	public ResponseEntity<Boolean> deleteUser(@RequestBody int[] userIds) {
-		logger.info("deleteUser - 호출");
+	@ApiOperation(value = "가맹점  신청 거부", notes = "회원들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
+	@PutMapping("/deny")
+	public ResponseEntity<Boolean> denyStoreApplication(@RequestBody int[] storeIds) {
+		logger.info("denyStoreApplication - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
 		// 회원 탈퇴
 		try {
-			for (int userId : userIds) {
-				int active = userService.deleteUser(userId);
-				if (active == 0) {
-					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-				}
-			}
-			flag = true;
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Boolean>(flag, status);
-	}
-
-	@ApiOperation(value = "회원 활성화", notes = "회원들을 활성화하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
-	@PutMapping("/user/activate")
-	public ResponseEntity<Boolean> activateUser(@RequestBody int[] userIds) {
-		logger.info("activateUser - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
-
-		// 회원 탈퇴
-		try {
-			for (int userId : userIds) {
-				int active = userService.activateUser(userId);
+			for (int storeId : storeIds) {
+				int active = storeService.denyStoreApplication(storeId);
 				if (active == 0) {
 					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
 				}
