@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Text>여기가 홈이다</Text>
+        <Text>여기가 모바일지갑이다</Text>
       </View>
     </View>
   );
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contents: {
-    flex: 1,
+    flex: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
