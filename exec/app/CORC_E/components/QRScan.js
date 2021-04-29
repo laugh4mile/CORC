@@ -16,11 +16,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contents: {
-    flex: 10,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  footer: {
-    flex: 1,
   },
 });
