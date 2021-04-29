@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.web.shinhan.model.AdminDto;
+import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 
 import io.jsonwebtoken.Claims;
@@ -39,6 +41,48 @@ public class JwtService {
 		// signature 설정
 		jwtBuilder.signWith(SignatureAlgorithm.HS256, signature.getBytes());
 
+		// 마지막 직렬화 처리
+		String jwt = jwtBuilder.compact();
+		return jwt;
+	}
+	
+	// 로그인 성공시 사용자 정보를 기반으로 JWTToken을 생성하여 반환.
+	public String createAdmin(AdminDto adminDto) {
+		JwtBuilder jwtBuilder = Jwts.builder();
+		
+		// Header 설정
+		jwtBuilder.setHeaderParam("typ", "JWT"); // 토큰의 타입으로 고정 값.
+		
+		// Payload 설정
+		jwtBuilder.setSubject("로그인토큰") // 토큰의 제목 설정
+		.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin)) // 유효기간 설정
+		.claim("user", adminDto).claim("greeting", "환영합니다. ");
+//				+ userDto.getUser_name()); // 담고 싶은 정보 설정.
+		
+		// signature 설정
+		jwtBuilder.signWith(SignatureAlgorithm.HS256, signature.getBytes());
+		
+		// 마지막 직렬화 처리
+		String jwt = jwtBuilder.compact();
+		return jwt;
+	}
+
+	// 로그인 성공시 사용자 정보를 기반으로 JWTToken을 생성하여 반환.
+	public String createStore(StoreDto storeDto) {
+		JwtBuilder jwtBuilder = Jwts.builder();
+		
+		// Header 설정
+		jwtBuilder.setHeaderParam("typ", "JWT"); // 토큰의 타입으로 고정 값.
+		
+		// Payload 설정
+		jwtBuilder.setSubject("로그인토큰") // 토큰의 제목 설정
+		.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin)) // 유효기간 설정
+		.claim("user", storeDto).claim("greeting", "환영합니다. ");
+//				+ userDto.getUser_name()); // 담고 싶은 정보 설정.
+		
+		// signature 설정
+		jwtBuilder.signWith(SignatureAlgorithm.HS256, signature.getBytes());
+		
 		// 마지막 직렬화 처리
 		String jwt = jwtBuilder.compact();
 		return jwt;

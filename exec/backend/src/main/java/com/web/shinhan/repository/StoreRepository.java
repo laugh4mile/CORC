@@ -11,23 +11,23 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.web.shinhan.entity.Payment;
-import com.web.shinhan.entity.User;
+import com.web.shinhan.entity.Store;
 import com.web.shinhan.model.UserDto;
 
 @Repository
-public interface UserRepository
-		extends JpaRepository<User, Integer>, PagingAndSortingRepository<User, Integer>, QueryByExampleExecutor<User> {
+public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAndSortingRepository<Store, Integer>,
+		QueryByExampleExecutor<Store> {
 	boolean existsByEmail(String email);
 
 	boolean existsByEmployeeNum(int employee_num);
 
-	boolean existsByUserId(int userId);
+//	boolean findByStoreId(int storeId);
 
-	User findByEmail(String email);
+	Store findByEmail(String email);
 
-	User findByUserId(int userId);
+	Store findByStoreId(int storeId);
 
-	@Query("select password from user where email = :email")
+	@Query("select password from store where email = :email")
 	String findPwd(String email);
 
 	boolean existsByEmailAndPassword(String email, String password);

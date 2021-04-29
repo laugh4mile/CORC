@@ -10,24 +10,16 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
+import com.web.shinhan.entity.Admin;
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.UserDto;
 
 @Repository
-public interface UserRepository
-		extends JpaRepository<User, Integer>, PagingAndSortingRepository<User, Integer>, QueryByExampleExecutor<User> {
-	boolean existsByEmail(String email);
+public interface AdminRepository extends JpaRepository<Admin, Integer>, PagingAndSortingRepository<Admin, Integer>,
+		QueryByExampleExecutor<Admin> {
 
-	boolean existsByEmployeeNum(int employee_num);
-
-	boolean existsByUserId(int userId);
-
-	User findByEmail(String email);
-
-	User findByUserId(int userId);
-
-	@Query("select password from user where email = :email")
+	@Query("select password from admin where email = :email")
 	String findPwd(String email);
 
 	boolean existsByEmailAndPassword(String email, String password);
