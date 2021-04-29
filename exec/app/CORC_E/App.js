@@ -1,10 +1,10 @@
 import React from 'react';
-import Home from './components/Home';
+import Footer from './components/Navigation';
 
 export default class extends React.Component {
   state = {};
 
   render() {
-    return <Home />;
+    return <Footer />;
   }
 }
