@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import HomeIcon from './icons/HomeIcon';
 import CardIcon from './icons/CardIcon';
 import QRCodeIcon from './icons/QRCodeIcon';
@@ -8,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from './Home';
 import Wallet from './Wallet';
-import QR from './QR';
+import QR from './QRScan';
 import Settings from './Settings';
 
 const Tab = createBottomTabNavigator();
@@ -28,7 +27,7 @@ export default function Footer() {
           }}
         />
         <Tab.Screen
-          name="Card"
+          name="Wallet"
           component={Wallet}
           options={{
             tabBarLabel: Boolean,
@@ -61,29 +60,3 @@ export default function Footer() {
     </NavigationContainer>
   );
 }
-// <View style={styles.container}>
-//   <View style={styles.contents}>
-//     <HomeIcon />
-//   </View>
-//   <View style={styles.contents}>
-//     <CardIcon />
-//   </View>
-//   <View style={styles.contents}>
-//     <BarCodeIcon />
-//   </View>
-//   <View style={styles.contents}>
-//     <GearIcon />
-//   </View>
-// </View>
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  contents: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

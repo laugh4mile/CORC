@@ -20,7 +20,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  footer: {
-    flex: 1,
-  },
 });
