@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TextInput, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Alert } from "react-native";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
+
 import Colors from "../constants/Colors";
 
 const logo = require("../assets/login_logo.png");
 
-const Login = () => {
+const Login = (props) => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,6 +33,15 @@ const Login = () => {
     setPassword(password);
   };
 
+  const login = () => {
+    if(!idValid) {
+      return Alert.alert(null, '아이디를 입력해 주세요.');
+    }
+    if(!passwordValid) {
+      return Alert.alert(null, '비밀번호를 입력해 주세요.');
+    }
+    // 로그인 시도
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -44,10 +54,8 @@ const Login = () => {
           onChangeText={(userId) => {
             idCheckHandler(userId);
           }}
-          defaultValue={userId}
           returnKeyType="next"
         />
-        {/* {!idValid && <Text>아이디 입력해라</Text>} */}
         <Input
           placeholder="비밀번호"
           type="password"
@@ -55,30 +63,23 @@ const Login = () => {
             passwordCheckHandler(password);
           }}
         />
-        {/* {!passwordValid && <Text>비밀번호 입력해라</Text>} */}
       </View>
       <View style={styles.footer}>
         <Button
           title="로그인"
-          onPress={() => {
-            alert(`아이디: ${userId}, 비밀번호: ${password}`);
-          }}
+          onPress={login}
           backgroundColor={Colors.primary.backgroundColor}
           fontColor={Colors.primary.fontColor}
         />
         <View style={styles.footerItems}>
           <Text
-            onPress={() => {
-              alert("비밀번호 찾기");
-            }}
+            onPress={() => props.navigation.navigate("FindPassword")}
             style={styles.textlink}
           >
             비밀번호 찾기
           </Text>
           <Text
-            onPress={() => {
-              alert("가맹점 신청");
-            }}
+            onPress={() => props.navigation.navigate("RegistStore")}
             style={styles.textlink}
           >
             가맹점 신청
@@ -94,7 +95,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    marginHorizontal: "10%",
+    paddingHorizontal: "10%",
     flex: 1,
   },
   header: {
