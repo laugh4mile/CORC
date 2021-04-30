@@ -1,5 +1,6 @@
 package com.web.shinhan.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,6 +94,7 @@ public class LoginController {
 		UserDto dto = new UserDto();
 		dto.setEmail(email);
 		dto.setPassword(password);
+		dto.setAccessTime(LocalDateTime.now());
 		// 로그인
 		try {
 			boolean loginUser = userService.login(dto);

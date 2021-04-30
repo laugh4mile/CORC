@@ -30,6 +30,12 @@ public class StoreService {
 		return stores.map(StoreDto::of);
 	}
 
+	@Transactional
+	public Page<StoreDto> findAllUnassignedStore(Pageable pageable) {
+		Page<Store> stores = storeRepository.findAllUnassignedStore(pageable);
+		return stores.map(StoreDto::of);
+	}
+
 	public StoreDto findStoreInfo(int storeId) {
 		Store storeInfo = storeRepository.findByStoreId(storeId);
 		StoreDto storeDto = mapper.INSTANCE.storeToDto(storeInfo);
