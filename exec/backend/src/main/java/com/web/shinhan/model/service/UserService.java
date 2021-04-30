@@ -5,9 +5,7 @@ import java.util.List;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +39,12 @@ public class UserService {
 
 	public UserDto findUserInfo(int userId) {
 		User userInfo = userRepository.findByUserId(userId);
+		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+		return userDto;
+	}
+
+	public UserDto findUserByEmail(String email) {
+		User userInfo = userRepository.findByEmail(email);
 		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
 		return userDto;
 	}
@@ -160,6 +164,15 @@ public class UserService {
 		} else {
 			return false;
 		}
+	}
+
+	public int assignedTotal() {
+		int total = 0;
+		List<Integer> assigned = userRepository.findCardLimitByActive();
+		for (int cnt : assigned) {
+			total += cnt;
+		}
+		return total;
 	}
 
 }

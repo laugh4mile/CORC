@@ -33,12 +33,7 @@ public interface UserRepository
 
 	boolean existsByEmailAndPassword(String email, String password);
 
-//	Page<User> findAll(Pageable pageable, Sort by);
-
-//	@Query("insert into user(employee_num, email, user_name, password, department, position, contact, days, balance, card_limit, active, access_time) values (:employee_num, :email, :user_name, :password, :department, :position, :contact, :days, :balance, :card_limit, :active, :access_time)")
-//	UserDto regist(UserDto userDto);
-
-//	@Query("select id_user, employee_number, email, name, password, department, position, telephone, card_limit, status, access_time, admin from user where email = :email and password = :password")
-//	@Query("select u from user u where email = :email and password = :password")
+	@Query("select cardLimit from user where active = 1")
+	List<Integer> findCardLimitByActive();
 
 }

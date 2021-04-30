@@ -1,6 +1,7 @@
 package com.web.shinhan.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,21 +10,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.model.PaymentDto;
+import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.service.PaymentService;
+import com.web.shinhan.model.service.PaymentitemService;
 import com.web.shinhan.model.service.StoreService;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,66 +45,21 @@ public class StoreController {
 	@Autowired
 	PaymentService paymentService;
 
-	@ApiOperation(value = "가맹점 목록 조회", notes = "가맹점들의 정보를 반환한다.", response = HashMap.class)
-	@GetMapping("/list")
-	public ResponseEntity<Map<String, Object>> findStoreList(@RequestParam String email, Pageable pageable)
-			throws Exception {
-		logger.info("findMembers - 호출");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.OK;
-		Page<StoreDto> page = null;
-
-		// 가맹점 정보 조회
-		try {
-			if (!email.equals("admin@admin.com")) {
-				resultMap.put("message", "Not a Admin Account");
-				status = HttpStatus.METHOD_NOT_ALLOWED;
-				return new ResponseEntity<Map<String, Object>>(resultMap, status);
-			}
-			page = storeService.findAllStore(pageable);
-			resultMap.put("userList", page);
-			status = HttpStatus.OK;
-		} catch (Exception e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
-
-	@ApiOperation(value = "가맹점 정보 조회", notes = "가맹점의 정보를 가지고 온다.", response = HashMap.class)
-	@GetMapping("/info")
-	public ResponseEntity<Map<String, Object>> findStoreInfo(@RequestParam int userId, HttpServletRequest req)
-			throws Exception {
-		logger.info("findUserInfo - 호출");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
-
-		// 가맹점 정보 조회
-		try {
-			resultMap.put("info", storeService.findStoreInfo(userId));
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+	@Autowired
+	PaymentitemService paymentitemService;
 
 	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment")
-	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable,
-			HttpServletRequest req) throws Exception {
+	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable)
+			throws Exception {
 		logger.info("findUserPayment - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
 		Page<PaymentDto> page = null;
 		HttpStatus status = HttpStatus.ACCEPTED;
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Sort.by(Sort.Direction.DESC, "date"));
 
-		// 가맹점 정보 조회
 		try {
 			resultMap.put("info", storeService.findStoreInfo(storeId));
 			page = paymentService.findStorePayment(storeId, pageable);
@@ -117,12 +76,11 @@ public class StoreController {
 	@ApiOperation(value = "가맹점 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
 	@PostMapping("/regist")
 	public ResponseEntity<Boolean> registStore(@RequestBody StoreDto store) {
-		logger.info("regist - 호출");
+		logger.info("registStore - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = true;
 
-		// 가맹점가입
 		try {
 			storeService.registStore(store);
 			status = HttpStatus.ACCEPTED;
@@ -134,77 +92,47 @@ public class StoreController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "가맹점 정보 수정", notes = "가맹점의 정보를 수정한다.", response = Boolean.class)
-	@PutMapping("/modify")
-	public ResponseEntity<Boolean> modifyStoreInfo(@RequestBody StoreDto newDto) {
-		logger.info("modifyStoreInfo - 호출");
+	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@GetMapping("/payment/total")
+	public ResponseEntity<Map<String, Object>> findTransactionalInfo(@RequestParam int storeId) throws Exception {
+		logger.info("findStoreTotal - 호출");
 
+		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
 
-		// 가맹점 정보 조회
-		String email = newDto.getEmail();
-		// 가맹점 소개 수정
 		try {
-			flag = storeService.modifyStoreInfo(email, newDto);
+			int total = paymentService.findTotal(storeId);
+			resultMap.put("total", total);
+			int notConfirmed = paymentService.findNotConfirmed(storeId);
+			resultMap.put("notConfirmed", notConfirmed);
 			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<Boolean>(flag, status);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "가맹점 정지", notes = "가맹점들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
-	@PutMapping("/allow")
-	public ResponseEntity<Boolean> allowStoreApplication(@RequestBody int[] storeIds) {
-		logger.info("allowStoreApplication - 호출");
+	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@GetMapping("/payment/single")
+	public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId, @RequestParam int paymentId)
+			throws Exception {
+		logger.info("showPayment - 호출");
 
+		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
 
-		// 가맹점 탈퇴
 		try {
-			for (int userId : storeIds) {
-				int active = storeService.allowStoreApplication(userId);
-				if (active == 0) {
-					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-				}
-			}
-			flag = true;
+			List<PaymentitemDto> items = paymentitemService.findItems(storeId, paymentId);
+			resultMap.put("items", items);
 			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<Boolean>(flag, status);
-	}
-
-	@ApiOperation(value = "가맹점 신청 거부", notes = "가맹점들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
-	@PutMapping("/deny")
-	public ResponseEntity<Boolean> denyStoreApplication(@RequestBody int[] storeIds) {
-		logger.info("denyStoreApplication - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
-
-		try {
-			for (int storeId : storeIds) {
-				int active = storeService.denyStoreApplication(storeId);
-				if (active == 0) {
-					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-				}
-			}
-			flag = true;
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Boolean>(flag, status);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
 }

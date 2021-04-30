@@ -1,11 +1,7 @@
 package com.web.shinhan.model.service;
 
-import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.mapstruct.factory.Mappers;
@@ -19,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.PaymentDto;
+import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.mapper.PaymentMapper;
 import com.web.shinhan.repository.PaymentRepository;
 
@@ -46,8 +43,8 @@ public class PaymentService {
 	}
 
 	@Transactional
-	public boolean confirmPayment(int userId) {
-		Payment payment = paymentRepository.findByUserId(userId);
+	public boolean confirmPayment(int paymentId) {
+		Payment payment = paymentRepository.findByPaymentId(paymentId);
 		if (payment.getStatus() == 1) {
 			PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
 			paymentDto.setStatus(2);
@@ -63,75 +60,102 @@ public class PaymentService {
 		return payments.map(PaymentDto::of);
 	}
 
+	public int findStoreTotal() {
+		int total = 0;
+		List<Integer> used = paymentRepository.calcTotalExpense();
+		for (int nc : used) {
+			total += nc;
+		}
+		return total;
+	}
+
 	@Transactional
 	public Page<PaymentDto> findDepartmentPayment(String department, Pageable pageable) {
 		Page<Payment> payments = paymentRepository.findAllByDepartment(department, pageable);
 		return payments.map(PaymentDto::of);
 	}
 
-//	public int calcTotalExpense() {
-//		return paymentRepository.calcTotalExpense();
-//	}
+	public int calcTotalExpense() {
+		int total = 0;
+		List<Integer> used = paymentRepository.calcTotalExpense();
+		for (int nc : used) {
+			total += nc;
+		}
+		return total;
+	}
 
-//	public int notConfirmedExpense() {
-//		int cnt = 0;
-//		while (true) {
-//			if (true) {
-//				break;
-//			}
-//			int temp = paymentRepository.findAllByStatus();
-//		}
-//		return cnt;
-//	}
+	public int notConfirmed() {
+		int total = 0;
+		List<Integer> notConfirmed = paymentRepository.findTotalByStatus();
+		for (int nc : notConfirmed) {
+			total += nc;
+		}
+		return total;
+	}
 
-	public List<PaymentDto> expenseByMonth(int now, int year) throws ParseException {
-		List<PaymentDto> monthly = null;
-//		String date1 = year + "-";
-//		String date2 = year + "-";
-
-		System.out.println("before If" + monthly + " " + now);
+	public int expenseByMonth(int now, int year) {
+		int monthly = 0;
 
 		if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
-//			System.out.println(now + " ");
 			LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
 			LocalDateTime endDate = LocalDateTime.of(year, now, 31, 23, 59);
-			System.out.println(startDate + " date " + endDate);
-			List<Payment> payments = paymentRepository.findAllByMonth(startDate, endDate);
-			System.out.println(payments + " now" + now);
-			for (Payment payment : payments) {
-				PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
-				monthly.add(paymentDto);
+			List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			for (int payment : payments) {
+				monthly += payment;
 			}
 		} else if (now == 4 || now == 6 || now == 9 || now == 11) {
 			LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
 			LocalDateTime endDate = LocalDateTime.of(year, now, 30, 23, 59);
-			List<Payment> payments = paymentRepository.findAllByMonth(startDate, endDate);
-			System.out.println(payments + " now" + now);
-			for (Payment payment : payments) {
-				PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
-				monthly.add(paymentDto);
+			List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			for (int payment : payments) {
+				monthly += payment;
 			}
 		} else {
-			LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
-			LocalDateTime endDate = LocalDateTime.of(year, now, 28, 23, 59);
-			List<Payment> payments = paymentRepository.findAllByMonth(startDate, endDate);
-			System.out.println(payments + " now" + now);
-			for (Payment payment : payments) {
-				PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
-				monthly.add(paymentDto);
+			if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+				LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+				LocalDateTime endDate = LocalDateTime.of(year, now, 29, 23, 59);
+				List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+				for (int payment : payments) {
+					monthly += payment;
+				}
+			} else {
+				LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+				LocalDateTime endDate = LocalDateTime.of(year, now, 28, 23, 59);
+				List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+				for (int payment : payments) {
+					monthly += payment;
+				}
 			}
 		}
 		return monthly;
 	}
 
 	public List<PaymentDto> expenseByCategory() {
-		List<Payment> payments = paymentRepository.findAll();
+		List<Payment> payments = paymentRepository.findAllByStatus();
 		List<PaymentDto> dto = null;
 		for (Payment payment : payments) {
 			PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
 			dto.add(paymentDto);
 		}
 		return dto;
+	}
+
+	public int findTotal(int storeId) {
+		int total = 0;
+		List<Integer> totalUsed = paymentRepository.findTotalByStoreId(storeId);
+		for (int nc : totalUsed) {
+			total += nc;
+		}
+		return total;
+	}
+
+	public int findNotConfirmed(int storeId) {
+		int total = 0;
+		List<Integer> notConfirmed = paymentRepository.findNotConfirmedByStoreId(storeId);
+		for (int nc : notConfirmed) {
+			total += nc;
+		}
+		return total;
 	}
 
 }
