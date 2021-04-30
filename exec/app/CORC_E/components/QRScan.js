@@ -28,13 +28,24 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <BarCodeScanner
+        type={BarCodeScanner.Constants.Type.back}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         // style={StyleSheet.absoluteFillObject}
-        style={styles.barCodeView}
-      />
-      {scanned && (
-        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-      )}
+        style={styles.barCode}
+      >
+        <View style={styles.topView}>
+          <Text style={styles.text}>QR 코드를 스캔하세요</Text>
+        </View>
+        <View style={styles.bottomView}>
+          {scanned && (
+            <Button
+              color="#f194ff"
+              title={'Tap to Scan Again'}
+              onPress={() => setScanned(false)}
+            />
+          )}
+        </View>
+      </BarCodeScanner>
     </View>
   );
 }
@@ -44,13 +55,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
   },
-  contents: {
+  barCode: {
     flex: 1,
+    width: '110%',
   },
-  barCodeView: {
-    width: '100%',
-    height: '100%',
-    // marginBottom: 20,
+  text: {
+    color: 'white',
+    fontSize: 20,
+  },
+  topView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: '20%',
+  },
+  bottomView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: '60%',
   },
 });
