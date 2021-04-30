@@ -43,7 +43,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 	@Query("select total from payment where storeId = :storeId and status != 0")
 	List<Integer> findTotalByStoreId(int storeId);
 
-	@Query("select total from payment where storeId = :storeId and status == 1")
+	@Query("select total from payment where storeId = :storeId and status = 1")
 	List<Integer> findNotConfirmedByStoreId(int storeId);
+
+	@Query("select p from payment p where userId = :userId and date between :startDate and :endDate")
+	Page<Payment> findAllByCustom(int userId, Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
 
 }

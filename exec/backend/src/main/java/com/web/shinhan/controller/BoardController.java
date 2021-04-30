@@ -77,7 +77,7 @@ public class BoardController {
 	}
 
 	@ApiOperation(value = "월간 소비량", notes = "월간 소비량을 보여준다.")
-	@GetMapping("/expense/month")
+	@GetMapping("/expenses/month")
 	public ResponseEntity<Map<Integer, Object>> expenseByMonth(@RequestParam int year) {
 		logger.info("expenseByMonth - 호출");
 		Map<Integer, Object> resultMap = new HashMap<>();
@@ -94,6 +94,26 @@ public class BoardController {
 		}
 
 		return new ResponseEntity<Map<Integer, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "통계", notes = "모든 결제 내역을 반환한다.", response = Boolean.class)
+	@GetMapping("/expenses/statistics")
+	public ResponseEntity<Map<String, Object>> expenseForStatistics() {
+		logger.info("expenseForStatistics - 호출 ");
+
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		try {
+			List<PaymentDto> paymentList = paymentService.findAllByStatus();
+			resultMap.put("payment", paymentList);
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
 	@ApiOperation(value = "가맹점 신청 현황", notes = "가맹점 신청 현황을 반환한다.", response = HashMap.class)
@@ -119,7 +139,7 @@ public class BoardController {
 	}
 
 	@ApiOperation(value = "실시간 결제 현황", notes = "실시간 결제 현황 정보를 가지고 온다.", response = HashMap.class)
-	@GetMapping("payment/recent")
+	@GetMapping("/payment/recent")
 	public ResponseEntity<Map<String, Object>> recentPayment(Pageable pageable) throws Exception {
 		logger.info("recentPayment - 호출");
 
@@ -130,48 +150,6 @@ public class BoardController {
 
 		try {
 			resultMap.put("payment", paymentService.findAll(pageable));
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
-
-	@ApiOperation(value = "부서별 결제 금액", notes = "부서별 결제 금액을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment/department")
-	public ResponseEntity<Map<String, Object>> findDeptPayment(@RequestParam String department, Pageable pageable)
-			throws Exception {
-		logger.info("findDeptPayment - 호출");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		Page<PaymentDto> page = null;
-		HttpStatus status = HttpStatus.ACCEPTED;
-
-		try {
-			page = paymentService.findDepartmentPayment(department, pageable);
-			resultMap.put("paymentList", page);
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
-
-	@ApiOperation(value = "소비 품목 현황", notes = "모든 결제 내역을 반환한다.", response = Boolean.class)
-	@GetMapping("/expense/category")
-	public ResponseEntity<Map<String, Object>> expenseByCategory() {
-		logger.info("expenseByCategory - 호출 ");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
-
-		try {
-			List<PaymentDto> paymentList = paymentService.expenseByCategory();
-			resultMap.put("payment", paymentList);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());

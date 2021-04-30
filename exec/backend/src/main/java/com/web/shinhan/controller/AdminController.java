@@ -49,8 +49,7 @@ public class AdminController {
 
 	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보를 반환한다.", response = HashMap.class)
 	@GetMapping("/user/list")
-	public ResponseEntity<Map<String, Object>> findUserList(@RequestParam String email, Pageable pageable)
-			throws Exception {
+	public ResponseEntity<Map<String, Object>> findUserList(Pageable pageable) throws Exception {
 		logger.info("findUserList - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -72,14 +71,12 @@ public class AdminController {
 
 	@ApiOperation(value = "회원 정보 조회", notes = "회원의 정보를 가지고 온다.", response = HashMap.class)
 	@GetMapping("/user/info")
-	public ResponseEntity<Map<String, Object>> findUserInfo(@RequestParam int userId, HttpServletRequest req)
-			throws Exception {
+	public ResponseEntity<Map<String, Object>> findUserInfo(@RequestParam int userId) throws Exception {
 		logger.info("findUserInfo - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		// 회원 정보 조회
 		try {
 			resultMap.put("info", userService.findUserInfo(userId));
 			status = HttpStatus.ACCEPTED;
@@ -93,8 +90,8 @@ public class AdminController {
 
 	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/user/payment")
-	public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId, Pageable pageable,
-			HttpServletRequest req) throws Exception {
+	public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId, Pageable pageable)
+			throws Exception {
 		logger.info("findUserPayment - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -129,7 +126,7 @@ public class AdminController {
 
 		// 회원가입
 		try {
-			userService.insertUser(user);
+			userService.registUser(user);
 			flag = true;
 			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
@@ -143,7 +140,7 @@ public class AdminController {
 	@ApiOperation(value = "회원 활성화", notes = "회원들을 활성화하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@PutMapping("/user/activate")
 	public ResponseEntity<Boolean> userStatus(@RequestBody int[] userIds, @RequestBody int userStatus) {
-		logger.info("activateUser - 호출");
+		logger.info("userStatus - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
@@ -193,12 +190,12 @@ public class AdminController {
 
 	@ApiOperation(value = "사번 중복 체크", notes = "같은 사번으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
 	@PostMapping("/check/employeenum")
-	public ResponseEntity<Boolean> employeenumCheck(@RequestParam int employee_num) {
-		logger.info("employeenumCheck - 호출");
+	public ResponseEntity<Boolean> employeeNumCheck(@RequestParam int employeeNum) {
+		logger.info("employeeNumCheck - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		return new ResponseEntity<Boolean>(userService.employeenumCheck(employee_num), status);
+		return new ResponseEntity<Boolean>(userService.employeeNumCheck(employeeNum), status);
 
 	}
 
@@ -210,9 +207,8 @@ public class AdminController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
-		// 회원 정보 조회
 		String email = newDto.getEmail();
-		// 회원 소개 수정
+
 		try {
 			flag = userService.modifyUserInfo(email, newDto);
 			status = HttpStatus.ACCEPTED;

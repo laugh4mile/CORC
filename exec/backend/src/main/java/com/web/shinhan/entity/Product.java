@@ -22,6 +22,9 @@ public class Product {
 	private String productName;
 	private int price;
 
+//	@ManyToOne
+//	private Paymentitem paymentitem;
+
 	@Builder
 	public Product(int productId, int storeId, String productName, int price) {
 		this.productId = productId;
@@ -29,5 +32,11 @@ public class Product {
 		this.productName = productName;
 		this.price = price;
 	}
+
+//	@Override
+//	public String toString() {
+//		return "Product [productId=" + productId + ", storeId=" + storeId + ", productName=" + productName + ", price="
+//				+ price + ", paymentitem=" + paymentitem + "]";
+//	}
 
 }

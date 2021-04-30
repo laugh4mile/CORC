@@ -70,9 +70,14 @@ public class PaymentService {
 	}
 
 	@Transactional
-	public Page<PaymentDto> findDepartmentPayment(String department, Pageable pageable) {
-		Page<Payment> payments = paymentRepository.findAllByDepartment(department, pageable);
-		return payments.map(PaymentDto::of);
+	public List<PaymentDto> findAllByStatus() {
+		List<Payment> payments = paymentRepository.findAllByStatus();
+		List<PaymentDto> paymentDto = null;
+		for (Payment payment : payments) {
+			PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
+			paymentDto.add(dto);
+		}
+		return paymentDto;
 	}
 
 	public int calcTotalExpense() {
@@ -130,16 +135,6 @@ public class PaymentService {
 		return monthly;
 	}
 
-	public List<PaymentDto> expenseByCategory() {
-		List<Payment> payments = paymentRepository.findAllByStatus();
-		List<PaymentDto> dto = null;
-		for (Payment payment : payments) {
-			PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
-			dto.add(paymentDto);
-		}
-		return dto;
-	}
-
 	public int findTotal(int storeId) {
 		int total = 0;
 		List<Integer> totalUsed = paymentRepository.findTotalByStoreId(storeId);
@@ -156,6 +151,56 @@ public class PaymentService {
 			total += nc;
 		}
 		return total;
+	}
+
+	public int findUserPaymentCustom(int now, int year) {
+		int monthly = 0;
+
+		if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
+			LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+			LocalDateTime endDate = LocalDateTime.of(year, now, 31, 23, 59);
+			List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			for (int payment : payments) {
+				monthly += payment;
+			}
+		} else if (now == 4 || now == 6 || now == 9 || now == 11) {
+			LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+			LocalDateTime endDate = LocalDateTime.of(year, now, 30, 23, 59);
+			List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			for (int payment : payments) {
+				monthly += payment;
+			}
+		} else {
+			if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+				LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+				LocalDateTime endDate = LocalDateTime.of(year, now, 29, 23, 59);
+				List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+				for (int payment : payments) {
+					monthly += payment;
+				}
+			} else {
+				LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+				LocalDateTime endDate = LocalDateTime.of(year, now, 28, 23, 59);
+				List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+				for (int payment : payments) {
+					monthly += payment;
+				}
+			}
+		}
+		return monthly;
+	}
+
+	public Page<PaymentDto> findUserPaymentCustom(int userId, Pageable pageable, int startDate, int endDate) {
+		int startYear = startDate / 10000;
+		int startMonth = (startDate - startYear * 10000) / 100;
+		int startDay = (startDate - startYear * 10000) % 100;
+		int endYear = endDate / 10000;
+		int endMonth = (endDate - endYear * 10000) / 100;
+		int endDay = (endDate - endYear * 10000) % 100;
+		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00);
+		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
+		Page<Payment> payments = paymentRepository.findAllByCustom(userId, pageable, startDateIn, endDateIn);
+		return payments.map(PaymentDto::of);
 	}
 
 }

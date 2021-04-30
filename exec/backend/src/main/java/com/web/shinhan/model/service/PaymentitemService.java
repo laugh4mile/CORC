@@ -2,7 +2,9 @@ package com.web.shinhan.model.service;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +36,12 @@ public class PaymentitemService {
 
 	private final PaymentitemMapper mapper = Mappers.getMapper(PaymentitemMapper.class);
 
-	public List<PaymentitemDto> findItems(int storeId, int paymentId) {
-		List<String> productName = paymentitemRepository.findProductNameByPaymentId(paymentId);
-		List<Integer> price = paymentitemRepository.findPriceByPaymentId(paymentId);
-		List<Integer> amount = paymentitemRepository.findAmountByPaymentId(paymentId);
-//		for (Paymentitem item : items) {
-//			UserDto userDto = mapper.INSTANCE.userToDto(user);
-//			userDto.setCardLimit(limit);
-//			userRepository.save(userDto.toEntity());
-////		List<PaymentitemDto> items = paymentitemRepository.findByPaymentId(paymentId);
-//		}
-//		User userInfo = userRepository.findByUserId(userId);
-//		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
-
-		return items;
+	@Transactional
+	public Map<String, Object> findItems(int storeId, int paymentId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		List<Paymentitem> paymentItem = paymentitemRepository.findByStoreIdandPaymentId(storeId, paymentId);
+		resultMap.put("paymentItem", paymentItem);
+		return resultMap;
 	}
 
 }

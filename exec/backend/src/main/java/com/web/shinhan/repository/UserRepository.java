@@ -36,4 +36,7 @@ public interface UserRepository
 	@Query("select cardLimit from user where active = 1")
 	List<Integer> findCardLimitByActive();
 
+	@Query("select userId from user where email = :email")
+	int findUserIdByEmail(String email);
+
 }

@@ -95,7 +95,7 @@ public class StoreController {
 	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/total")
 	public ResponseEntity<Map<String, Object>> findTransactionalInfo(@RequestParam int storeId) throws Exception {
-		logger.info("findStoreTotal - 호출");
+		logger.info("findTransactionalInfo - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -124,7 +124,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		try {
-			List<PaymentitemDto> items = paymentitemService.findItems(storeId, paymentId);
+			Map<String, Object> items = paymentitemService.findItems(storeId, paymentId);
 			resultMap.put("items", items);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {

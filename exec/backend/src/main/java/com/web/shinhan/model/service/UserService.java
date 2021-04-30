@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.AdminDto;
+import com.web.shinhan.model.AreaDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.UserMapper;
 import com.web.shinhan.repository.AdminRepository;
+import com.web.shinhan.repository.AreaRepository;
 import com.web.shinhan.repository.UserRepository;
 
 @Service
@@ -28,6 +30,9 @@ public class UserService {
 
 	@Autowired
 	private AdminRepository adminRepository;
+
+	@Autowired
+	private AreaRepository areaRepository;
 
 	private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
@@ -50,10 +55,20 @@ public class UserService {
 	}
 
 	@Transactional
-	public void insertUser(UserDto userDto) {
+	public void registUser(UserDto userDto) {
 		String encodePassword = passwordEncoder.encode(userDto.getPassword());
 		userDto.setPassword(encodePassword);
+		System.out.println(userDto);
+		System.out.println(userDto.toEntity());
 		userRepository.save(userDto.toEntity());
+		int userId = userRepository.findUserIdByEmail(userDto.getEmail());
+//		System.out.println(userId);
+		AreaDto areaDto = new AreaDto();
+		areaDto.setUserId(userId);
+		areaDto.setSidoCode(userDto.getSidoCode());
+		areaDto.setGugunCode(userDto.getGugunCode());
+		System.out.println(areaDto);
+		areaRepository.save(areaDto.toEntity());
 	}
 
 	public boolean emailCheck(String email) {
@@ -61,7 +76,7 @@ public class UserService {
 		return result;
 	}
 
-	public boolean employeenumCheck(int employee_num) {
+	public boolean employeeNumCheck(int employee_num) {
 		boolean result = userRepository.existsByEmployeeNum(employee_num);
 		return result;
 	}
@@ -69,6 +84,7 @@ public class UserService {
 	public boolean modifyUserInfo(String email, UserDto newDto) {
 		User userInfo = userRepository.findByEmail(email);
 		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+
 		String encodePassword = passwordEncoder.encode(newDto.getPassword());
 		userDto.setEmployeeNum(newDto.getEmployeeNum());
 		userDto.setPassword(encodePassword);
@@ -84,6 +100,13 @@ public class UserService {
 		userRepository.save(userDto.toEntity());
 		newDto.setPassword(encodePassword);
 		newDto.setUserId(userDto.getUserId());
+//		areaDto.set
+		AreaDto areaDto = new AreaDto();
+		areaDto.setUserId(newDto.getUserId());
+		areaDto.setSidoCode(newDto.getSidoCode());
+		areaDto.setGugunCode(newDto.getGugunCode());
+		System.out.println(areaDto);
+		areaRepository.save(areaDto.toEntity());
 		if (newDto.equals(userDto)) {
 			return true;
 		}
@@ -173,6 +196,13 @@ public class UserService {
 			total += cnt;
 		}
 		return total;
+	}
+
+	public void pay(int userId, int bill) {
+		User user = userRepository.findByUserId(userId);
+		UserDto userDto = mapper.INSTANCE.userToDto(user);
+		userDto.setBalance(userDto.getBalance() - bill);
+		userRepository.save(userDto.toEntity());
 	}
 
 }
