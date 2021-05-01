@@ -2,6 +2,7 @@ import React from 'react';
 import Navigation from './components/Navigation';
 import { StyleSheet, View, Platform } from 'react-native';
 import Constants from 'expo-constants';
+import Login from './screens/Login';
 
 export default class extends React.Component {
   state = {};
@@ -9,7 +10,7 @@ export default class extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Navigation />
+        <Login />
       </View>
     );
   }
@@ -17,7 +18,5 @@ export default class extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
-    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
   },
 });

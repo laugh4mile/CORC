@@ -5,10 +5,10 @@ import QRCodeIcon from './icons/QRCodeIcon';
 import SettingsIcon from './icons/SettingsIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from './Home';
-import Wallet from './Wallet';
-import QR from './QRScan';
-import Settings from './Settings';
+import Home from '../screens/Home';
+import Wallet from '../screens/Wallet';
+import QR from '../screens/QRScan';
+import Settings from '../screens/Settings';
 
 const Tab = createBottomTabNavigator();
 
