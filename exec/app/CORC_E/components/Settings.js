@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 export default function Home() {
   return (
@@ -17,20 +18,13 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  // },
-  // contents: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   container: {
     flex: 1,
     alignItems: 'center',
     height: 100,
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
   },
   center: {
     width: 200,
