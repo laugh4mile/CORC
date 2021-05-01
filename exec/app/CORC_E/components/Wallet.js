@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
   },
   contents: {
     flex: 1,
