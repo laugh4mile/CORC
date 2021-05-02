@@ -17,21 +17,18 @@ const {
 	buildCAClient,
 	registerAndEnrollUser,
 	enrollAdmin
-} = require('../../test-application/javascript/CAUtil.js');
+} = require('./util/CAUtil.js');
 const {
 	buildCCPOrg1,
-	buildWallet
-} = require('../../test-application/javascript/AppUtil.js');
+	buildWallet,
+	prettyJSONString
+} = require('./util/AppUtil.js');
 
 const channelName = 'mychannel';
 const chaincodeName = 'basic';
 const mspOrg1 = 'Org1MSP';
 const walletPath = path.join(__dirname, 'wallet');
-const org1UserId = 'appUser';
-
-function prettyJSONString(inputString) {
-	return JSON.stringify(JSON.parse(inputString), null, 2);
-}
+const org1UserId = 'appUser17';
 
 // express
 const express = require('express')
@@ -42,6 +39,12 @@ const {
 	error,
 	exception
 } = require('console');
+const {
+	parse
+} = require('path');
+const {
+	json
+} = require('express');
 
 app.use(express.json())
 app.use(express.urlencoded({
@@ -88,8 +91,11 @@ class Contract {
 					identity: org1UserId,
 					discovery: {
 						enabled: true,
-						asLocalhost: true
-					} // using asLocalhost as this gateway is using a fabric network deployed locally
+						asLocalhost: false
+					}, // using asLocalhost as this gateway is using a fabric network deployed locally
+					eventHandlerOptions: {
+						strategy: null
+					}
 				});
 
 				// Build a network instance based on the channel where the smart contract is deployed
@@ -117,21 +123,33 @@ class Contract {
 	}
 }
 
+function getResult(isSuccess, rs, debug = 0) {
+	if (isSuccess) {
+		if (debug) console.log(`Result: ${rs}`)
+		return {
+			"state": isSuccess,
+			"result": JSON.parse(rs.toString())
+		}
+	}
+
+	if (debug) console.log(`Error: ${rs}`)
+	return {
+		"state": isSuccess,
+		"error": rs
+	}
+}
+
 const c = new Contract();
 
 // func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, _id string, _type string) (*User, error)
 app.get('/createuser', async (req, res) => {
 	try {
-		await c.submitTransaction("CreateUser", ["TestUser", "User"])
+		let result = await c.submitTransaction("CreateUser", ["TestUser", "User"])
 		await c.submitTransaction("CreateUser", ["TestSeller", "Seller"])
 		await c.submitTransaction("CreateUser", ["TestUser2", "User"])
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -139,13 +157,9 @@ app.get('/createuser', async (req, res) => {
 app.get('/deleteuser', async (req, res) => {
 	try {
 		let result = await c.submitTransaction("DeleteUser", ["TestUser2"])
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -153,14 +167,9 @@ app.get('/deleteuser', async (req, res) => {
 app.get('/setbalance', async (req, res) => {
 	try {
 		let result = await c.submitTransaction("SetBalance", ["TestUser", "1000000"])
-		console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -168,14 +177,9 @@ app.get('/setbalance', async (req, res) => {
 app.get('/getuser', async (req, res) => {
 	try {
 		let result = await c.evaluateTransaction("GetUser", ["TestUser"])
-		console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -183,14 +187,9 @@ app.get('/getuser', async (req, res) => {
 app.get('/transfer', async (req, res) => {
 	try {
 		let result = await c.submitTransaction("TransferFrom", ["TestUser", "TestSeller", "1000"])
-		console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -198,14 +197,9 @@ app.get('/transfer', async (req, res) => {
 app.get('/userexist', async (req, res) => {
 	try {
 		let result = await c.evaluateTransaction("UserExist", ["TestUser"])
-		console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
@@ -214,14 +208,9 @@ app.get('/gettransaction/:txid', async (req, res) => {
 	try {
 		if (req.params.txid == "") throw new Error()
 		let result = await c.evaluateTransaction("GetTransaction", [req.params.txid])
-		console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-		return res.json({
-			"state": true
-		})
+		return res.json(getResult(true, result))
 	} catch (error) {
-		return res.json({
-			"state": false
-		})
+		return res.json(getResult(false, error))
 	}
 })
 
