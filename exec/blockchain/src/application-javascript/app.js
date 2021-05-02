@@ -28,7 +28,7 @@ const channelName = 'mychannel';
 const chaincodeName = 'basic';
 const mspOrg1 = 'Org1MSP';
 const walletPath = path.join(__dirname, 'wallet');
-const org1UserId = 'appUser17';
+const org1UserId = 'appUser';
 
 // express
 const express = require('express')
