@@ -68,7 +68,7 @@ exports.Contract = class {
                     identity: org1UserId,
                     discovery: {
                         enabled: true,
-                        asLocalhost: true
+                        asLocalhost: false
                     }, // using asLocalhost as this gateway is using a fabric network deployed locally
                     eventHandlerOptions: {
                         strategy: null
