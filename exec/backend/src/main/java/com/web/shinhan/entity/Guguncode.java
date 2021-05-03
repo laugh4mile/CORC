@@ -26,4 +26,9 @@ public class Guguncode {
 		this.gugunName = gugunName;
 	}
 
+	@Override
+	public String toString() {
+		return "Guguncode [gugunCode=" + gugunCode + ", gugunName=" + gugunName + "]";
+	}
+
 }

@@ -28,20 +28,19 @@ public class User {
 	private String position;
 	private String contact;
 	private String days;
+	private String sidoCode;
+	private String gugunCode;
 	private int balance;
 	private int cardLimit;
 	private int active;
 	private LocalDateTime accessTime;
 	private LocalDateTime limitTime;
-	
-//	@OneToOne(cascade = { CascadeType.ALL })
-//	@JoinColumn(name = "userId", insertable = false, updatable = false)
-//	private Area area;
-	
+
 	@Builder
 	public User(int userId, int employeeNum, String email, String userName, String password, String department,
-			String position, String contact, String days, int balance, int cardLimit, int active,
-			LocalDateTime accessTime, LocalDateTime limitTime) {
+			String position, String contact, String days, String sidoCode, String gugunCode, int balance, int cardLimit,
+			int active, LocalDateTime accessTime, LocalDateTime limitTime) {
+		super();
 		this.userId = userId;
 		this.employeeNum = employeeNum;
 		this.email = email;
@@ -51,6 +50,8 @@ public class User {
 		this.position = position;
 		this.contact = contact;
 		this.days = days;
+		this.sidoCode = sidoCode;
+		this.gugunCode = gugunCode;
 		this.balance = balance;
 		this.cardLimit = cardLimit;
 		this.active = active;

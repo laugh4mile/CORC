@@ -46,8 +46,7 @@ public class LoginController {
 
 	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/web")
-	public ResponseEntity<Map<String, Object>> webLogin(@RequestParam String email, @RequestParam String password,
-			HttpServletResponse response, HttpSession session) {
+	public ResponseEntity<Map<String, Object>> webLogin(@RequestParam String email, @RequestParam String password) {
 		logger.info("webLogin - 호출");
 
 		HttpStatus status = null;
@@ -84,9 +83,8 @@ public class LoginController {
 
 	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/user")
-	public ResponseEntity<Map<String, Object>> userLogin(@RequestParam String email, @RequestParam String password,
-			HttpServletResponse response, HttpSession session) {
-		logger.info("webLogin - 호출");
+	public ResponseEntity<Map<String, Object>> userLogin(@RequestParam String email, @RequestParam String password) {
+		logger.info("userLogin - 호출");
 
 		HttpStatus status = null;
 		Map<String, Object> resultMap = new HashMap<>();
@@ -125,8 +123,7 @@ public class LoginController {
 
 	@ApiOperation(value = "가맹점 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/store")
-	public ResponseEntity<Map<String, Object>> storeLogin(@RequestParam String email, @RequestParam String password,
-			HttpServletResponse response, HttpSession session) {
+	public ResponseEntity<Map<String, Object>> storeLogin(@RequestParam String email, @RequestParam String password) {
 		logger.info("storeLogin - 호출");
 
 		HttpStatus status = null;
