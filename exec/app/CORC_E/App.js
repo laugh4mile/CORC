@@ -1,17 +1,30 @@
 import React from 'react';
-import Navigation from './components/Navigation';
 import { StyleSheet, View, Platform } from 'react-native';
-import Constants from 'expo-constants';
-import Login from './screens/Login';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
+import { StatusBar } from 'expo-status-bar';
+
+import authReducer from './store/reducers/auth';
+import Navigation from './navigations/Navigation';
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default class extends React.Component {
   state = {};
 
   render() {
     return (
-      <View style={styles.container}>
-        <Login />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Navigation />
+          <StatusBar style="auto" />
+        </View>
+      </Provider>
     );
   }
 }

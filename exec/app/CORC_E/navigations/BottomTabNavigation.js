@@ -1,8 +1,8 @@
 import React from 'react';
-import HomeIcon from './icons/HomeIcon';
-import CardIcon from './icons/CardIcon';
-import QRCodeIcon from './icons/QRCodeIcon';
-import SettingsIcon from './icons/SettingsIcon';
+import HomeIcon from '../components/icons/HomeIcon';
+import CardIcon from '../components/icons/CardIcon';
+import QRCodeIcon from '../components/icons/QRCodeIcon';
+import SettingsIcon from '../components/icons/SettingsIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from '../screens/Home';

@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
 
-import Button from '../components/Button';
-import Input from '../components/Input';
-import Colors from '../constants/Colors';
-import Navigation from '../components/Navigation';
-import Home from './Home';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Colors from '../../constants/Colors';
+import * as authActions from '../../store/actions/auth';
 
-const logo = require('../assets/icon.png');
+const logo = require('../../assets/icon.png');
 
-const Login = (props) => {
+const LoginScreen = (props) => {
+  const [error, setError] = useState();
+
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+
   const [idValid, setIdValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let mounted = true;
+    if (error) {
+      Alert.alert('Error Occurred!', error, [{ text: 'Okay' }]);
+    }
+
+    return () => (mounted = false);
+  }, [error]);
 
   const idCheckHandler = (userid) => {
     if (userid.trim().length === 0) {
@@ -33,17 +47,24 @@ const Login = (props) => {
     setPassword(password);
   };
 
-  const login = () => {
-    console.log('zzz');
-    return <Home />;
-    // if (!idValid) {
-    //   return Alert.alert(null, '아이디를 입력해 주세요.');
-    // }
-    // if (!passwordValid) {
-    //   return Alert.alert(null, '비밀번호를 입력해 주세요.');
-    // }
-    // 로그인 시도
+  const login = async () => {
+    console.log('login');
+    if (!idValid) {
+      return Alert.alert(null, '아이디를 입력해 주세요.');
+    }
+    if (!passwordValid) {
+      return Alert.alert(null, '비밀번호를 입력해 주세요.');
+    }
+
+    let action = authActions.login(userId, password);
+    setError(null);
+    try {
+      await dispatch(action);
+    } catch (e) {
+      setError(e.message);
+    }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -86,7 +107,7 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
