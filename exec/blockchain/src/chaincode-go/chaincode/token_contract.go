@@ -21,13 +21,13 @@ type event struct {
 }
 
 type User struct {
-	ID      string `json:"ID"`
+	ID      string `json:"userId"`
 	Type    string `json:"type"`
 	Balance int    `json:"balance"`
 }
 
 type Transaction struct {
-	TXID  string `json:"TXID"`
+	TXID  string `json:"txId"`
 	From  string `json:"from"`
 	To    string `json:"to"`
 	Value int    `json:"value"`
