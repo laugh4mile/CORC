@@ -28,12 +28,15 @@ public class Store {
 	private String contact;
 	private String bankName;
 	private int account;
+	private String sidoCode;
+	private String gugunCode;
 	private LocalDateTime requestDate;
 	private int accepted;
 
 	@Builder
 	public Store(int storeId, String crNum, int categoryCode, String email, String password, String storeName,
-			String contact, String bankName, int account, LocalDateTime requestDate, int accepted) {
+			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
+			int accepted) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -43,8 +46,18 @@ public class Store {
 		this.contact = contact;
 		this.bankName = bankName;
 		this.account = account;
+		this.sidoCode = sidoCode;
+		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
+	}
+
+	@Override
+	public String toString() {
+		return "Store [storeId=" + storeId + ", crNum=" + crNum + ", categoryCode=" + categoryCode + ", email=" + email
+				+ ", password=" + password + ", storeName=" + storeName + ", contact=" + contact + ", bankName="
+				+ bankName + ", account=" + account + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode
+				+ ", requestDate=" + requestDate + ", accepted=" + accepted + "]";
 	}
 
 }

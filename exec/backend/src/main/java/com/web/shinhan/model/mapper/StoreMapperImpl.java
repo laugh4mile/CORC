@@ -23,6 +23,8 @@ public class StoreMapperImpl implements StoreMapper {
 		storeDto.contact(store.getContact());
 		storeDto.bankName(store.getBankName());
 		storeDto.account(store.getAccount());
+		storeDto.sidoCode(store.getSidoCode());
+		storeDto.gugunCode(store.getGugunCode());
 		storeDto.requestDate(store.getRequestDate());
 		storeDto.accepted(store.getAccepted());
 

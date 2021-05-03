@@ -61,6 +61,8 @@ public class StoreService {
 		storeDto.setContact(newDto.getContact());
 		storeDto.setBankName(newDto.getBankName());
 		storeDto.setAccount(newDto.getAccount());
+		storeDto.setSidoCode(newDto.getSidoCode());
+		storeDto.setGugunCode(newDto.getGugunCode());
 		storeDto.setRequestDate(newDto.getRequestDate());
 		storeDto.setAccepted(newDto.getAccepted());
 		storeRepository.save(storeDto.toEntity());
@@ -99,7 +101,9 @@ public class StoreService {
 
 	public boolean login(StoreDto storeDto) {
 		String encodedPassword = storeRepository.findPwd(storeDto.getEmail());
-		if (passwordEncoder.matches(storeDto.getPassword(), encodedPassword)) {
+		Store dbStore = storeRepository.findByEmail(storeDto.getEmail());
+		if (passwordEncoder.matches(storeDto.getPassword(), encodedPassword)
+				&& storeDto.getEmail().equals(dbStore.getEmail())) {
 			storeDto.setPassword(encodedPassword);
 			boolean result = storeRepository.existsByEmailAndPassword(storeDto.getEmail(), storeDto.getPassword());
 			return result;

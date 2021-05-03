@@ -2,6 +2,7 @@ package com.web.shinhan.model.service;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mapstruct.factory.Mappers;
@@ -72,7 +73,7 @@ public class PaymentService {
 	@Transactional
 	public List<PaymentDto> findAllByStatus() {
 		List<Payment> payments = paymentRepository.findAllByStatus();
-		List<PaymentDto> paymentDto = null;
+		List<PaymentDto> paymentDto = new ArrayList<>();
 		for (Payment payment : payments) {
 			PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
 			paymentDto.add(dto);
@@ -201,6 +202,15 @@ public class PaymentService {
 		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
 		Page<Payment> payments = paymentRepository.findAllByCustom(userId, pageable, startDateIn, endDateIn);
 		return payments.map(PaymentDto::of);
+	}
+
+	public void pay(int userId, int storeId, int bill) {
+		PaymentDto paymentDto = new PaymentDto();
+		paymentDto.setDate(LocalDateTime.now());
+		paymentDto.setUserId(userId);
+		paymentDto.setStoreId(storeId);
+		paymentDto.setTotal(bill);
+		paymentRepository.save(paymentDto.toEntity());
 	}
 
 }

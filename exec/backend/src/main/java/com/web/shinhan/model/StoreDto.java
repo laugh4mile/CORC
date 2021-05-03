@@ -23,15 +23,15 @@ public class StoreDto {
 	private String contact;
 	private String bankName;
 	private int account;
-	private LocalDateTime requestDate;
-	private int accepted;
-	
 	private String sidoCode;
 	private String gugunCode;
+	private LocalDateTime requestDate;
+	private int accepted;
 
 	@Builder
 	public StoreDto(int storeId, String crNum, int categoryCode, String email, String password, String storeName,
-			String contact, String bankName, int account, LocalDateTime requestDate, int accepted) {
+			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
+			int accepted) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -41,6 +41,8 @@ public class StoreDto {
 		this.contact = contact;
 		this.bankName = bankName;
 		this.account = account;
+		this.sidoCode = sidoCode;
+		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
 	}
@@ -56,6 +58,8 @@ public class StoreDto {
 				.contact(contact)
 				.bankName(bankName)
 				.account(account)
+				.sidoCode(sidoCode)
+				.gugunCode(gugunCode)
 				.requestDate(requestDate)
 				.accepted(accepted)
 				.build();
@@ -72,6 +76,8 @@ public class StoreDto {
 				.contact(store.getContact())
 				.bankName(store.getBankName())
 				.account(store.getAccount())
+				.sidoCode(store.getSidoCode())
+				.gugunCode(store.getGugunCode())
 				.requestDate(store.getRequestDate())
 				.accepted(store.getAccepted())
 				.build();

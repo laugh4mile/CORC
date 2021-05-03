@@ -31,6 +31,7 @@ import com.web.shinhan.model.service.PaymentService;
 import com.web.shinhan.model.service.PaymentitemService;
 import com.web.shinhan.model.service.StoreService;
 import com.web.shinhan.model.service.UserService;
+import com.web.shinhan.repository.PaymentRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -128,13 +129,14 @@ public class UserController {
 
 	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@PostMapping("/pay")
-	public ResponseEntity<Boolean> pay(@RequestParam int bill, @RequestParam int userId) throws Exception {
+	public ResponseEntity<Boolean> pay(@RequestParam int bill, @RequestParam int userId, @RequestParam int storeId) throws Exception {
 		logger.info("pay - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
 		try {
+			paymentService.pay(userId, storeId, bill);
 			userService.pay(userId, bill);
 			flag = true;
 			status = HttpStatus.ACCEPTED;
