@@ -19,18 +19,24 @@ class App extends React.Component {
   componentWillUnmount() {}
 
   render() {
+    console.log("this.props", this.props);
+    console.log(this.props.currentUser);
     return (
       <div className="noto-sans-KR">
         {this.props.currentUser ? <Nav /> : ""}
         <Switch>
           <Route
             exact
-            path="/signin"
+            path="/"
             render={() =>
-              this.props.currentUser ? <Redirect to="/" /> : <SignInPage />
+              this.props.currentUser ? (
+                <Redirect to="/dashboard" />
+              ) : (
+                <SignInPage />
+              )
             }
           />
-          <Route exact path="/" component={DashBoardPage} />
+          <Route exact path="/dashboard" component={DashBoardPage} />
         </Switch>
       </div>
     );

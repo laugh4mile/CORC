@@ -1,8 +1,12 @@
+* {
+}
+
 .sign-in {
   display: flex;
   flex-direction: column;
-  background-color: #f9fbff;
   margin: auto;
+  min-height: 100vh;
+  background-color: #f9fbff;
 
   .logo {
     display: flex;

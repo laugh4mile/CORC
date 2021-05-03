@@ -6,7 +6,7 @@ import BaseButton from "../../components/ui/base-button/base-button.component";
 
 import "./sign-in.styles.scss";
 
-class SignIn extends React.Component {
+class SignInPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -86,4 +86,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default SignIn;
+export default SignInPage;
