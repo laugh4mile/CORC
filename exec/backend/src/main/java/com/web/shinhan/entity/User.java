@@ -33,7 +33,11 @@ public class User {
 	private int active;
 	private LocalDateTime accessTime;
 	private LocalDateTime limitTime;
-
+	
+//	@OneToOne(cascade = { CascadeType.ALL })
+//	@JoinColumn(name = "userId", insertable = false, updatable = false)
+//	private Area area;
+	
 	@Builder
 	public User(int userId, int employeeNum, String email, String userName, String password, String department,
 			String position, String contact, String days, int balance, int cardLimit, int active,

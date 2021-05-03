@@ -13,11 +13,6 @@ import com.web.shinhan.entity.Store;
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAndSortingRepository<Store, Integer>,
 		QueryByExampleExecutor<Store> {
-	boolean existsByEmail(String email);
-
-//	boolean existsByEmployeeNum(int employee_num);
-
-//	boolean findByStoreId(int storeId);
 
 	Store findByEmail(String email);
 
@@ -30,11 +25,5 @@ public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAn
 
 	@Query("select s from store s where accepted = 1")
 	Page<Store> findAllUnassignedStore(Pageable pageable);
-
-//	@Query("insert into user(employee_num, email, user_name, password, department, position, contact, days, balance, card_limit, active, access_time) values (:employee_num, :email, :user_name, :password, :department, :position, :contact, :days, :balance, :card_limit, :active, :access_time)")
-//	UserDto regist(UserDto userDto);
-
-//	@Query("select id_user, employee_number, email, name, password, department, position, telephone, card_limit, status, access_time, admin from user where email = :email and password = :password")
-//	@Query("select u from user u where email = :email and password = :password")
 
 }
