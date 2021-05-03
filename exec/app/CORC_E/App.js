@@ -1,21 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import Navigation from './components/Navigation';
+import { StyleSheet, View, Platform } from 'react-native';
+import Constants from 'expo-constants';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>사용자 앱</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+export default class extends React.Component {
+  state = {};
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Navigation />
+      </View>
+    );
+  }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // backgroundColor: '#fff',
+    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
   },
 });
