@@ -51,7 +51,6 @@ const {
 router.post('/user', async (req, res) => {
     try {
         if (!req.body['userId'] || !req.body['type']) throw new Error()
-        console.log(req.body)
         const userId = req.body.userId
         const type = req.body.type
 
