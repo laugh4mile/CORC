@@ -1,19 +1,28 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import Constants from 'expo-constants';
 import { StyleSheet, View, Platform } from "react-native";
-import TabNavigation from './navigations/TabNavigation'
-import LoginNavigation from './navigations/LoginNavigation'
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
+import { StatusBar } from "expo-status-bar";
+import Constants from "expo-constants";
+
+import Navigation from "./navigations/Navigation";
+import authReducer from "./store/reducers/auth";
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      {/* 로그인 전이라면 Login 페이지,
-          로그인 후 TabNav */}
-      <LoginNavigation />
-      {/* <TabNavigation /> */}
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <View style={styles.container}>
+        <Navigation />
+        <StatusBar style="auto" />
+      </View>
+    </Provider>
   );
 }
 

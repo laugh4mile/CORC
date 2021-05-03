@@ -1,14 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
+
+import Card from '../components/Card';
 
 const Main = () => {
-    return (
-        <View>
-            <Text>메인 페이지</Text>
-        </View>
-    )
-}
+  const userId = useSelector((state) => state.auth.userId);
+  const userToken = useSelector((state) => state.auth.token);
 
-export default Main
+  return (
+    <View style={styles.container}>
+      <Text>메인 페이지</Text>
+      <Card><Text>{userId}, {userToken}</Text></Card>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default Main;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
