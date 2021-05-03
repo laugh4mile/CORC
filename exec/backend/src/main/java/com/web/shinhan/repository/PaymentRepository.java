@@ -1,13 +1,10 @@
 package com.web.shinhan.repository;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,7 +12,6 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.web.shinhan.entity.Payment;
-import com.web.shinhan.model.PaymentDto;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer>,
@@ -30,19 +26,27 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 	@Query("select p from payment p where department = :department")
 	Page<Payment> findAllByDepartment(String department, Pageable pageable);
 
-//	@Query("select total from payment p where status = ")
-//	int calcTotalExpense();
+	@Query("select p from payment p where status = 1")
+	List<Payment> findAllByStatus();
 
-	Payment findByUserId(int userId);
+	@Query("select total from payment where status != 0")
+	List<Integer> calcTotalExpense();
 
-	@Query("select total from payment p where status = 1")
-	int findAllByStatus();
+	Payment findByPaymentId(int userId);
 
-	@Query("select total from payment where date >= :startDate and date <= :endDate")
-	List<Payment> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
+	@Query("select total from payment where status = 1")
+	List<Integer> findTotalByStatus();
 
-//	List<Payment> findByLatestUpdateBetween(Date start, Date end);
-//	@Query("select total from payment where date = :date1")
-//	List<Payment> findAllByMonth(String date1);
-//	WHERE DATE(post_date) BETWEEN '2012-01-22' AND '2012-01-23'
+	@Query("select total from payment where date between :startDate and :endDate")
+	List<Integer> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
+
+	@Query("select total from payment where storeId = :storeId and status != 0")
+	List<Integer> findTotalByStoreId(int storeId);
+
+	@Query("select total from payment where storeId = :storeId and status = 1")
+	List<Integer> findNotConfirmedByStoreId(int storeId);
+
+	@Query("select p from payment p where userId = :userId and date between :startDate and :endDate")
+	Page<Payment> findAllByCustom(int userId, Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
+
 }

@@ -25,6 +25,9 @@ public class StoreDto {
 	private int account;
 	private LocalDateTime requestDate;
 	private int accepted;
+	
+	private String sidoCode;
+	private String gugunCode;
 
 	@Builder
 	public StoreDto(int storeId, String crNum, int categoryCode, String email, String password, String storeName,

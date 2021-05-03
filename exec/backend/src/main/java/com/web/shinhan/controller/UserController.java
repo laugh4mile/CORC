@@ -1,7 +1,7 @@
 package com.web.shinhan.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,26 +18,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.StoreDto;
+import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.PaymentService;
 import com.web.shinhan.model.service.PaymentitemService;
 import com.web.shinhan.model.service.StoreService;
+import com.web.shinhan.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/store")
+@RequestMapping("/user")
 @CrossOrigin(origins = { "*" })
-public class StoreController {
+public class UserController {
 
-	public static final Logger logger = LoggerFactory.getLogger(StoreController.class);
+	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	StoreService storeService;
@@ -48,9 +53,9 @@ public class StoreController {
 	@Autowired
 	PaymentitemService paymentitemService;
 
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment")
-	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable)
+	public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId, Pageable pageable)
 			throws Exception {
 		logger.info("findUserPayment - 호출");
 
@@ -61,8 +66,8 @@ public class StoreController {
 				Sort.by(Sort.Direction.DESC, "date"));
 
 		try {
-			resultMap.put("info", storeService.findStoreInfo(storeId));
-			page = paymentService.findStorePayment(storeId, pageable);
+			resultMap.put("info", userService.findUserInfo(userId));
+			page = paymentService.findUserPayment(userId, pageable);
 			resultMap.put("paymentList", page);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -73,38 +78,22 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "가맹점 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
-	@PostMapping("/regist")
-	public ResponseEntity<Boolean> registStore(@RequestBody StoreDto store) {
-		logger.info("registStore - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = true;
-
-		try {
-			storeService.registStore(store);
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Boolean>(flag, status);
-	}
-
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment/total")
-	public ResponseEntity<Map<String, Object>> findTransactionalInfo(@RequestParam int storeId) throws Exception {
-		logger.info("findTransactionalInfo - 호출");
+	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@GetMapping("/payment/custom")
+	public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
+			@RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
+		logger.info("findUserPaymentCustom - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
+		Page<PaymentDto> page = null;
 		HttpStatus status = HttpStatus.ACCEPTED;
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Sort.by(Sort.Direction.DESC, "date"));
 
 		try {
-			int total = paymentService.findTotal(storeId);
-			resultMap.put("total", total);
-			int notConfirmed = paymentService.findNotConfirmed(storeId);
-			resultMap.put("notConfirmed", notConfirmed);
+			resultMap.put("info", userService.findUserInfo(userId));
+			page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
+			resultMap.put("paymentList", page);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -126,6 +115,8 @@ public class StoreController {
 		try {
 			Map<String, Object> items = paymentitemService.findItems(storeId, paymentId);
 			resultMap.put("items", items);
+			StoreDto storeInfo = storeService.findStoreInfo(storeId);
+			resultMap.put("storeInfo", storeInfo);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -133,6 +124,25 @@ public class StoreController {
 		}
 
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@PostMapping("/pay")
+	public ResponseEntity<Boolean> pay(@RequestParam int bill, @RequestParam int userId) throws Exception {
+		logger.info("pay - 호출");
+
+		HttpStatus status = HttpStatus.ACCEPTED;
+		boolean flag = false;
+
+		try {
+			userService.pay(userId, bill);
+			flag = true;
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Boolean>(flag, status);
 	}
 
 }

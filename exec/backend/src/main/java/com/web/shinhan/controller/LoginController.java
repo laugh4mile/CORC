@@ -99,6 +99,7 @@ public class LoginController {
 		try {
 			boolean loginUser = userService.login(dto);
 			if (loginUser) {
+				UserDto user = userService.findUserByEmail(email);
 				// jwt.io에서 확인
 				// 로그인 성공했다면 토큰을 생성한다
 				String token = jwtService.create(dto);
@@ -107,6 +108,7 @@ public class LoginController {
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
 				resultMap.put("auth-token", token);
 				resultMap.put("user-email", email);
+				resultMap.put("user-userid", user.getUserId());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
@@ -135,8 +137,9 @@ public class LoginController {
 		dto.setPassword(password);
 		// 로그인
 		try {
-			boolean loginUser = storeService.login(dto);
-			if (loginUser) {
+			boolean login = storeService.login(dto);
+			if (login) {
+				StoreDto store = storeService.findStoreByEmail(email);
 				// jwt.io에서 확인
 				// 로그인 성공했다면 토큰을 생성한다
 				String token = jwtService.createStore(dto);
@@ -144,7 +147,8 @@ public class LoginController {
 
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
 				resultMap.put("auth-token", token);
-				resultMap.put("user-email", email);
+				resultMap.put("store-email", email);
+				resultMap.put("store-userid", store.getStoreId());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");

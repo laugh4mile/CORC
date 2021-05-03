@@ -2,6 +2,8 @@ package com.web.shinhan.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.OneToOne;
+
 import com.web.shinhan.entity.User;
 
 import lombok.Builder;
@@ -27,6 +29,9 @@ public class UserDto {
 	private int active;
 	private LocalDateTime accessTime;
 	private LocalDateTime limitTime;
+
+	private String sidoCode;
+	private String gugunCode;
 
 	@Builder
 	public UserDto(int userId, int employeeNum, String email, String userName, String password, String department,
@@ -60,6 +65,15 @@ public class UserDto {
 				.position(user.getPosition()).contact(user.getContact()).days(user.getDays()).balance(user.getBalance())
 				.cardLimit(user.getCardLimit()).active(user.getActive()).accessTime(user.getAccessTime())
 				.limitTime(user.getLimitTime()).build();
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto [userId=" + userId + ", employeeNum=" + employeeNum + ", email=" + email + ", userName="
+				+ userName + ", password=" + password + ", department=" + department + ", position=" + position
+				+ ", contact=" + contact + ", days=" + days + ", balance=" + balance + ", cardLimit=" + cardLimit
+				+ ", active=" + active + ", accessTime=" + accessTime + ", limitTime=" + limitTime + ", sidoCode="
+				+ sidoCode + ", gugunCode=" + gugunCode + "]";
 	}
 
 }

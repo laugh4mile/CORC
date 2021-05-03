@@ -108,4 +108,10 @@ public class StoreService {
 		}
 	}
 
+	public StoreDto findStoreByEmail(String email) {
+		Store storeInfo = storeRepository.findByEmail(email);
+		StoreDto storeDto = mapper.INSTANCE.storeToDto(storeInfo);
+		return storeDto;
+	}
+
 }

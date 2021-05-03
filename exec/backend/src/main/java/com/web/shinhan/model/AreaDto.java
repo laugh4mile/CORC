@@ -49,4 +49,10 @@ public class AreaDto {
 				.build();
 	}
 
+	@Override
+	public String toString() {
+		return "AreaDto [areaId=" + areaId + ", userId=" + userId + ", storeId=" + storeId + ", sidoCode=" + sidoCode
+				+ ", gugunCode=" + gugunCode + "]";
+	}
+
 }
