@@ -13,6 +13,7 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
+    marginHorizontal: '10%',
     backgroundColor: "white",
     borderWidth: 1,
     borderRadius: 15,
