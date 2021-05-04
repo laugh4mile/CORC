@@ -22,7 +22,7 @@ import {
 const Nav = () => (
   <NavContainer>
     <OptionsContainer>
-      <OptionLink to="/">
+      <OptionLink to="/dashboard">
         <DashboardIcon />
         <span>대쉬보드</span>
       </OptionLink>
@@ -64,15 +64,13 @@ const Nav = () => (
         <span>통계</span>
       </OptionLink>
     </OptionsContainer>
-    <OptionsContainer>
-      <OptionDivider></OptionDivider>
-    </OptionsContainer>
+    <OptionDivider></OptionDivider>
     <OptionsContainer>
       <OptionLink to="/settings">
         <SettingsIcon className="icon" />
         <span>설정</span>
       </OptionLink>
-      <OptionLink to="/">
+      <OptionLink to="/signin">
         <SignOutIcon className="icon" />
         <span>로그아웃</span>
       </OptionLink>

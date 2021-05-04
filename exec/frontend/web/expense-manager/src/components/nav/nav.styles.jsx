@@ -16,8 +16,9 @@ export const OptionsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
-  /* justify-content: flex-end; */
+  margin-top: 2rem;
+  margin-left: auto;
+  justify-content: center;
 `;
 
 export const OptionsTitle = styled.span`
@@ -33,19 +34,27 @@ export const OptionLink = styled(NavLink).attrs({ activeClassName })`
   align-items: center;
   cursor: pointer;
   margin: 0.5rem auto;
+  margin-left: 2rem;
   color: #a5a5a8;
-
+  transition: 0.3s ease-out;
   svg {
-    width: 50%;
+    width: 40%;
   }
 
-  &.${activeClassName} {
+  &.${activeClassName}, &:hover {
     font-weight: 700;
     color: #7986ff;
+
+    svg {
+      & path {
+        fill: #7986ff;
+      }
+    }
   }
 `;
 
 export const OptionDivider = styled.div`
   border-bottom: 2px solid #a5a5a8;
   width: 75%;
+  margin: 2rem auto 0 auto;
 `;
