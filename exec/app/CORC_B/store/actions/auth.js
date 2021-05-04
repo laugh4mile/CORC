@@ -65,10 +65,12 @@ export const login = (email, password) => {
       let message = response.data["message"];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
     }
+
     // console.log(response.data);
     let userId = response.data["store-userid"];
     let useremail = response.data["store-email"];
     let token = response.data["auth-token"];
+
     dispatch(
       authenticate(
         userId,
@@ -78,6 +80,7 @@ export const login = (email, password) => {
         3600 * 1000
       )
     );
+
     const expirationDate = new Date(
       // new Date().getTime() + parseInt(resData.expiresIn) * 1000
       new Date().getTime() + 360 * 1000
@@ -88,7 +91,7 @@ export const login = (email, password) => {
 
 export const logout = () => {
   clearLogoutTimer();
-  AsyncStorage.removeItem("userData");
+  // AsyncStorage.removeItem("userData");
   return { type: LOGOUT };
 };
 
