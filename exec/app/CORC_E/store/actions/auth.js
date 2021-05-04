@@ -1,4 +1,4 @@
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
@@ -46,7 +46,7 @@ export const signup = (email, password) => {
       throw new Error(message);
     }
 
-    console.log(response);
+    console.log('response');
   };
 };
 
@@ -57,7 +57,7 @@ export const login = (email, password) => {
       `${SERVER_URL}/login/user?email=${email}&password=${password}`
     );
     console.log('response');
-    console.log(response);
+    // console.log(response);
     if (response.data['message']) {
       let message = response.data['message'];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!!`);
@@ -70,14 +70,20 @@ export const login = (email, password) => {
         userid,
         token,
         // parseInt(resData.expiresIn) * 1000
-        3600 * 1000
+        3600
       )
     );
     const expirationDate = new Date(
       // new Date().getTime() + parseInt(resData.expiresIn) * 1000
       new Date().getTime() + 360 * 1000
     );
-    // saveDataToStorage(token, userid, expirationDate);
+    saveDataToStorage(token, userid, expirationDate);
+    console.log('userData 는? ');
+    console.log('userData : ', await AsyncStorage.getItem('userData'));
+
+    // console.log('userData 삭제');
+    // AsyncStorage.removeItem('userData');
+    // console.log('userData 삭제완료');
   };
 };
 
@@ -102,6 +108,7 @@ const setLogoutTimer = (expirationTime) => {
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
+  console.log('saveDataToStorage 진입');
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({
@@ -111,3 +118,4 @@ const saveDataToStorage = (token, userId, expirationDate) => {
     })
   );
 };
+console.log('saveDataToStorage 탈출');
