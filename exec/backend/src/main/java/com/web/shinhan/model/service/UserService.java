@@ -10,13 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.web.shinhan.entity.Admin;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.AdminDto;
-import com.web.shinhan.model.AreaDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.UserMapper;
 import com.web.shinhan.repository.AdminRepository;
-import com.web.shinhan.repository.AreaRepository;
 import com.web.shinhan.repository.UserRepository;
 
 @Service
@@ -30,9 +29,6 @@ public class UserService {
 
 	@Autowired
 	private AdminRepository adminRepository;
-
-	@Autowired
-	private AreaRepository areaRepository;
 
 	private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
@@ -58,17 +54,8 @@ public class UserService {
 	public void registUser(UserDto userDto) {
 		String encodePassword = passwordEncoder.encode(userDto.getPassword());
 		userDto.setPassword(encodePassword);
-		System.out.println(userDto);
-		System.out.println(userDto.toEntity());
 		userRepository.save(userDto.toEntity());
 		int userId = userRepository.findUserIdByEmail(userDto.getEmail());
-//		System.out.println(userId);
-		AreaDto areaDto = new AreaDto();
-		areaDto.setUserId(userId);
-		areaDto.setSidoCode(userDto.getSidoCode());
-		areaDto.setGugunCode(userDto.getGugunCode());
-		System.out.println(areaDto);
-		areaRepository.save(areaDto.toEntity());
 	}
 
 	public boolean emailCheck(String email) {
@@ -93,20 +80,16 @@ public class UserService {
 		userDto.setPosition(newDto.getPosition());
 		userDto.setContact(newDto.getContact());
 		userDto.setDays(newDto.getDays());
+		userDto.setSidoCode(newDto.getSidoCode());
+		userDto.setGugunCode(newDto.getGugunCode());
 		userDto.setBalance(newDto.getBalance());
 		userDto.setCardLimit(newDto.getCardLimit());
 		userDto.setAccessTime(newDto.getAccessTime());
 		userDto.setActive(newDto.getActive());
 		userRepository.save(userDto.toEntity());
+
 		newDto.setPassword(encodePassword);
 		newDto.setUserId(userDto.getUserId());
-//		areaDto.set
-		AreaDto areaDto = new AreaDto();
-		areaDto.setUserId(newDto.getUserId());
-		areaDto.setSidoCode(newDto.getSidoCode());
-		areaDto.setGugunCode(newDto.getGugunCode());
-		System.out.println(areaDto);
-		areaRepository.save(areaDto.toEntity());
 		if (newDto.equals(userDto)) {
 			return true;
 		}
@@ -165,7 +148,8 @@ public class UserService {
 		User userInfo = userRepository.findByEmail(user.getEmail());
 		UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
 		String encodedPassword = userRepository.findPwd(user.getEmail());
-		if (passwordEncoder.matches(user.getPassword(), encodedPassword)) {
+		if (passwordEncoder.matches(user.getPassword(), encodedPassword)
+				&& user.getEmail().equals(userInfo.getEmail())) {
 			user.setPassword(encodedPassword);
 			boolean result = userRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
 			if (result) {
@@ -180,7 +164,9 @@ public class UserService {
 
 	public boolean loginAdmin(AdminDto admin) {
 		String encodedPassword = adminRepository.findPwd(admin.getEmail());
-		if (passwordEncoder.matches(admin.getPassword(), encodedPassword)) {
+		Admin adminET = adminRepository.findByEmail(admin.getEmail());
+		if (passwordEncoder.matches(admin.getPassword(), encodedPassword)
+				&& adminET.getEmail().equals(admin.getEmail())) {
 			admin.setPassword(encodedPassword);
 			boolean result = adminRepository.existsByEmailAndPassword(admin.getEmail(), admin.getPassword());
 			return result;
@@ -198,11 +184,16 @@ public class UserService {
 		return total;
 	}
 
-	public void pay(int userId, int bill) {
+	public Boolean pay(int userId, int bill) {
 		User user = userRepository.findByUserId(userId);
 		UserDto userDto = mapper.INSTANCE.userToDto(user);
-		userDto.setBalance(userDto.getBalance() - bill);
-		userRepository.save(userDto.toEntity());
+		if(userDto.getBalance() - bill >= 0) {
+			userDto.setBalance(userDto.getBalance() - bill);
+			userRepository.save(userDto.toEntity());
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 }

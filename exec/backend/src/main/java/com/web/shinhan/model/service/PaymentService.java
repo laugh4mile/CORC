@@ -1,7 +1,7 @@
 package com.web.shinhan.model.service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mapstruct.factory.Mappers;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.mapper.PaymentMapper;
 import com.web.shinhan.repository.PaymentRepository;
 
@@ -72,7 +71,7 @@ public class PaymentService {
 	@Transactional
 	public List<PaymentDto> findAllByStatus() {
 		List<Payment> payments = paymentRepository.findAllByStatus();
-		List<PaymentDto> paymentDto = null;
+		List<PaymentDto> paymentDto = new ArrayList<>();
 		for (Payment payment : payments) {
 			PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
 			paymentDto.add(dto);
@@ -201,6 +200,27 @@ public class PaymentService {
 		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
 		Page<Payment> payments = paymentRepository.findAllByCustom(userId, pageable, startDateIn, endDateIn);
 		return payments.map(PaymentDto::of);
+	}
+
+	public void pay(int userId, int storeId, int bill) {
+		PaymentDto paymentDto = new PaymentDto();
+		paymentDto.setDate(LocalDateTime.now());
+		paymentDto.setUserId(userId);
+		paymentDto.setStoreId(storeId);
+		paymentDto.setTotal(bill);
+		paymentDto.setStatus(1);
+		paymentRepository.save(paymentDto.toEntity());
+	}
+
+	public int findLastPayment() {
+		Payment payment = paymentRepository.findTop1ByOrderByPaymentIdDesc();
+		return payment.getPaymentId();
+	}
+
+	public PaymentDto findPayment(int paymentId) {
+		Payment paymentEN = paymentRepository.findByPaymentId(paymentId);
+		PaymentDto dto = mapper.INSTANCE.paymentToDto(paymentEN);
+		return dto;
 	}
 
 }

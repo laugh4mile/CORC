@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Entity(name = "guguncode")
 public class Guguncode {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String gugunCode;
 
 	private String gugunName;
@@ -24,6 +23,11 @@ public class Guguncode {
 	public Guguncode(String gugunCode, String gugunName) {
 		this.gugunCode = gugunCode;
 		this.gugunName = gugunName;
+	}
+
+	@Override
+	public String toString() {
+		return "Guguncode [gugunCode=" + gugunCode + ", gugunName=" + gugunName + "]";
 	}
 
 }

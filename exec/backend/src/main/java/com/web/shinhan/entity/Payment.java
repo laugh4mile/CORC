@@ -1,6 +1,8 @@
 package com.web.shinhan.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 //import javax.persistence.GeneratedValue;
@@ -25,6 +27,11 @@ public class Payment {
 	private int total;
 	private int status;
 	private LocalDateTime date;
+
+	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
+//	(cascade = { CascadeType.ALL })
+//	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
+	private List<Paymentitem> paymentitem = new ArrayList<>();
 
 	@Builder
 	public Payment(int paymentId, int userId, int storeId, int total, int status, LocalDateTime date) {

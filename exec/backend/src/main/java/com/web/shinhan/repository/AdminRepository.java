@@ -24,10 +24,6 @@ public interface AdminRepository extends JpaRepository<Admin, Integer>, PagingAn
 
 	boolean existsByEmailAndPassword(String email, String password);
 
-//	@Query("insert into user(employee_num, email, user_name, password, department, position, contact, days, balance, card_limit, active, access_time) values (:employee_num, :email, :user_name, :password, :department, :position, :contact, :days, :balance, :card_limit, :active, :access_time)")
-//	UserDto regist(UserDto userDto);
-
-//	@Query("select id_user, employee_number, email, name, password, department, position, telephone, card_limit, status, access_time, admin from user where email = :email and password = :password")
-//	@Query("select u from user u where email = :email and password = :password")
+	Admin findByEmail(String email);
 
 }

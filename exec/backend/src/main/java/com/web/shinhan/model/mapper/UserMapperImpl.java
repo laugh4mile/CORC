@@ -23,6 +23,8 @@ public class UserMapperImpl implements UserMapper {
 		userDto.position(user.getPosition());
 		userDto.contact(user.getContact());
 		userDto.days(user.getDays());
+		userDto.sidoCode(user.getSidoCode());
+		userDto.gugunCode(user.getGugunCode());
 		userDto.balance(user.getBalance());
 		userDto.cardLimit(user.getCardLimit());
 		userDto.active(user.getActive());

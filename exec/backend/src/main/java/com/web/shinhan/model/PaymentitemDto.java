@@ -13,27 +13,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentitemDto {
 	private int paymentItemId;
-	private int productId;
 	private int paymentId;
+	private String productName;
+	private int price;
 	private int amount;
 
 	@Builder
-	public PaymentitemDto(int paymentItemId, int productId, int paymentId, int amount) {
+	public PaymentitemDto(int paymentItemId, int paymentId, String productName, int price, int amount) {
 		this.paymentItemId = paymentItemId;
-		this.productId = productId;
 		this.paymentId = paymentId;
+		this.productName = productName;
+		this.price = price;
 		this.amount = amount;
 	}
 
 	public Paymentitem toEntity() {
-		return Paymentitem.builder().paymentItemId(paymentItemId).productId(productId).paymentId(paymentId)
-				.amount(amount).build();
+		return Paymentitem.builder().paymentItemId(paymentItemId).paymentId(paymentId).productName(productName)
+				.price(price).amount(amount).build();
 	}
 
 	public static PaymentitemDto of(Paymentitem paymentitem) {
 		return PaymentitemDto.builder().paymentItemId(paymentitem.getPaymentItemId())
-				.productId(paymentitem.getProductId()).paymentId(paymentitem.getPaymentId())
-				.amount(paymentitem.getAmount()).build();
+				.productName(paymentitem.getProductName()).paymentId(paymentitem.getPaymentId())
+				.price(paymentitem.getPrice()).amount(paymentitem.getAmount()).build();
 	}
 
 }
