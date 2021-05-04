@@ -12,10 +12,15 @@ export const setDidTryAL = () => {
   return { type: SET_DID_TRY_AL };
 };
 
-export const authenticate = (userId, token, expiryTime) => {
+export const authenticate = (userId, email, token, expiryTime) => {
   return (dispatch) => {
     // dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+    dispatch({
+      type: AUTHENTICATE,
+      userId: userId,
+      email: email,
+      token: token,
+    });
   };
 };
 
@@ -56,32 +61,37 @@ export const login = (email, password) => {
       `${SERVER_URL}/login/store?email=${email}&password=${password}`
     );
 
-    if(response.data["message"]) {
-      let message = response.data["message"]
+    if (response.data["message"]) {
+      let message = response.data["message"];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
     }
-    // console.log(response.data)
-    let token = response.data["auth-token"]
-    let userid = response.data['user-email']
+
+    // console.log(response.data);
+    let userId = response.data["store-userid"];
+    let useremail = response.data["store-email"];
+    let token = response.data["auth-token"];
+
     dispatch(
       authenticate(
-        userid,
+        userId,
+        useremail,
         token,
         // parseInt(resData.expiresIn) * 1000
         3600 * 1000
       )
     );
+
     const expirationDate = new Date(
       // new Date().getTime() + parseInt(resData.expiresIn) * 1000
       new Date().getTime() + 360 * 1000
     );
-    // saveDataToStorage(token, userid, expirationDate);
+    // saveDataToStorage( userId, email, token, expirationDate);
   };
 };
 
 export const logout = () => {
   clearLogoutTimer();
-  AsyncStorage.removeItem("userData");
+  // AsyncStorage.removeItem("userData");
   return { type: LOGOUT };
 };
 
@@ -99,12 +109,13 @@ const setLogoutTimer = (expirationTime) => {
   };
 };
 
-const saveDataToStorage = (token, userId, expirationDate) => {
+const saveDataToStorage = (userId, email, token, expirationDate) => {
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({
-      token: token,
       userId: userId,
+      email: email,
+      token: token,
       expiryDate: expirationDate.toISOString(),
     })
   );
