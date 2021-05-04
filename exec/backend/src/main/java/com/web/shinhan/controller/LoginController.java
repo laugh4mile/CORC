@@ -44,7 +44,7 @@ public class LoginController {
 	@Autowired
 	private StoreService storeService;
 
-	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
+	@ApiOperation(value = "웹 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/web")
 	public ResponseEntity<Map<String, Object>> webLogin(@RequestParam String email, @RequestParam String password) {
 		logger.info("webLogin - 호출");
@@ -81,7 +81,7 @@ public class LoginController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
+	@ApiOperation(value = "사용자 앱 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/user")
 	public ResponseEntity<Map<String, Object>> userLogin(@RequestParam String email, @RequestParam String password) {
 		logger.info("userLogin - 호출");
@@ -121,7 +121,7 @@ public class LoginController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "가맹점 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
+	@ApiOperation(value = "가맹점 앱 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/store")
 	public ResponseEntity<Map<String, Object>> storeLogin(@RequestParam String email, @RequestParam String password) {
 		logger.info("storeLogin - 호출");

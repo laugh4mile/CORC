@@ -208,13 +208,13 @@ public class PaymentService {
 		paymentDto.setUserId(userId);
 		paymentDto.setStoreId(storeId);
 		paymentDto.setTotal(bill);
-		paymentDto.setPaymentId(1);
+		paymentDto.setStatus(1);
 		paymentRepository.save(paymentDto.toEntity());
 	}
 
 	public int findLastPayment() {
-		int paymentId = paymentRepository.findByOrderByPaymentIdDesc();
-		return paymentId;
+		Payment payment = paymentRepository.findTop1ByOrderByPaymentIdDesc();
+		return payment.getPaymentId();
 	}
 
 	public PaymentDto findPayment(int paymentId) {

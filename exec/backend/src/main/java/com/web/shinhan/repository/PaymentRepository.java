@@ -53,7 +53,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 //	int findByOrderByPaymentIdDesc();
 //	LastPayment();
 //	findByOrderBySeatNumberAsc
-
-	int findByOrderByPaymentIdDesc();
+//	Select f from Foo as f order by f.id desc
+//	@Query("select p.paymentId from payment p order by p.paymentId desc limit 1")
+	Payment findTop1ByOrderByPaymentIdDesc();
 
 }

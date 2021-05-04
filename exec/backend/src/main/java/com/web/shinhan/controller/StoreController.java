@@ -25,10 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.entity.Payment;
+import com.web.shinhan.model.GuguncodeDto;
 import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.PaymentitemDto;
+import com.web.shinhan.model.SidocodeDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
+import com.web.shinhan.model.service.AreaService;
 import com.web.shinhan.model.service.PaymentService;
 import com.web.shinhan.model.service.PaymentitemService;
 import com.web.shinhan.model.service.StoreService;
@@ -51,7 +54,10 @@ public class StoreController {
 	@Autowired
 	PaymentitemService paymentitemService;
 
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@Autowired
+	AreaService areaService;
+
+	@ApiOperation(value = "가맹점 판매 내역", notes = "가맹점의 판매 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment")
 	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable)
 			throws Exception {
@@ -67,6 +73,46 @@ public class StoreController {
 			resultMap.put("info", storeService.findStoreInfo(storeId));
 			page = paymentService.findStorePayment(storeId, pageable);
 			resultMap.put("paymentList", page);
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "시/도", notes = "시/도", response = HashMap.class)
+	@GetMapping("/sido")
+	public ResponseEntity<Map<String, Object>> sidoCode() throws Exception {
+		logger.info("sidoCode - 호출");
+
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		try {
+			List<SidocodeDto> sido = areaService.findSidoAll();
+			resultMap.put("sido", sido);
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "구/군", notes = "구/군", response = HashMap.class)
+	@GetMapping("/gugun")
+	public ResponseEntity<Map<String, Object>> gugunCode(@RequestParam String sidoCode) throws Exception {
+		logger.info("gugunCode - 호출");
+
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		try {
+			List<GuguncodeDto> gugun = areaService.findGugun(sidoCode);
+			resultMap.put("gugun", gugun);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -117,54 +163,7 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-//	@ApiOperation(value = "영수증 등록 시작", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = HashMap.class)
-//	@GetMapping("/payment/regist/start")
-//	public ResponseEntity<Map<String, Object>> registPaymentStart() {
-//		logger.info("registPaymentStart - 호출");
-//
-//		Map<String, Object> resultMap = new HashMap<>();
-//		HttpStatus status = HttpStatus.ACCEPTED;
-//
-//		try {
-//			int paymentId = paymentService.findLastPayment() + 1;
-//			resultMap.put("new paymentId", paymentId);
-//			status = HttpStatus.ACCEPTED;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			status = HttpStatus.INTERNAL_SERVER_ERROR;
-//		}
-//
-//		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-//	}
-//
-//	@ApiOperation(value = "영수증 등록", notes = "입력한 정보를 토대로 DB에 정보를 저장한다.", response = Boolean.class)
-//	@PostMapping("/paymentitem/regist")
-//	public ResponseEntity<Boolean> registPaymentitem(@RequestBody String[] productNames, @RequestBody int[] prices,
-//			@RequestBody int[] amounts, @RequestParam int total) {
-//		logger.info("registPayment - 호출");
-//
-////		Map<String, Object> resultMap = new HashMap<>();
-//		HttpStatus status = HttpStatus.ACCEPTED;
-//		boolean flag = false;
-//
-//		try {
-//			paymentService.registPayment(total);
-//			int paymentId = paymentService.findLastPayment() + 1;
-//			for (int i = 0; i < productNames.length; i++) {
-//				paymentitemService.registPaymentitem(productNames[i], prices[i], amounts[i], paymentId);
-//			}
-////			resultMap.put(key, value);
-//			flag = true;
-//			status = HttpStatus.ACCEPTED;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			status = HttpStatus.INTERNAL_SERVER_ERROR;
-//		}
-//
-//		return new ResponseEntity<Boolean>(flag, status);
-//	}
-
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "영수증", notes = "영수증을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/single")
 	public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId, @RequestParam int paymentId)
 			throws Exception {
