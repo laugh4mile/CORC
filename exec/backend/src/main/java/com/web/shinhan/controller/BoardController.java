@@ -1,12 +1,8 @@
 package com.web.shinhan.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.StoreDto;
-import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.PaymentService;
 import com.web.shinhan.model.service.StoreService;
 import com.web.shinhan.model.service.UserService;
@@ -52,7 +43,8 @@ public class BoardController {
 	@Autowired
 	PaymentService paymentService;
 
-	@ApiOperation(value = "사용된 금액", notes = "", response = HashMap.class)
+	@ApiOperation(value = "사용된 금액", notes = "assignedTotal: 배정된 총액\r\n" + "notConfirmed: 정산되어야 하는 금액\r\n"
+			+ "used: 사용된 금액", response = HashMap.class)
 	@GetMapping("/expenses")
 	public ResponseEntity<Map<String, Object>> expenses() {
 		logger.info("expenses - 호출");
@@ -96,7 +88,7 @@ public class BoardController {
 		return new ResponseEntity<Map<Integer, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "통계", notes = "모든 결제 내역을 반환한다.", response = Boolean.class)
+	@ApiOperation(value = "통계", notes = "통계에 쓰일 모든 결제 내역을 반환한다.", response = Boolean.class)
 	@GetMapping("/expenses/statistics")
 	public ResponseEntity<Map<String, Object>> expenseForStatistics() {
 		logger.info("expenseForStatistics - 호출 ");

@@ -1,5 +1,7 @@
 package com.web.shinhan.controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/custom")
 	public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
 			@RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
@@ -103,7 +105,7 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "영수증", notes = "영수증을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/single")
 	public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId, @RequestParam int paymentId)
 			throws Exception {
@@ -126,37 +128,51 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = Boolean.class)
+	@ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = HashMap.class)
 	@PostMapping("/pay")
-	public ResponseEntity<Boolean> pay(@RequestParam String storeGugunCode, @RequestParam String userGugunCode,
-			@RequestParam int bill, @RequestParam int userId, @RequestParam int storeId,
-			@RequestBody List<PaymentitemDto> paymentitems) throws Exception {
+	public ResponseEntity<Map<String, Object>> pay(@RequestParam String storeGugunCode,
+			@RequestParam String userGugunCode, @RequestParam int total, @RequestParam int userId,
+			@RequestParam int storeId, @RequestBody List<PaymentitemDto> paymentitems) throws Exception {
 		logger.info("pay - 호출");
 
+		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
 
 		try {
 			System.out.println(storeId + storeGugunCode);
-			if (storeGugunCode.equals(userGugunCode)) {
-				paymentService.pay(userId, storeId, bill);
-				int paymentId = paymentService.findLastPayment();
-				for (int i = 0; i < paymentitems.size(); i++) {
-					paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
-							paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
+			UserDto user = userService.findUserInfo(userId);
+			String userDays = user.getDays();
+			LocalDateTime now = LocalDateTime.now();
+			int nowDay = now.getDayOfWeek().getValue();
+			if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
+				if (storeGugunCode.equals(userGugunCode)) {
+					if (!userService.pay(userId, total)) {
+						status = HttpStatus.UNAUTHORIZED;
+						resultMap.put("message", "잔고 부족");
+						return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+					} else {
+						paymentService.pay(userId, storeId, total);
+						int paymentId = paymentService.findLastPayment();
+						for (int i = 0; i < paymentitems.size(); i++) {
+							paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
+									paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
+						}
+						resultMap.put("message", "결제 완료");
+						status = HttpStatus.ACCEPTED;
+					}
+				} else {
+					resultMap.put("message", "사용 불가 지역");
+					return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
 				}
-				userService.pay(userId, bill);
-				flag = true;
-				status = HttpStatus.ACCEPTED;
-//				HttpStatus.
 			} else {
-				return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
+				resultMap.put("message", "사용 불가 요일");
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
 			}
 		} catch (RuntimeException e) {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<Boolean>(flag, status);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
 }
