@@ -10,7 +10,7 @@ const options = {
             description: "Chaincode 통신 지원 RestAPI",
         },
         servers: [{
-            url: "http://localhost:8080",
+            url: "https://corc.tk/chain-api",
         }, ],
     },
     apis: ["./route/index.js"],
