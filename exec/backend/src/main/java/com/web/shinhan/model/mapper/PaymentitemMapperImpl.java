@@ -15,8 +15,9 @@ public class PaymentitemMapperImpl implements PaymentitemMapper {
 		PaymentitemDtoBuilder paymentitemDto = PaymentitemDto.builder();
 
 		paymentitemDto.paymentItemId(paymentitem.getPaymentItemId());
+		paymentitemDto.productName(paymentitem.getProductName());
 		paymentitemDto.paymentId(paymentitem.getPaymentId());
-		paymentitemDto.productId(paymentitem.getProductId());
+		paymentitemDto.price(paymentitem.getPrice());
 		paymentitemDto.amount(paymentitem.getAmount());
 
 		return paymentitemDto.build();
