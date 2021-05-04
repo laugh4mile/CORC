@@ -1,37 +1,3 @@
 * {
-}
-
-.sign-in {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  min-height: 100vh;
-  background-color: #f9fbff;
-
-  .logo {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    margin-top: 7rem;
-    margin-bottom: 1.5rem;
-
-    .title {
-      margin: 0 auto;
-      width: fit-content;
-      background: -webkit-linear-gradient(top left, #32499a, #7986ff, #d3deff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: 3.75rem;
-    }
-    .subtitle {
-      color: #32499a;
-      letter-spacing: 0.1em;
-      font-size: 1.25rem;
-    }
-  }
-
-  form {
-    width: 18vw;
-    margin: 0 1rem;
-  }
+  width: 100%;
 }
