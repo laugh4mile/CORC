@@ -70,7 +70,7 @@ public class LoginController {
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
-				status = HttpStatus.ACCEPTED;
+				status = HttpStatus.UNAUTHORIZED;
 			}
 		} catch (Exception e) {
 			logger.error("로그인 실패 : {}", e);
@@ -110,7 +110,7 @@ public class LoginController {
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
-				status = HttpStatus.ACCEPTED;
+				status = HttpStatus.UNAUTHORIZED;
 			}
 		} catch (Exception e) {
 			logger.error("로그인 실패 : {}", e);
@@ -145,8 +145,8 @@ public class LoginController {
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
 				resultMap.put("auth-token", token);
 				resultMap.put("store-email", email);
-				resultMap.put("store-userid", store.getStoreId());
-				status = HttpStatus.ACCEPTED;
+				resultMap.put("store-storeid", store.getStoreId());
+				status = HttpStatus.UNAUTHORIZED;
 			} else {
 				resultMap.put("message", "로그인 실패");
 				status = HttpStatus.ACCEPTED;

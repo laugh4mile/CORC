@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Entity(name = "guguncode")
 public class Guguncode {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String gugunCode;
 
 	private String gugunName;

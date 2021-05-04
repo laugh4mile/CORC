@@ -1,10 +1,8 @@
 package com.web.shinhan.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.model.PaymentDto;
+import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.PaymentService;
@@ -127,19 +126,32 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
+	@ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = Boolean.class)
 	@PostMapping("/pay")
-	public ResponseEntity<Boolean> pay(@RequestParam int bill, @RequestParam int userId, @RequestParam int storeId) throws Exception {
+	public ResponseEntity<Boolean> pay(@RequestParam String storeGugunCode, @RequestParam String userGugunCode,
+			@RequestParam int bill, @RequestParam int userId, @RequestParam int storeId,
+			@RequestBody List<PaymentitemDto> paymentitems) throws Exception {
 		logger.info("pay - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
 		boolean flag = false;
 
 		try {
-			paymentService.pay(userId, storeId, bill);
-			userService.pay(userId, bill);
-			flag = true;
-			status = HttpStatus.ACCEPTED;
+			System.out.println(storeId + storeGugunCode);
+			if (storeGugunCode.equals(userGugunCode)) {
+				paymentService.pay(userId, storeId, bill);
+				int paymentId = paymentService.findLastPayment();
+				for (int i = 0; i < paymentitems.size(); i++) {
+					paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
+							paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
+				}
+				userService.pay(userId, bill);
+				flag = true;
+				status = HttpStatus.ACCEPTED;
+//				HttpStatus.
+			} else {
+				return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
+			}
 		} catch (RuntimeException e) {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

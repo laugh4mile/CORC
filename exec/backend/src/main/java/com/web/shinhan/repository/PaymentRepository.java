@@ -49,4 +49,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 	@Query("select p from payment p where userId = :userId and date between :startDate and :endDate")
 	Page<Payment> findAllByCustom(int userId, Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
 
+//	@Query("select paymentId from payment order by paymentId desc limit 1")
+//	int findByOrderByPaymentIdDesc();
+//	LastPayment();
+//	findByOrderBySeatNumberAsc
+
+	int findByOrderByPaymentIdDesc();
+
 }

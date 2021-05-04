@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Entity(name = "sidocode")
 public class Sidocode {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String sidoCode;
 
 	private String sidoName;
