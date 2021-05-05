@@ -1,6 +1,5 @@
 package com.web.shinhan.model.service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.mapper.PaymentMapper;
 import com.web.shinhan.repository.PaymentRepository;
 
@@ -210,7 +208,19 @@ public class PaymentService {
 		paymentDto.setUserId(userId);
 		paymentDto.setStoreId(storeId);
 		paymentDto.setTotal(bill);
+		paymentDto.setStatus(1);
 		paymentRepository.save(paymentDto.toEntity());
+	}
+
+	public int findLastPayment() {
+		Payment payment = paymentRepository.findTop1ByOrderByPaymentIdDesc();
+		return payment.getPaymentId();
+	}
+
+	public PaymentDto findPayment(int paymentId) {
+		Payment paymentEN = paymentRepository.findByPaymentId(paymentId);
+		PaymentDto dto = mapper.INSTANCE.paymentToDto(paymentEN);
+		return dto;
 	}
 
 }

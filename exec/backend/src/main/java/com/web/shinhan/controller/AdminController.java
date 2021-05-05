@@ -297,7 +297,7 @@ public class AdminController {
 	@ApiOperation(value = "결제 내역", notes = "모든 결제 내역을 반환한다.", response = HashMap.class)
 	@GetMapping("/payment")
 	public ResponseEntity<Map<String, Object>> findAllPayment(Pageable pageable) {
-		logger.info("findPayment - 호출, ");
+		logger.info("findAllPayment - 호출 ");
 
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.OK;
@@ -336,7 +336,7 @@ public class AdminController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<Boolean>(flag, HttpStatus.OK);
+		return new ResponseEntity<Boolean>(flag, status);
 	}
 
 	@ApiOperation(value = "가맹점 목록 조회", notes = "가맹점들의 정보를 반환한다.", response = HashMap.class)
@@ -363,8 +363,7 @@ public class AdminController {
 
 	@ApiOperation(value = "가맹점 정보 조회", notes = "가맹점의 정보를 가지고 온다.", response = HashMap.class)
 	@GetMapping("/store/info")
-	public ResponseEntity<Map<String, Object>> findStoreInfo(@RequestParam int storeId, HttpServletRequest req)
-			throws Exception {
+	public ResponseEntity<Map<String, Object>> findStoreInfo(@RequestParam int storeId) throws Exception {
 		logger.info("findStoreInfo - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -384,8 +383,8 @@ public class AdminController {
 
 	@ApiOperation(value = "가맹점 결제 내역", notes = "가맹점의 결제 내역을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/store/payment")
-	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable,
-			HttpServletRequest req) throws Exception {
+	public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId, Pageable pageable)
+			throws Exception {
 		logger.info("findStorePayment - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
