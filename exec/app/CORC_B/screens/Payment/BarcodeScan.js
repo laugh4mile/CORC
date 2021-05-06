@@ -34,18 +34,18 @@ export default function BarcodeScan(props) {
       style={{
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'flex-end',
+        // justifyContent: 'flex-end',
       }}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={[StyleSheet.absoluteFillObject, styles.container]}>
+        style={[styles.container, {minWidth: '100%'}]}>
         <Text style={styles.description}>Scan your QR code</Text>
-        <Image
+        {/* <Image
           style={styles.qr}
           source={{
             uri: 'https://facebook.github.io/react-native/img/tiny_logo.png',
           }}
-        />
+        /> */}
         <Text onPress={() => alert("Navigate back from here")} style={styles.cancel}>
           Cancel
         </Text>

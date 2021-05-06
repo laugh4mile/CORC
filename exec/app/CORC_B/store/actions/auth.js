@@ -67,7 +67,7 @@ export const login = (email, password) => {
     }
 
     // console.log(response.data);
-    let userId = response.data["store-userid"];
+    let userId = response.data["store-storeid"];
     let useremail = response.data["store-email"];
     let token = response.data["auth-token"];
 
