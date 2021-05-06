@@ -54,8 +54,9 @@ public class UserService {
 	public void registUser(UserDto userDto) {
 		String encodePassword = passwordEncoder.encode(userDto.getPassword());
 		userDto.setPassword(encodePassword);
+		userDto.setBalance(userDto.getCardLimit());
+		userDto.setActive(1);
 		userRepository.save(userDto.toEntity());
-		int userId = userRepository.findUserIdByEmail(userDto.getEmail());
 	}
 
 	public boolean emailCheck(String email) {
