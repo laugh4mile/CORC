@@ -2,8 +2,7 @@
 
 @font-face {
   font-family: "BMDOHYEON";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff")
-    format("woff");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -34,4 +33,19 @@
 body {
   font-family: "Noto Sans KR", sans-serif;
   margin: 0;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  color: #7986FF;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 700;
+  padding: 5rem;
+  padding-bottom: 3rem;
 }

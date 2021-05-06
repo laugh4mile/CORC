@@ -2,8 +2,8 @@ import React from "react";
 
 import classes from "./Button.module.css";
 
-const Button = ({ children, ...otherProps }) => (
-  <button className={classes.button} {...otherProps}>
+const Button = ({ children, sub }) => (
+  <button className={`${classes.button} ${sub ? classes.sub : " "}`}>
     {children}
   </button>
 );

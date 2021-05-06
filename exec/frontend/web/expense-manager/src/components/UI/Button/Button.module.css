@@ -21,3 +21,12 @@
 .button:hover {
     background-color: #32499a;
 }
+
+.sub {
+    color: #7986FF;
+    background-color: #E8F1FF;
+}
+
+.sub:hover {
+    background-color: #D3DEFF;
+}

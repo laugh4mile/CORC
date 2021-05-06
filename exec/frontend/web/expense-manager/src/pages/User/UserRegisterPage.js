@@ -1,8 +1,9 @@
-import React from "react";
+import RegisterForm from "../../components/User/RegisterForm";
 
 const UserRegisterPage = () => (
-  <div>
-    <span>사용자 등록</span>
+  <div className="page">
+    <span className="title">사용자 등록</span>
+    <RegisterForm />
   </div>
 );
 

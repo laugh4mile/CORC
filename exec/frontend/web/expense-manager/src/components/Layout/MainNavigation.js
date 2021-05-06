@@ -25,6 +25,7 @@ const MainNavigation = () => {
 
   return (
     <header className={classes.header}>
+      <span className={classes["header-title"]}>코르크</span>
       <nav className={classes.nav}>
         <NavLink to="/dashboard" activeClassName={classes.active}>
           <DashboardIcon className={classes.icon} />
@@ -41,7 +42,7 @@ const MainNavigation = () => {
           <UserListIcon className={classes.icon} />
           <span>사용자 목록</span>
         </NavLink>
-        <NavLink to="/user/paymentdetails" activeClassName={classes.active}>
+        <NavLink to="/user/payment" activeClassName={classes.active}>
           <UserPaymentDetailsIcon className={classes.icon} />
           <span>결제내역</span>
         </NavLink>
@@ -56,7 +57,7 @@ const MainNavigation = () => {
           <StoreRequestedIcon className={classes.icon} />
           <span>가맹점 신청 목록</span>
         </NavLink>
-        <NavLink to="/store/salesdetails" activeClassName={classes.active}>
+        <NavLink to="/store/sales" activeClassName={classes.active}>
           <StoreSalesDetailsIcon className={classes.icon} />
           <span>판매 내역</span>
         </NavLink>
@@ -74,7 +75,7 @@ const MainNavigation = () => {
           <SettingsIcon className={classes.icon} />
           <span>설정</span>
         </NavLink>
-        <div onClick={logoutHandler}>
+        <div className={classes["nav-item"]} onClick={logoutHandler}>
           <SignOutIcon className={classes.icon} />
           <span>로그아웃</span>
         </div>

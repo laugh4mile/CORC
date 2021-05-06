@@ -9,6 +9,15 @@
   background-color: white;
 }
 
+.header-title {
+  margin: 1rem auto 0;
+  width: fit-content;
+  background: -webkit-linear-gradient(top left, #32499a, #7986ff, #d3deff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.75rem;
+  font-family: "BMDOHYEON";
+}
 
 .nav {
   display: flex;
@@ -25,7 +34,8 @@
   margin-left: 4rem;
 }
 
-.nav a {
+.nav a,
+.nav-item {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -37,8 +47,10 @@
 
 .nav .icon {
   width: 40%;
+  cursor: pointer;
 }
 
+.nav-item:hover,
 .nav a:hover,
 .nav a:active,
 .nav a.active {
@@ -46,9 +58,14 @@
   color: #7986ff;
 }
 
-.nav a:hover .icon,
-.nav a:active .icon,
-.nav a.active .icon {
+.nav a:hover path {
+  cursor: pointer;
+}
+
+.nav-item:hover .icon path,
+.nav a:hover .icon path,
+.nav a:active .icon path,
+.nav a.active .icon path {
   fill: #7986ff;
 }
 
@@ -56,5 +73,5 @@
 .divider {
   border-bottom: 2px solid #a5a5a8;
   width: 75%;
-  margin: 2rem auto 0 auto;
+  margin: 1rem auto -1rem auto;
 }

@@ -9,10 +9,10 @@ const Layout = (props) => {
 
   const isLoggedIn = authCtx.isLoggedIn;
   return (
-    <Fragment>
-      {isLoggedIn && <MainNavigation />}
+    <div className={classes.container}>
+      {!isLoggedIn && <MainNavigation />}
       <main className={classes.main}>{props.children}</main>
-    </Fragment>
+    </div>
   );
 };
 
