@@ -1,5 +1,7 @@
 package com.web.shinhan.model.service;
 
+import java.time.LocalDateTime;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +48,8 @@ public class StoreService {
 	public void registStore(StoreDto storeDto) {
 		String encodePassword = passwordEncoder.encode(storeDto.getPassword());
 		storeDto.setPassword(encodePassword);
+		storeDto.setRequestDate(LocalDateTime.now());
+		storeDto.setAccepted(1);
 		storeRepository.save(storeDto.toEntity());
 	}
 
