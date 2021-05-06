@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Constants from 'expo-constants';
 
-export default function Home() {
+export default function Wallet() {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>

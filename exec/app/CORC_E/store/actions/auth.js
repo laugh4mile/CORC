@@ -62,7 +62,8 @@ export const login = (email, password) => {
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!!`);
     }
     let token = response.data['auth-token'];
-    let userid = response.data['user-email'];
+    let userid = response.data['user-userid'];
+    // let email = response.data['user-email'];
     dispatch(
       authenticate(
         userid,

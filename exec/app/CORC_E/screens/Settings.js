@@ -1,18 +1,26 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Constants from 'expo-constants';
+import Button from '../components/Button';
+import Colors from '../constants/Colors';
+import * as authActions from '../store/actions/auth';
 
-export default function Home() {
+export default function Settings() {
+  const dispatch = useDispatch();
   return (
-    // <View style={styles.container}>
-    //   <View style={styles.contents}>
-    //     <Text>여기가 환경설정이다</Text>
-    //   </View>
-    // </View>
     <View style={styles.container}>
       <View style={styles.center}>
         <View style={styles.behind}></View>
       </View>
+      <Button
+        title="Logout"
+        backgroundColor={Colors.cancel.backgroundColor}
+        fontColor={Colors.cancel.fontColor}
+        onPress={() => {
+          dispatch(authActions.logout());
+        }}
+      />
     </View>
   );
 }
@@ -23,15 +31,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
-  },
-  center: {
-    width: 200,
-    height: 200,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 15,
   },
 });
