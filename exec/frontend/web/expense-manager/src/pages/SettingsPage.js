@@ -1,8 +1,8 @@
 import React from "react";
 
 const SettingsPage = () => (
-  <div>
-    <span>설정</span>
+  <div className="page">
+    <span className="title">설정</span>
   </div>
 );
 

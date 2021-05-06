@@ -1,8 +1,8 @@
 import React from "react";
 
 const StoreListPage = () => (
-  <div>
-    <span>가맹점 목록</span>
+  <div className="page">
+    <span className="title">가맹점 목록</span>
   </div>
 );
 

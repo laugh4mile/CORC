@@ -1,8 +1,8 @@
 import React from "react";
 
 const PaymentPage = () => (
-  <div>
-    <span>결제 내역</span>
+  <div className="page">
+    <span className="title">결제 내역</span>
   </div>
 );
 
