@@ -1,0 +1,8 @@
+body {
+    display: flex;
+}
+
+.main {
+    background-color: #f9fbff;
+    width: 100%;
+}

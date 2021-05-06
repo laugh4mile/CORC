@@ -1,73 +1,75 @@
-import React from "react";
+import { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
+import AuthContext from "./store/auth-context";
 
-import { selectIsLoggedIn } from "./redux/user/user.selectors";
+import Layout from "./components/Layout/Layout";
 
-import Nav from "./components/nav/nav.component";
-import SignInPage from "./pages/sign-in/sign-in.component";
-import DashBoardPage from "./pages/dashboard/dashboard.component";
-import UserRegisterPage from "./pages/user-register/user-register.component";
-import UserListPage from "./pages/user-list/user-list.component";
-import UserPaymentDetailsPage from "./pages/user-paymentdetails/user-paymentdetails.component";
-import StoreListPage from "./pages/store-list/store-list.component";
-import StoreRequestedPage from "./pages/store-requested/store-requested.component";
-import StoreSalesDetailsPage from "./pages/store-salesdetails/store-salesdetails.component";
-import StatisticsPage from "./pages/statistics/statistics.component";
-import SettingsPage from "./pages/settings/settings.component";
+import AuthPage from "./pages/AuthPage";
+import DashBoardPage from "./pages/DashBoardPage";
+// User
+import UserRegisterPage from "./pages/User/UserRegisterPage";
+import UserListPage from "./pages/User/UserListPage";
+import PaymentPage from "./pages/User/PaymentPage";
+import PaymentDetailPage from "./pages/User/PaymentDetailPage";
+// Store
+import StoreListPage from "./pages/Store/StoreListPage";
+import RequestedStoresPage from "./pages/Store/RequestedStoresPage";
+import SalesPage from "./pages/Store/SalesPage";
+import SalesDetailPage from "./pages/Store/SalesDetailPage";
 
-import "./App.scss";
+import StatisticsPage from "./pages/StatisticsPage";
+import SettingsPage from "./pages/SettingsPage";
+
+import "./App.css";
 import "./index.css";
 
-class App extends React.Component {
-  componentDidMount() {}
+const App = () => {
+  const authCtx = useContext(AuthContext);
 
-  componentWillUnmount() {}
+  return (
+    <Layout>
+      <Switch>
+        <Route exact path="/">
+          {!authCtx.isLoggedIn && <AuthPage />}
+          {authCtx.isLoggedIn && <DashBoardPage />}
+        </Route>
+        <Route path="/dashboard" exact>
+          <DashBoardPage />
+        </Route>
+        <Route path="/user/register" exact>
+          <UserRegisterPage />
+        </Route>
+        <Route path="/user/list" exact>
+          <UserListPage />
+        </Route>
+        <Route exact path="/user/payment">
+          <PaymentPage />
+        </Route>
+        <Route path="/user/payment/:userId">
+          <PaymentDetailPage />
+        </Route>
+        <Route exact path="/store/list">
+          <StoreListPage />
+        </Route>
+        <Route exact path="/store/requested">
+          <RequestedStoresPage />
+        </Route>
+        <Route exact path="/store/sales">
+          <SalesPage />
+        </Route>
+        <Route exact path="/store/sales/:storeId">
+          <SalesDetailPage />
+        </Route>
+        <Route exact path="/statistics">
+          <StatisticsPage />
+        </Route>
+        <Route exact path="/settings" component={SettingsPage} />
 
-  render() {
-    console.log("this.props", this.props);
-    console.log(this.props.isLoggedIn);
-    return (
-      <div className="noto-sans-KR flex">
-        {this.props.isLoggedIn ? <Nav /> : ""}
-        <Switch>
-          <Route exact path="/dashboard" component={DashBoardPage} />
-          <Route exact path="/user/register" component={UserRegisterPage} />
-          <Route exact path="/user/list" component={UserListPage} />
-          <Route
-            exact
-            path="/user/paymentdetails"
-            component={UserPaymentDetailsPage}
-          />
-          <Route exact path="/store/list" component={StoreListPage} />
-          <Route exact path="/store/requested" component={StoreRequestedPage} />
-          <Route
-            exact
-            path="/store/salesdetails"
-            component={StoreSalesDetailsPage}
-          />
-          <Route exact path="/statistics" component={StatisticsPage} />
-          <Route exact path="/settings" component={SettingsPage} />
-          <Route
-            exact
-            path="/"
-            render={() =>
-              this.props.isLoggedIn ? (
-                <Redirect to="/dashboard" />
-              ) : (
-                <SignInPage />
-              )
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = createStructuredSelector({
-  isLoggedIn: selectIsLoggedIn,
-});
-
-export default connect(mapStateToProps)(App);
+        <Route path="*">
+          <Redirect to="/" />
+        </Route>
+      </Switch>
+    </Layout>
+  );
+};
+export default App;
