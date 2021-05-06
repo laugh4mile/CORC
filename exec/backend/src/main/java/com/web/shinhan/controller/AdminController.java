@@ -448,9 +448,9 @@ public class AdminController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "가맹점 정지", notes = "가맹점들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 상태 처리", notes = "가맹점들의 상태를 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@PutMapping("/store/status")
-	public ResponseEntity<Boolean> storeApplication(@RequestBody int[] storeIds, int storeStatus) {
+	public ResponseEntity<Boolean> storeApplication(@RequestBody int[] storeIds, @RequestParam int storeStatus) {
 		logger.info("allowStoreApplication - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;

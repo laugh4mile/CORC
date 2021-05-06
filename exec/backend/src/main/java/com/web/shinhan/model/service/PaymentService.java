@@ -71,8 +71,6 @@ public class PaymentService {
 	@Transactional
 	public List<PaymentDto> findAllByStatus() {
 		List<Payment> payments = paymentRepository.findAllByStatus();
-		System.out.println("pyament");
-		System.out.println(payments.toString());
 		List<PaymentDto> paymentDto = new ArrayList<>();
 		for (Payment payment : payments) {
 			PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
