@@ -15,6 +15,7 @@ export default function Home() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
+    console.log(JSON.parse(data));
     alert(`${data}`);
   };
 
@@ -30,7 +31,6 @@ export default function Home() {
       <BarCodeScanner
         type={BarCodeScanner.Constants.Type.back}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        // style={StyleSheet.absoluteFillObject}
         style={styles.barCode}
       >
         <View style={styles.topView}>
