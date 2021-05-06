@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Constants from 'expo-constants';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
+  const userId = useSelector((state) => state.auth.userId);
+  console.log('userId는??? : ', userId);
   return (
-    // console.log()
     <View style={styles.container}>
       <View style={styles.contents}>
         <Text>여기가 홈이다 </Text>

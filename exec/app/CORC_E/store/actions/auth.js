@@ -57,12 +57,10 @@ export const login = (email, password) => {
       `${SERVER_URL}/login/user?email=${email}&password=${password}`
     );
     console.log('response');
-    // console.log(response);
     if (response.data['message']) {
       let message = response.data['message'];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!!`);
     }
-    // console.log(response.data)
     let token = response.data['auth-token'];
     let userid = response.data['user-email'];
     dispatch(
@@ -78,12 +76,21 @@ export const login = (email, password) => {
       new Date().getTime() + 360 * 1000
     );
     saveDataToStorage(token, userid, expirationDate);
-    console.log('userData 는? ');
-    console.log('userData : ', await AsyncStorage.getItem('userData'));
+  };
+};
 
-    // console.log('userData 삭제');
-    // AsyncStorage.removeItem('userData');
-    // console.log('userData 삭제완료');
+export const autologin = (data) => {
+  return (dispatch) => {
+    let token = data['token'];
+    let userid = data['userId'];
+    dispatch(
+      authenticate(
+        userid,
+        token,
+        // parseInt(resData.expiresIn) * 1000
+        3600
+      )
+    );
   };
 };
 
@@ -108,7 +115,6 @@ const setLogoutTimer = (expirationTime) => {
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
-  console.log('saveDataToStorage 진입');
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({
@@ -118,4 +124,3 @@ const saveDataToStorage = (token, userId, expirationDate) => {
     })
   );
 };
-console.log('saveDataToStorage 탈출');

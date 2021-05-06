@@ -7,7 +7,7 @@ import Input from '../../components/Input';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 
-const logo = require('../../assets/icon.png');
+const logo = require('../../assets/CORC_E.png');
 
 const LoginScreen = (props) => {
   const [error, setError] = useState();
