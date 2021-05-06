@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.shinhan.model.GuguncodeDto;
+import com.web.shinhan.model.GugunDto;
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.SidocodeDto;
+import com.web.shinhan.model.SidoDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.AreaService;
@@ -128,7 +128,7 @@ public class AdminController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		// 회원 정보 조회
 		try {
-			List<SidocodeDto> sido = areaService.findSidoAll();
+			List<SidoDto> sido = areaService.findSidoAll();
 			resultMap.put("sido", sido);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -148,7 +148,7 @@ public class AdminController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		// 회원 정보 조회
 		try {
-			List<GuguncodeDto> gugun = areaService.findGugun(sidoCode);
+			List<GugunDto> gugun = areaService.findGugun(sidoCode);
 			resultMap.put("gugun", gugun);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {

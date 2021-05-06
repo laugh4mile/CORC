@@ -2,6 +2,9 @@ package com.web.shinhan.model;
 
 import java.time.LocalDateTime;
 
+import com.web.shinhan.entity.Category;
+import com.web.shinhan.entity.Gugun;
+import com.web.shinhan.entity.Sido;
 import com.web.shinhan.entity.Store;
 
 import lombok.Builder;
@@ -16,7 +19,7 @@ public class StoreDto {
 
 	private int storeId;
 	private String crNum;
-	private int categoryCode;
+	private String categoryCode;
 	private String email;
 	private String password;
 	private String storeName;
@@ -28,10 +31,14 @@ public class StoreDto {
 	private LocalDateTime requestDate;
 	private int accepted;
 
+	private Category category;
+	private Sido sido;
+	private Gugun gugun;
+	
 	@Builder
-	public StoreDto(int storeId, String crNum, int categoryCode, String email, String password, String storeName,
+	public StoreDto(int storeId, String crNum, String categoryCode, String email, String password, String storeName,
 			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
-			int accepted) {
+			int accepted, Category category, Sido sido, Gugun gugun) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -45,6 +52,9 @@ public class StoreDto {
 		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
+		this.category = category;
+		this.sido = sido;
+		this.gugun = gugun;
 	}
 	
 	public Store toEntity() {
@@ -62,6 +72,9 @@ public class StoreDto {
 				.gugunCode(gugunCode)
 				.requestDate(requestDate)
 				.accepted(accepted)
+				.category(category)
+				.sido(sido)
+				.gugun(gugun)
 				.build();
 	}
 
@@ -80,7 +93,12 @@ public class StoreDto {
 				.gugunCode(store.getGugunCode())
 				.requestDate(store.getRequestDate())
 				.accepted(store.getAccepted())
+				.category(store.getCategory())
+				.sido(store.getSido())
+				.gugun(store.getGugun())
 				.build();
 	}
+
+	
 
 }

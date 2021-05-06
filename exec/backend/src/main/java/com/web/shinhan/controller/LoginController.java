@@ -146,10 +146,10 @@ public class LoginController {
 				resultMap.put("auth-token", token);
 				resultMap.put("store-email", email);
 				resultMap.put("store-storeid", store.getStoreId());
-				status = HttpStatus.UNAUTHORIZED;
+				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
-				status = HttpStatus.ACCEPTED;
+				status = HttpStatus.UNAUTHORIZED;
 			}
 		} catch (Exception e) {
 			logger.error("로그인 실패 : {}", e);

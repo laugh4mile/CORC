@@ -10,13 +10,16 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.web.shinhan.entity.Sidocode;
+import com.web.shinhan.entity.Gugun;
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.UserDto;
 
 @Repository
-public interface SidocodeRepository extends JpaRepository<Sidocode, Integer>, PagingAndSortingRepository<Sidocode, Integer>,
-		QueryByExampleExecutor<Sidocode> {
+public interface GugunRepository extends JpaRepository<Gugun, Integer>,
+		PagingAndSortingRepository<Gugun, Integer>, QueryByExampleExecutor<Gugun> {
+
+	@Query("select g from guguncode g where SUBSTRING(g.gugunCode,1,2) = :sido")
+	List<Gugun> findAllBySidocode(String sido);
 
 }

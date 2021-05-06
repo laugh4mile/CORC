@@ -1,15 +1,12 @@
 package com.web.shinhan.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.*;
 //import javax.persistence.GeneratedValue;
 //import javax.persistence.GenerationType;
 //import javax.persistence.Id;
 //import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -36,8 +33,9 @@ public class Paymentitem {
 //	private Set<Product> product = new HashSet<>();
 //	= new ArrayList<>();
 
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "paymentId")
+	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
 	private Payment payment;
 
 	@Builder

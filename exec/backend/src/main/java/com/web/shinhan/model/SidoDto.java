@@ -1,6 +1,6 @@
 package com.web.shinhan.model;
 
-import com.web.shinhan.entity.Sidocode;
+import com.web.shinhan.entity.Sido;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,25 +10,25 @@ import lombok.NoArgsConstructor;
 @Getter
 @Data
 @NoArgsConstructor
-public class SidocodeDto {
+public class SidoDto {
 	private String sidoCode;
 	private String sidoName;
 
 	@Builder
-	public SidocodeDto(String sidoCode, String sidoName) {
+	public SidoDto(String sidoCode, String sidoName) {
 		this.sidoCode = sidoCode;
 		this.sidoName = sidoName;
 	}
 	
-	public Sidocode toEntity() {
-		return Sidocode.builder()
+	public Sido toEntity() {
+		return Sido.builder()
 				.sidoCode(sidoCode)
 				.sidoName(sidoName)
 				.build();
 	}
 
-	public static SidocodeDto of(Sidocode payment) {
-		return SidocodeDto.builder()
+	public static SidoDto of(Sido payment) {
+		return SidoDto.builder()
 				.sidoCode(payment.getSidoCode())
 				.sidoName(payment.getSidoName())
 				.build();
