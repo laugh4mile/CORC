@@ -29,6 +29,8 @@ public class UserMapperImpl implements UserMapper {
 		userDto.cardLimit(user.getCardLimit());
 		userDto.active(user.getActive());
 		userDto.accessTime(user.getAccessTime());
+		userDto.sido(user.getSido());
+		userDto.gugun(user.getGugun());
 
 		return userDto.build();
 	}

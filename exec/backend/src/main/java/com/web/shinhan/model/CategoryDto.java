@@ -1,9 +1,6 @@
 package com.web.shinhan.model;
 
-import java.time.LocalDateTime;
-
 import com.web.shinhan.entity.Category;
-import com.web.shinhan.entity.User;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,19 +11,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CategoryDto {
-	private int categoryCode;
+	private String categoryCode;
+	private String categoryClassification;
 	private String categoryName;
 
 	@Builder
-	public CategoryDto(int categoryCode, String categoryName) {
-		super();
+	public CategoryDto(String categoryCode, String categoryClassification, String categoryName) {
 		this.categoryCode = categoryCode;
+		this.categoryClassification = categoryClassification;
 		this.categoryName = categoryName;
 	}
 	
 	public Category toEntity() {
 		return Category.builder()
 				.categoryCode(categoryCode)
+				.categoryClassification(categoryClassification)
 				.categoryName(categoryName)
 				.build();
 	}
@@ -34,12 +33,9 @@ public class CategoryDto {
 	public static CategoryDto of(Category category) {
 		return CategoryDto.builder()
 				.categoryCode(category.getCategoryCode())
+				.categoryClassification(category.getCategoryClassification())
 				.categoryName(category.getCategoryName())
 				.build();
 	}
-
-	
-
-	
 
 }

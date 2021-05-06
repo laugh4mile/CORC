@@ -103,7 +103,7 @@ public class StoreService {
 		String encodedPassword = storeRepository.findPwd(storeDto.getEmail());
 		Store dbStore = storeRepository.findByEmail(storeDto.getEmail());
 		if (passwordEncoder.matches(storeDto.getPassword(), encodedPassword)
-				&& storeDto.getEmail().equals(dbStore.getEmail())) {
+				&& storeDto.getEmail().equals(dbStore.getEmail()) && dbStore.getAccepted() == 2) {
 			storeDto.setPassword(encodedPassword);
 			boolean result = storeRepository.existsByEmailAndPassword(storeDto.getEmail(), storeDto.getPassword());
 			return result;

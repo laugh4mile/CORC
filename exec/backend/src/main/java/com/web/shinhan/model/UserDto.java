@@ -2,8 +2,11 @@ package com.web.shinhan.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import com.web.shinhan.entity.Gugun;
+import com.web.shinhan.entity.Sido;
 import com.web.shinhan.entity.User;
 
 import lombok.Builder;
@@ -32,10 +35,13 @@ public class UserDto {
 	private LocalDateTime accessTime;
 	private LocalDateTime limitTime;
 
+	private Sido sido;
+	private Gugun gugun;
+
 	@Builder
 	public UserDto(int userId, int employeeNum, String email, String userName, String password, String department,
 			String position, String contact, String days, String sidoCode, String gugunCode, int balance, int cardLimit,
-			int active, LocalDateTime accessTime, LocalDateTime limitTime) {
+			int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
 		this.userId = userId;
 		this.employeeNum = employeeNum;
 		this.email = email;
@@ -52,13 +58,15 @@ public class UserDto {
 		this.active = active;
 		this.accessTime = accessTime;
 		this.limitTime = limitTime;
+		this.sido = sido;
+		this.gugun = gugun;
 	}
 
 	public User toEntity() {
 		return User.builder().userId(userId).employeeNum(employeeNum).email(email).userName(userName).password(password)
 				.department(department).position(position).contact(contact).days(days).sidoCode(sidoCode)
 				.gugunCode(gugunCode).balance(balance).cardLimit(cardLimit).active(active).accessTime(accessTime)
-				.limitTime(limitTime).build();
+				.limitTime(limitTime).sido(sido).gugun(gugun).build();
 	}
 
 	public static UserDto of(User user) {
@@ -67,7 +75,7 @@ public class UserDto {
 				.position(user.getPosition()).contact(user.getContact()).days(user.getDays())
 				.sidoCode(user.getSidoCode()).gugunCode(user.getGugunCode()).balance(user.getBalance())
 				.cardLimit(user.getCardLimit()).active(user.getActive()).accessTime(user.getAccessTime())
-				.limitTime(user.getLimitTime()).build();
+				.limitTime(user.getLimitTime()).sido(user.getSido()).gugun(user.getGugun()).build();
 	}
 
 }

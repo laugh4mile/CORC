@@ -1,12 +1,16 @@
 package com.web.shinhan.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 //import javax.persistence.GeneratedValue;
 //import javax.persistence.GenerationType;
 //import javax.persistence.Id;
 //import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +25,7 @@ public class Store {
 	private int storeId;
 
 	private String crNum;
-	private int categoryCode;
+	private String categoryCode;
 	private String email;
 	private String password;
 	private String storeName;
@@ -33,10 +37,31 @@ public class Store {
 	private LocalDateTime requestDate;
 	private int accepted;
 
+	@OneToOne
+	@JoinColumn(name = "categoryCode", insertable = false, updatable = false)
+	private Category category;
+
+	@OneToOne
+	@JoinColumn(name = "sidoCode", insertable = false, updatable = false)
+	private Sido sido;
+
+	@OneToOne
+	@JoinColumn(name = "gugunCode", insertable = false, updatable = false)
+	private Gugun gugun;
+//	(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+//	(cascade = { CascadeType.ALL })
+//	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
+//	= new ArrayList<>();
+
+	@JsonBackReference
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "storeId", insertable = false, updatable = false)
+	private Payment payment;
+
 	@Builder
-	public Store(int storeId, String crNum, int categoryCode, String email, String password, String storeName,
+	public Store(int storeId, String crNum, String categoryCode, String email, String password, String storeName,
 			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
-			int accepted) {
+			int accepted, Category category, Sido sido, Gugun gugun, Payment payment) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -50,14 +75,14 @@ public class Store {
 		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
+		this.category = category;
+		this.sido = sido;
+		this.gugun = gugun;
+		this.payment = payment;
 	}
 
-	@Override
-	public String toString() {
-		return "Store [storeId=" + storeId + ", crNum=" + crNum + ", categoryCode=" + categoryCode + ", email=" + email
-				+ ", password=" + password + ", storeName=" + storeName + ", contact=" + contact + ", bankName="
-				+ bankName + ", account=" + account + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode
-				+ ", requestDate=" + requestDate + ", accepted=" + accepted + "]";
-	}
+//	@OneToOne
+////	@JoinColumn(name = "paymentId")
+//	private Payment payment;
 
 }

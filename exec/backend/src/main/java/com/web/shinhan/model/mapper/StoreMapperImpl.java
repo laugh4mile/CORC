@@ -27,6 +27,7 @@ public class StoreMapperImpl implements StoreMapper {
 		storeDto.gugunCode(store.getGugunCode());
 		storeDto.requestDate(store.getRequestDate());
 		storeDto.accepted(store.getAccepted());
+		storeDto.category(store.getCategory());
 
 		return storeDto.build();
 	}

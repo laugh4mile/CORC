@@ -1,11 +1,8 @@
 package com.web.shinhan.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.shinhan.entity.Payment;
-import com.web.shinhan.model.GuguncodeDto;
+import com.web.shinhan.model.GugunDto;
 import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.PaymentitemDto;
-import com.web.shinhan.model.SidocodeDto;
+import com.web.shinhan.model.SidoDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.AreaService;
@@ -91,7 +88,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		try {
-			List<SidocodeDto> sido = areaService.findSidoAll();
+			List<SidoDto> sido = areaService.findSidoAll();
 			resultMap.put("sido", sido);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -111,7 +108,7 @@ public class StoreController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		try {
-			List<GuguncodeDto> gugun = areaService.findGugun(sidoCode);
+			List<GugunDto> gugun = areaService.findGugun(sidoCode);
 			resultMap.put("gugun", gugun);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {

@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.shinhan.model.GuguncodeDto;
+import com.web.shinhan.model.GugunDto;
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.SidocodeDto;
+import com.web.shinhan.model.SidoDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.AreaService;
@@ -128,7 +128,7 @@ public class AdminController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		// 회원 정보 조회
 		try {
-			List<SidocodeDto> sido = areaService.findSidoAll();
+			List<SidoDto> sido = areaService.findSidoAll();
 			resultMap.put("sido", sido);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -148,7 +148,7 @@ public class AdminController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		// 회원 정보 조회
 		try {
-			List<GuguncodeDto> gugun = areaService.findGugun(sidoCode);
+			List<GugunDto> gugun = areaService.findGugun(sidoCode);
 			resultMap.put("gugun", gugun);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -448,9 +448,9 @@ public class AdminController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "가맹점 정지", notes = "가맹점들을 정지 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
+	@ApiOperation(value = "가맹점 상태 처리", notes = "가맹점들의 상태를 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@PutMapping("/store/status")
-	public ResponseEntity<Boolean> storeApplication(@RequestBody int[] storeIds, int storeStatus) {
+	public ResponseEntity<Boolean> storeApplication(@RequestBody int[] storeIds, @RequestParam int storeStatus) {
 		logger.info("allowStoreApplication - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;

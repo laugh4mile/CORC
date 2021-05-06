@@ -16,24 +16,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.shinhan.entity.Guguncode;
+import com.web.shinhan.entity.Gugun;
 import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.Paymentitem;
-import com.web.shinhan.entity.Sidocode;
+import com.web.shinhan.entity.Sido;
 import com.web.shinhan.entity.User;
-import com.web.shinhan.model.GuguncodeDto;
+import com.web.shinhan.model.GugunDto;
 import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.PaymentitemDto;
-import com.web.shinhan.model.SidocodeDto;
+import com.web.shinhan.model.SidoDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
-import com.web.shinhan.model.mapper.GuguncodeMapper;
+import com.web.shinhan.model.mapper.GugunMapper;
 import com.web.shinhan.model.mapper.PaymentitemMapper;
-import com.web.shinhan.model.mapper.SidocodeMapper;
-import com.web.shinhan.repository.GuguncodeRepository;
+import com.web.shinhan.model.mapper.SidoMapper;
+import com.web.shinhan.repository.GugunRepository;
 import com.web.shinhan.repository.PaymentRepository;
 import com.web.shinhan.repository.PaymentitemRepository;
-import com.web.shinhan.repository.SidocodeRepository;
+import com.web.shinhan.repository.SidoRepository;
 
 @Service
 public class AreaService {
@@ -42,33 +42,33 @@ public class AreaService {
 	PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private SidocodeRepository sidocodeRepository;
+	private SidoRepository sidocodeRepository;
 
 	@Autowired
-	private GuguncodeRepository guguncodeRepository;
+	private GugunRepository guguncodeRepository;
 
-	private final SidocodeMapper sidoMapper = Mappers.getMapper(SidocodeMapper.class);
+	private final SidoMapper sidoMapper = Mappers.getMapper(SidoMapper.class);
 
-	private final GuguncodeMapper gugunMapper = Mappers.getMapper(GuguncodeMapper.class);
+	private final GugunMapper gugunMapper = Mappers.getMapper(GugunMapper.class);
 
 	@Transactional
-	public List<SidocodeDto> findSidoAll() {
-		List<Sidocode> sidoEN = sidocodeRepository.findAll();
-		List<SidocodeDto> sidoDto = new ArrayList<>();
-		for (Sidocode sido : sidoEN) {
+	public List<SidoDto> findSidoAll() {
+		List<Sido> sidoEN = sidocodeRepository.findAll();
+		List<SidoDto> sidoDto = new ArrayList<>();
+		for (Sido sido : sidoEN) {
 			sidoDto.add(sidoMapper.INSTANCE.sidocodeToDto(sido));
 		}
 		return sidoDto;
 	}
 
 	@Transactional
-	public List<GuguncodeDto> findGugun(String sidoCode) {
+	public List<GugunDto> findGugun(String sidoCode) {
 		sidoCode = sidoCode.substring(0, 2);
 		System.out.println(sidoCode);
-		List<Guguncode> gugunEN = guguncodeRepository.findAllBySidocode(sidoCode);
+		List<Gugun> gugunEN = guguncodeRepository.findAllBySidocode(sidoCode);
 		System.out.println(gugunEN.toString());
-		List<GuguncodeDto> gugunDto = new ArrayList<>();
-		for (Guguncode gugun : gugunEN) {
+		List<GugunDto> gugunDto = new ArrayList<>();
+		for (Gugun gugun : gugunEN) {
 			gugunDto.add(gugunMapper.INSTANCE.guguncodeToDto(gugun));
 		}
 		return gugunDto;

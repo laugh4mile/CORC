@@ -8,6 +8,8 @@ import javax.persistence.*;
 //import javax.persistence.Id;
 //import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,11 +38,18 @@ public class User {
 	private LocalDateTime accessTime;
 	private LocalDateTime limitTime;
 
+	@OneToOne
+	@JoinColumn(name = "sidoCode", insertable = false, updatable = false)
+	private Sido sido;
+
+	@OneToOne
+	@JoinColumn(name = "gugunCode", insertable = false, updatable = false)
+	private Gugun gugun;
+
 	@Builder
 	public User(int userId, int employeeNum, String email, String userName, String password, String department,
 			String position, String contact, String days, String sidoCode, String gugunCode, int balance, int cardLimit,
-			int active, LocalDateTime accessTime, LocalDateTime limitTime) {
-		super();
+			int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
 		this.userId = userId;
 		this.employeeNum = employeeNum;
 		this.email = email;
@@ -57,14 +66,8 @@ public class User {
 		this.active = active;
 		this.accessTime = accessTime;
 		this.limitTime = limitTime;
-	}
-
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", employeeNum=" + employeeNum + ", email=" + email + ", userName=" + userName
-				+ ", password=" + password + ", department=" + department + ", position=" + position + ", contact="
-				+ contact + ", days=" + days + ", balance=" + balance + ", cardLimit=" + cardLimit + ", active="
-				+ active + ", accessTime=" + accessTime + "]";
+		this.sido = sido;
+		this.gugun = gugun;
 	}
 
 }
