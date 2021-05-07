@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 
-const Input = (props) => {
-  const placeholder = props.placeholder ? props.placeholder : null;
+const Input = ({placeholder, type, returnKeyType, keyboardType, onChangeText}) => {
   const [secure, setSecure] = useState(true);
-  const type = props.type;
   const [focus, setFocus] = useState(false);
-  const returnKeyType = props.returnKeyType ? props.returnKeyType : "done"
-  const keyboardType = props.keyboardType ? props.keyboardType : "default"
+  const placeholderV = placeholder ? placeholder : null;
+  const returnKeyTypeV = returnKeyType ? returnKeyType : "done"
+  const keyboardTypeV = keyboardType ? keyboardType : "default"
 
   return (
     <View style={!focus ? styles.container : styles.containerFocused}>
@@ -16,17 +15,17 @@ const Input = (props) => {
         <>
           <TextInput
             style={styles.input}
-            placeholder={placeholder}
+            placeholder={placeholderV}
             secureTextEntry={secure}
-            onChangeText={props.onChangeText}
+            onChangeText={onChangeText}
             onFocus={() => {
               setFocus(true);
             }}
             onBlur={() => {
               setFocus(false);
             }}
-            returnKeyType={returnKeyType}
-            keyboardType={keyboardType}
+            returnKeyType={returnKeyTypeV}
+            keyboardType={keyboardTypeV}
           />
           <TouchableOpacity
             onPress={() => {
@@ -39,16 +38,16 @@ const Input = (props) => {
       ) : (
         <TextInput
           style={styles.input}
-          placeholder={placeholder}
-          onChangeText={props.onChangeText}
+          placeholder={placeholderV}
+          onChangeText={onChangeText}
           onFocus={() => {
             setFocus(true);
           }}
           onBlur={() => {
             setFocus(false);
           }}
-          returnKeyType={returnKeyType}
-          keyboardType={keyboardType}
+          returnKeyType={returnKeyTypeV}
+          keyboardType={keyboardTypeV}
         />
       )}
     </View>

@@ -1,17 +1,16 @@
-import { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useState, Fragment } from "react";
+import { Prompt } from "react-router-dom";
 
-import AuthContext from "../../store/auth-context";
 import classes from "./RegisterForm.module.css";
 
 import Button from "../UI/Button/Button";
 import Card from "../UI/Card/Card";
 import Input from "../UI/Input/Input";
 
-const RegisterForm = () => {
-  const history = useHistory();
+const RegisterForm = (props) => {
+  const [isEntering, setIsEntering] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [enteredEmployeeNum, setEmployeeNum] = useState("");
   const [enteredEmail, setEmail] = useState("");
   const [enteredPassword, setPassword] = useState("");
   const [enteredName, setName] = useState("");
@@ -37,6 +36,32 @@ const RegisterForm = () => {
     { id: 7, value: "일" },
   ];
 
+  const departments = [
+    { id: 10, value: "인사부" },
+    { id: 20, value: "총무부" },
+    { id: 30, value: "디지털 개발부" },
+  ];
+
+  const cities = [
+    { code: "1100000000", value: "서울특별시" },
+    { code: "2600000000", value: "부산광역시" },
+    { code: "2700000000", value: "대구광역시" },
+    { code: "2800000000", value: "인천광역시" },
+    { code: "2900000000", value: "광주광역시" },
+    { code: "3000000000", value: "대전광역시" },
+    { code: "3100000000", value: "울산광역시" },
+    { code: "3611000000", value: "세종특별자치시" },
+    { code: "4100000000", value: "경기도" },
+    { code: "4200000000", value: "강원도" },
+    { code: "4300000000", value: "충청북도" },
+    { code: "4400000000", value: "충청남도" },
+    { code: "4500000000", value: "전라북도" },
+    { code: "4600000000", value: "전라남도" },
+    { code: "4700000000", value: "경상북도" },
+    { code: "4800000000", value: "경상남도" },
+    { code: "5000000000", value: "제주특별자치도" },
+  ];
+
   const changeHandler = (event) => {
     const { value, name } = event.target;
     switch (name) {
@@ -45,6 +70,9 @@ const RegisterForm = () => {
         break;
       case "password":
         setPassword(value);
+        break;
+      case "employeeNum":
+        setEmployeeNum(value);
         break;
       case "name":
         setName(value);
@@ -62,13 +90,19 @@ const RegisterForm = () => {
         setLimit(value);
         break;
       case "city":
-        setArea({ ...enteredArea, city: value });
+        setArea({ ...enteredArea, enteredCity: value });
         break;
       case "borough":
-        setArea({ ...enteredArea, borough: value });
+        setArea({ ...enteredArea, enteredBorough: value });
         break;
       case "day":
-        setDays(value);
+        const findIdx = enteredDays.indexOf(value);
+        if (findIdx > -1) enteredDays.splice(findIdx, 1);
+        else enteredDays.push(value);
+        enteredDays.sort();
+        setDays(enteredDays);
+        break;
+      default:
         break;
     }
   };
@@ -76,18 +110,49 @@ const RegisterForm = () => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    // const enteredEmail = emailInputRef.current.value;
-    // const enteredPassword = passwordInputRef.current.value;
+    let transformedDays = "";
+    for (let i = 1; i <= 7; i++) {
+      const findIdx = enteredDays.indexOf(i.toString());
+      if (findIdx > -1) transformedDays += "1";
+      else transformedDays += "0";
+    }
 
-    // optional: Add validation
+    const userData = {
+      employeeNum: enteredEmployeeNum,
+      email: enteredEmail,
+      userName: enteredName,
+      password: enteredPassword,
+      department: enteredPosition.enteredDepartment,
+      position: enteredPosition.enteredRole,
+      contact: enteredContact,
+      days: transformedDays,
+      sidoCode: enteredArea.enteredCity,
+      gugunCode: enteredArea.enteredBorough,
+      cardLimit: enteredLimit,
+    };
 
-    setIsLoading(true);
+    console.log(userData);
+    props.onAddUser(userData);
+  };
+
+  const finishEnteringHandler = () => {
+    setIsEntering(false);
+  };
+
+  const formFocusedHandler = () => {
+    setIsEntering(true);
   };
 
   return (
-    <section>
+    <Fragment>
+      <Prompt
+        when={isEntering}
+        message={(location) =>
+          "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."
+        }
+      />
       <Card>
-        <form onSubmit={submitHandler}>
+        <form onFocus={formFocusedHandler} onSubmit={submitHandler}>
           <div className={classes.container}>
             <article className={classes.section}>
               <div>
@@ -115,6 +180,17 @@ const RegisterForm = () => {
               <div>
                 <Input
                   type="text"
+                  id="employeeNum"
+                  name="employeeNum"
+                  required
+                  value={enteredEmployeeNum}
+                  onChange={changeHandler}
+                  label="사원 번호"
+                />
+              </div>
+              <div>
+                <Input
+                  type="text"
                   id="name"
                   name="name"
                   required
@@ -132,6 +208,7 @@ const RegisterForm = () => {
                   value={enteredContact}
                   onChange={changeHandler}
                   label="전화번호"
+                  placeholder="010-XXXX-XXXX"
                 />
               </div>
             </article>
@@ -148,13 +225,16 @@ const RegisterForm = () => {
                     onChange={changeHandler}
                   >
                     <option value="">부서</option>
-                    <option value="디지털개발">디지털 개발부</option>
-                    <option value="인사">인사부</option>
+                    {departments.map((department) => (
+                      <option key={department.value} value={department.value}>
+                        {department.value}
+                      </option>
+                    ))}
                   </select>
                   <select
                     type="text"
                     id="role"
-                    name="department"
+                    name="role"
                     required
                     value={enteredPosition.enteredRole}
                     onChange={changeHandler}
@@ -162,7 +242,7 @@ const RegisterForm = () => {
                     <option value="">직위</option>
                     <option value="수석">수석</option>
                     <option value="선임">선임</option>
-                    <option value="선임">주임</option>
+                    <option value="주임">주임</option>
                   </select>
                 </div>
               </div>
@@ -175,7 +255,7 @@ const RegisterForm = () => {
                   required
                   value={enteredLimit}
                   onChange={changeHandler}
-                  label="한도"
+                  label="한도 (원)"
                 />
               </div>
               <div>
@@ -190,8 +270,11 @@ const RegisterForm = () => {
                     onChange={changeHandler}
                   >
                     <option value="">시/도</option>
-                    <option value="디지털개발">서울특별시</option>
-                    <option value="인사">경기도</option>
+                    {cities.map((city) => (
+                      <option key={city.code} value={city.code}>
+                        {city.value}
+                      </option>
+                    ))}
                   </select>
                   <select
                     type="text"
@@ -202,9 +285,9 @@ const RegisterForm = () => {
                     onChange={changeHandler}
                   >
                     <option value="">구/군</option>
-                    <option value="수석">강남구</option>
-                    <option value="선임">서초구</option>
-                    <option value="선임">송파구</option>
+                    <option value="1168000000">강남구</option>
+                    <option value="1165000000">서초구</option>
+                    <option value="1171000000">송파구</option>
                   </select>
                 </div>
               </div>
@@ -212,15 +295,18 @@ const RegisterForm = () => {
                 <label className={classes.label}>사용 가능 요일</label>
                 <div className={classes.control}>
                   {days.map((day) => (
-                    <label className={classes.label}>
+                    <label
+                      className={`${classes.label} ${classes.checkbox}`}
+                      key={day.id}
+                    >
                       <input
                         type="checkbox"
-                        id="day"
+                        // id="day"
                         name="day"
                         value={day.id}
                         onChange={changeHandler}
                       />
-                      {day.value}
+                      <span>{day.value}</span>
                     </label>
                   ))}
                 </div>
@@ -228,15 +314,11 @@ const RegisterForm = () => {
             </article>
           </div>
           <div className={classes.buttons}>
-            {!isLoading && <Button>등록</Button>}
-            {/* {<Button sub>취소</Button>} */}
-            {isLoading && (
-              <span className={classes["text-sm"]}>등록 중...</span>
-            )}
+            <Button onClick={finishEnteringHandler}>등록</Button>
           </div>
         </form>
       </Card>
-    </section>
+    </Fragment>
   );
 };
 
