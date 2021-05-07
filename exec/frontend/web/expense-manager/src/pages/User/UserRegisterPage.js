@@ -1,10 +1,33 @@
-import RegisterForm from "../../components/User/RegisterForm";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
-const UserRegisterPage = () => (
-  <div className="page">
-    <span className="title">사용자 등록</span>
-    <RegisterForm />
-  </div>
-);
+import RegisterForm from "../../components/User/RegisterForm";
+import useHttp from "../../hooks/use-http";
+import { addUser } from "../../lib/api-user";
+
+const UserRegisterPage = () => {
+  const { sendRequest, status } = useHttp(addUser);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (status === "completed") {
+      history.push("/user/list");
+    }
+  }, [status, history]);
+
+  const addUserHandler = (userData) => {
+    sendRequest(userData);
+  };
+
+  return (
+    <div className="page">
+      <span className="title">사용자 등록</span>
+      <RegisterForm
+        isLoading={status === "pending"}
+        onAddUser={addUserHandler}
+      />
+    </div>
+  );
+};
 
 export default UserRegisterPage;

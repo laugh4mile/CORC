@@ -7,13 +7,7 @@ const Input = ({ handleChange, label, ...props }) => {
     <section className={classes.control}>
       <input className={classes.input} onChange={handleChange} {...props} />
       {label ? (
-        <label
-          className={`${classes.label} ${
-            props.value.length ? classes.shrink : ""
-          }`}
-        >
-          {label}
-        </label>
+        <label className={`${classes.label} ${classes.shrink}`}>{label}</label>
       ) : null}
     </section>
   );
