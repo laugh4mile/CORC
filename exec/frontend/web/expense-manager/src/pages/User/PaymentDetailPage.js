@@ -1,11 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 const PaymentDetailPage = () => {
   const params = useParams();
+  const location = useLocation();
+  const { userName } = location.state;
+
+  console.log("params", params);
+  console.log("state", location.state);
 
   return (
-    <section>
-      <h1>{params.userId}의 결제 내역</h1>
+    <section className="page">
+      <span className="title">
+        {`${userName} (${params.employeeNum})`}의 결제 내역
+      </span>
     </section>
   );
 };
