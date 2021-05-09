@@ -1,7 +1,7 @@
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
 
-export default function CoffeeIcon({ color }) {
+export default function CoffeeIcon({ color, size }) {
   const svg = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M11 3V7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M15 3V7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -11,7 +11,7 @@ export default function CoffeeIcon({ color }) {
   <path d="M26 11C27.0609 11 28.0783 11.4214 28.8284 12.1716C29.5786 12.9217 30 13.9391 30 15V16C30 17.0609 29.5786 18.0783 28.8284 18.8284C28.0783 19.5786 27.0609 20 26 20H25.5777" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 
-  const SvgImg = () => <SvgXml xml={svg} width="47%" height="47%" />;
+  const SvgImg = () => <SvgXml xml={svg} width={size} height={size} />;
 
   return <SvgImg />;
 }

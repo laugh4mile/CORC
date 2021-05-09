@@ -6,6 +6,7 @@ import Card from '../components/Card';
 import axios from 'axios';
 import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
+import MoneyIcon from '../components/icons/MoneyIcon';
 export default function Home() {
   const userId = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,8 +49,24 @@ export default function Home() {
           flex: 2,
         }}
       >
-        <View style={{ paddingTop: 10, paddingLeft: 15 }}>
+        {/* <View style={{ paddingTop: 10, paddingLeft: 15 }}>
           <Text style={{ color: 'gray', fontSize: 13 }}>
+            남은 한도 / 총 한도
+          </Text>
+        </View> */}
+
+        <View
+          style={{
+            // flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 10,
+            paddingLeft: 20,
+          }}
+        >
+          <MoneyIcon color={'#000000'} size={25} />
+          <Text style={{ color: 'gray', fontSize: 13 }}>
+            {'  '}
             남은 한도 / 총 한도
           </Text>
         </View>
