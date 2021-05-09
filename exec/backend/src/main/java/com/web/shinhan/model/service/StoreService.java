@@ -122,4 +122,8 @@ public class StoreService {
 		return storeDto;
 	}
 
+	public boolean checkCrNum(String crNum) {
+		return storeRepository.existsByCrNum(crNum);
+	}
+
 }

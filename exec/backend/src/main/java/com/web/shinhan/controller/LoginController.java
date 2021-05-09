@@ -146,6 +146,7 @@ public class LoginController {
 				resultMap.put("auth-token", token);
 				resultMap.put("store-email", email);
 				resultMap.put("store-storeid", store.getStoreId());
+				resultMap.put("store-accepted", store.getAccepted());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
