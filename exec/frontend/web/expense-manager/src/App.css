@@ -49,3 +49,33 @@ body {
   padding: 5rem;
   padding-bottom: 3rem;
 }
+
+.btn {
+  text-decoration: none;
+  line-height: 1.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #7986ff;
+  color: white;
+  text-transform: uppercase;
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+  font-weight: bolder;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease-out;
+}
+
+.btn:hover {
+  background-color: #32499a;
+}
+
+.btn .sub {
+  color: #7986FF;
+  background-color: #E8F1FF;
+}
+
+.btn .sub:hover {
+  background-color: #D3DEFF;
+}
