@@ -18,7 +18,7 @@ export async function addUser(userData) {
   return null;
 }
 
-export async function getAllUser() {
+export async function getAllUsers() {
   const response = await fetch(
     `${process.env.REACT_APP_SERVER_URL}/admin/user/list`,
     {
