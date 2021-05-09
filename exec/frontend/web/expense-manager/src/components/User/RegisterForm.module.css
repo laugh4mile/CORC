@@ -64,7 +64,7 @@ form {
     width: 100%;
 }
 
-[type='checkbox'] {
+.checkboxStyles [type='checkbox'] {
     position: absolute;
     opacity: 0;
     width: 0;
@@ -72,7 +72,7 @@ form {
 }
 
 /* default STYLES */
-[type='checkbox']+span {
+.checkboxStyles [type='checkbox']+span {
     cursor: pointer;
     color: #7986FF;
     background: #E8F1FF;
@@ -84,7 +84,7 @@ form {
     border-radius: 0.5rem;
 }
 
-[type='checkbox']:checked+span {
+.checkboxStyles [type='checkbox']:checked+span {
     color: white;
     background-color: #7986FF;
 }

@@ -300,6 +300,7 @@ const RegisterForm = (props) => {
                       key={day.id}
                     >
                       <input
+                        className={`${classes.checkboxStyles}`}
                         type="checkbox"
                         // id="day"
                         name="day"
