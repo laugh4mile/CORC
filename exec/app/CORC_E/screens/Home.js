@@ -15,6 +15,10 @@ export default function Home() {
 
   const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   useEffect(() => {
     (async () => {
       let response = await axios.get(
@@ -38,15 +42,15 @@ export default function Home() {
     <View style={styles.container}>
       <View style={styles.contents}>
         <Text style={styles.intro}>
-          안녕하세요, {userInfo.info.userName} 님
+          안녕하세요, {userInfo.info.userName} 님!
         </Text>
       </View>
       <Card
         style={{
           // marginHorizontal: 0,
           marginTop: 10,
-          marginBottom: '10%',
-          flex: 2,
+          // marginBottom: '0%',
+          flex: 1.6,
         }}
       >
         {/* <View style={{ paddingTop: 10, paddingLeft: 15 }}>
@@ -64,9 +68,8 @@ export default function Home() {
             paddingLeft: 20,
           }}
         >
-          <MoneyIcon color={'#000000'} size={25} />
-          <Text style={{ color: 'gray', fontSize: 13 }}>
-            {'  '}
+          <MoneyIcon color={'#414251'} size={25} />
+          <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
             남은 한도 / 총 한도
           </Text>
         </View>
@@ -79,8 +82,17 @@ export default function Home() {
             justifyContent: 'center',
           }}
         >
-          <Text style={{ fontSize: 35 }}>{userInfo.info.balance}</Text>
-          <Text style={{ fontSize: 24 }}> {'  '}원</Text>
+          <Text style={{ fontSize: 35, color: '#414251', marginRight: 10 }}>
+            {numberWithCommas(userInfo.info.balance)}
+          </Text>
+          <Text
+            style={{
+              fontSize: 24,
+              color: '#414251',
+            }}
+          >
+            원
+          </Text>
         </View>
 
         <View
@@ -90,40 +102,32 @@ export default function Home() {
             paddingBottom: 10,
           }}
         >
-          <Text>/ {userInfo.info.cardLimit} 원</Text>
+          <Text style={{ color: '#414251' }}>
+            / {numberWithCommas(userInfo.info.cardLimit)} 원
+          </Text>
         </View>
       </Card>
       <View
         style={{
-          flex: 1,
+          flex: 0.7,
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           // justifyContent: 'flex-start',
           // borderBottomColor: '#737373',
+          paddingBottom: '3%',
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          {/* <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <PaymentHistoryIcon color={'#b7b7b7'} size="60%" />
-          </View> */}
-          <PaymentHistoryIcon color={'#000000'} size="40" />
-          <View>
-            <Text style={{ fontSize: 24, marginLeft: 20 }}>최근 이용 내역</Text>
-          </View>
-        </View>
+        <PaymentHistoryIcon color={'#414251'} size="30" />
+        <Text style={{ fontSize: 24, marginLeft: 10, color: '#414251' }}>
+          최근 이용 내역
+        </Text>
       </View>
       <Card
         style={{
           // marginHorizontal: 10,
           // marginTop: 10,
           marginBottom: '10%',
-          flex: 3,
+          flex: 3.5,
         }}
       >
         <View
@@ -159,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '15%',
     // backgroundColor: 'red',
   },
   intro: {
