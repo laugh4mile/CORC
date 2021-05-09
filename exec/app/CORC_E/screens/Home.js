@@ -12,7 +12,7 @@ export default function Home() {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
+  const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
 
   useEffect(() => {
     (async () => {
