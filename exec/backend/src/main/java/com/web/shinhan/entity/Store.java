@@ -37,6 +37,7 @@ public class Store {
 	private String gugunCode;
 	private LocalDateTime requestDate;
 	private int accepted;
+	private Integer total;
 
 	@OneToOne
 	@JoinColumn(name = "categoryCode", insertable = false, updatable = false)
@@ -49,20 +50,11 @@ public class Store {
 	@OneToOne
 	@JoinColumn(name = "gugunCode", insertable = false, updatable = false)
 	private Gugun gugun;
-//	(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-//	(cascade = { CascadeType.ALL })
-//	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
-//	= new ArrayList<>();
-
-//	@JsonBackReference
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "storeId", insertable = false, updatable = false)
-//	private Payment payment;
 
 	@Builder
 	public Store(int storeId, String crNum, String categoryCode, String email, String password, String storeName,
 			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
-			int accepted, Category category, Sido sido, Gugun gugun) {
+			int accepted, Integer total, Category category, Sido sido, Gugun gugun) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -76,6 +68,7 @@ public class Store {
 		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
+		this.total = total;
 		this.category = category;
 		this.sido = sido;
 		this.gugun = gugun;
