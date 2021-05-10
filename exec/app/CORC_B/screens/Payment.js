@@ -37,6 +37,10 @@ const Payment = (props) => {
 
   const [qrVisible, setQRVisible] = useState(false);
 
+  const [isProductNameValid, setisProductNameValid] = useState(true);
+  const [isPriceValid, setisPriceValid] = useState(true);
+  const [isQuantityValid, setisQuantityValid] = useState(true);
+
   const productNameRef = useRef();
   const priceRef = useRef();
   const quantityRef = useRef();
@@ -57,18 +61,48 @@ const Payment = (props) => {
     setModalVisible(!isModalVisible);
   };
 
+  const checkProductName = (text) => {
+    setisProductNameValid(text.toString().trim().length > 0);
+    setProductName(text);
+  };
+  const numExp = /^\d+$/; // number expression
+
+  const checkPrice = (text) => {
+    setisPriceValid(numExp.test(text.toString()) && text > 0);
+    setPrice(text);
+    // if (!numExp.test(text.toString()) || price <= 0) {
+    //   setisPriceValid(false)
+    // }
+    // else {
+    //   setisPriceValid(true)
+    // }
+  };
+
+  const checkQuantity = (text) => {
+    setisQuantityValid(numExp.test(text.toString()) && text > 0);
+    setQuantity(text);
+  };
+
   const addItem = () => {
     var spExp = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi; // special character
-    var numExp = /^\d+$/; // number expression
     // const numExp = /^[0-9]*$/
-    if (productName.toString().trim().length <= 0) {
-      return Alert.alert(null, "이름을 확인해주세요.");
+    // if (productName.toString().trim().length <= 0) {
+    if (!isProductNameValid) {
+      return Alert.alert(null, "이름을 확인해주세요.", [
+        { text: "확인", onPress: () => productNameRef.current.focus() },
+      ]);
     }
-    if (!numExp.test(price.toString()) || price <= 0) {
-      return Alert.alert(null, "가격을 확인해주세요.");
+    // if (!numExp.test(price.toString()) || price <= 0) {
+    if (!isPriceValid) {
+      return Alert.alert(null, "가격을 확인해주세요.", [
+        { text: "확인", onPress: () => priceRef.current.focus() },
+      ]);
     }
-    if (!numExp.test(quantity.toString()) || quantity <= 0) {
-      return Alert.alert(null, "수량을 확인해주세요.");
+    // if (!numExp.test(quantity.toString()) || quantity <= 0) {
+    if (!isQuantityValid) {
+      return Alert.alert(null, "수량을 확인해주세요.", [
+        { text: "확인", onPress: () => quantityRef.current.focus() },
+      ]);
     }
 
     setItems([
@@ -507,8 +541,9 @@ const Payment = (props) => {
       <Modal isVisible={isModalVisible}>
         <Card style={styles.modalBox}>
           <Input
+            style={{ borderColor: isProductNameValid ? "#dddddd" : "red" }}
             placeholder="이름"
-            onChangeText={(name) => setProductName(name)}
+            onChangeText={(name) => checkProductName(name)}
             returnKeyType="next"
             onSubmitEditing={() => {
               priceRef.current.focus();
@@ -517,8 +552,9 @@ const Payment = (props) => {
             ref={productNameRef}
           />
           <Input
+            style={{ borderColor: isPriceValid ? "#dddddd" : "red" }}
             placeholder="가격"
-            onChangeText={(price) => setPrice(price)}
+            onChangeText={(price) => checkPrice(price)}
             keyboardType="numeric"
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -528,8 +564,9 @@ const Payment = (props) => {
             ref={priceRef}
           />
           <Input
+            style={{ borderColor: isQuantityValid ? "#dddddd" : "red" }}
             placeholder="수량"
-            onChangeText={(quantity) => setQuantity(quantity)}
+            onChangeText={(quantity) => checkQuantity(quantity)}
             keyboardType="numeric"
             onSubmitEditing={() => {
               addItem();
