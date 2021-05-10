@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -30,7 +31,11 @@ export default function LoginNavigation(props) {
           name="RegistStore"
           component={RegistStoreScreen}
           options={{
-            headerTitle: "",
+            headerTitle: "가맹점 신청",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
           }}
         />
       </Stack.Navigator>
