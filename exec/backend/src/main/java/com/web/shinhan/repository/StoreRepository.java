@@ -26,4 +26,6 @@ public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAn
 	@Query("select s from store s where accepted = 1")
 	Page<Store> findAllUnassignedStore(Pageable pageable);
 
+	boolean existsByCrNum(String crNum);
+
 }

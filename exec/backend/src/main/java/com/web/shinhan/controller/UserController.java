@@ -68,7 +68,7 @@ public class UserController {
 				Sort.by(Sort.Direction.DESC, "date"));
 
 		try {
-			resultMap.put("info", userService.findUserInfo(userId));
+//			resultMap.put("info", userService.findUserInfo(userId));
 			page = paymentService.findUserPayment(userId, pageable);
 			resultMap.put("paymentList", page);
 			status = HttpStatus.ACCEPTED;

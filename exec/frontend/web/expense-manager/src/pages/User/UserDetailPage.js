@@ -10,9 +10,7 @@ const PaymentDetailPage = () => {
 
   return (
     <section className="page">
-      <span className="title">
-        {`${userName} (${params.employeeNum})`}의 결제 내역
-      </span>
+      <span className="title">{`${userName} (${params.employeeNum})`}</span>
     </section>
   );
 };

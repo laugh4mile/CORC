@@ -45,7 +45,7 @@ const App = () => {
         <Route exact path="/user/payment">
           <PaymentPage />
         </Route>
-        <Route path="/user/payment/:userId">
+        <Route path="/user/payment/:employeeNum">
           <PaymentDetailPage />
         </Route>
         <Route exact path="/store/list">

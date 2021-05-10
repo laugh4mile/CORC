@@ -2,8 +2,11 @@ import React from "react";
 
 import classes from "./Card.module.css";
 
-const BaseCard = ({ children }) => (
-  <div className={classes.card}>{children}</div>
-);
+const Card = ({ children, type }) => {
+  console.log("type", type);
+  const nofitClass = type === "nofit" ? classes.nofit : "";
 
-export default BaseCard;
+  return <div className={`${classes.card} ${nofitClass}`}>{children}</div>;
+};
+
+export default Card;

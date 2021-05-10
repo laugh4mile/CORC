@@ -10,4 +10,11 @@
   padding-right: 4rem;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 3rem;
+}
+
+.nofit {
+  width: auto;
+  margin: 2rem 4rem;
+  padding-right: 2rem;
 }
