@@ -30,7 +30,8 @@ public class StoreDto {
 	private String gugunCode;
 	private LocalDateTime requestDate;
 	private int accepted;
-
+	private Integer total;
+	
 	private Category category;
 	private Sido sido;
 	private Gugun gugun;
@@ -38,7 +39,7 @@ public class StoreDto {
 	@Builder
 	public StoreDto(int storeId, String crNum, String categoryCode, String email, String password, String storeName,
 			String contact, String bankName, int account, String sidoCode, String gugunCode, LocalDateTime requestDate,
-			int accepted, Category category, Sido sido, Gugun gugun) {
+			int accepted, Integer total, Category category, Sido sido, Gugun gugun) {
 		this.storeId = storeId;
 		this.crNum = crNum;
 		this.categoryCode = categoryCode;
@@ -52,6 +53,7 @@ public class StoreDto {
 		this.gugunCode = gugunCode;
 		this.requestDate = requestDate;
 		this.accepted = accepted;
+		this.total = total;
 		this.category = category;
 		this.sido = sido;
 		this.gugun = gugun;
@@ -72,6 +74,7 @@ public class StoreDto {
 				.gugunCode(gugunCode)
 				.requestDate(requestDate)
 				.accepted(accepted)
+				.total(total)
 				.category(category)
 				.sido(sido)
 				.gugun(gugun)
@@ -93,6 +96,7 @@ public class StoreDto {
 				.gugunCode(store.getGugunCode())
 				.requestDate(store.getRequestDate())
 				.accepted(store.getAccepted())
+				.total(store.getTotal())
 				.category(store.getCategory())
 				.sido(store.getSido())
 				.gugun(store.getGugun())

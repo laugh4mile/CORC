@@ -188,13 +188,18 @@ public class UserService {
 	public Boolean pay(int userId, int bill) {
 		User user = userRepository.findByUserId(userId);
 		UserDto userDto = mapper.INSTANCE.userToDto(user);
-		if(userDto.getBalance() - bill >= 0) {
+		if (userDto.getBalance() - bill >= 0) {
 			userDto.setBalance(userDto.getBalance() - bill);
 			userRepository.save(userDto.toEntity());
 			return true;
-		}else {
+		} else {
 			return false;
 		}
+	}
+
+	public int countUser() {
+		int count = (int) userRepository.count();
+		return 0;
 	}
 
 }

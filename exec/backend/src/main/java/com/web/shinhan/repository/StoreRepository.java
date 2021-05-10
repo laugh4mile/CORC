@@ -14,6 +14,9 @@ import com.web.shinhan.entity.Store;
 public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAndSortingRepository<Store, Integer>,
 		QueryByExampleExecutor<Store> {
 
+	@Query(value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId)", nativeQuery = true)
+	Page<Store> findAll(Pageable pageable);
+
 	Store findByEmail(String email);
 
 	Store findByStoreId(int storeId);
@@ -27,5 +30,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAn
 	Page<Store> findAllUnassignedStore(Pageable pageable);
 
 	boolean existsByCrNum(String crNum);
+	
+	boolean existsByEmail(String email);
 
 }
