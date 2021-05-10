@@ -17,6 +17,7 @@ import MoneyIcon from '../components/icons/MoneyIcon';
 import Colors from '../constants/Colors';
 
 const Home = (props) => {
+  console.log('---------------------------------------------------------');
   const userId = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState();

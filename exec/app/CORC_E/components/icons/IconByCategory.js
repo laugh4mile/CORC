@@ -1,29 +1,33 @@
-import React from 'react';
-import StoreIcon from './StoreIcon';
-import CoffeeIcon from './CoffeeIcon';
-import { View, Text } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-
 export const GetIcon = (categoryCode) => {
   // console.log('code', categoryCode);
-  let iconName = '';
+  let iconInfo = {};
   switch (categoryCode) {
     case '10302':
       // 과실 및 그 외 채소 절임식품 제조업
-      iconName = 'back';
-      return <AntDesign name="down" size={24} color="black" />;
+      iconInfo.iconName = 'fruit-cherries';
+      iconInfo.family = 'MaterialCommunityIcons';
+      break;
     case '47121':
       // 슈퍼마켓
-      iconName = 'retweet';
+      iconInfo.iconName = 'store';
+      iconInfo.family = 'StoreIcon';
       break;
     case '47122':
       // 체인화 편의점
-      iconName = 'shrink';
+      iconInfo.iconName = 'store';
+      iconInfo.family = 'StoreIcon';
+      break;
+    case '56221':
+      // 커피 전문점
+      iconInfo.iconName = 'coffee';
+      iconInfo.family = 'CoffeeIcon';
       break;
 
     default:
-      iconName = 'left';
+      iconInfo.iconName = 'store';
+      iconInfo.family = 'StoreIcon';
       break;
   }
-  return iconName;
+  // console.log('code', iconInfo);
+  return iconInfo;
 };
