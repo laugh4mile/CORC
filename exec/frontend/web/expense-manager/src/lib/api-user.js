@@ -13,7 +13,8 @@ export async function addUser(userData) {
 export async function getAllUsers() {
   try {
     const rs = await axios.get('/admin/user/list');
-    const data = rs.data;
+    const data = rs.data.userList.content;
+    getAllPayment();
 
     const transformedUsers = [];
 
@@ -35,22 +36,29 @@ export async function getAllUsers() {
 export async function getSingleUser(userId) {
   try {
     const rs = await axios.get(`/admin/user/info?userId=${userId}`);
-    const data = rs.data;
-    const loadedUser = {
-      userId: userId,
-      ...data,
-    };
+    const data = rs.data.info;
 
-    return loadedUser;
+    return data;
   } catch (err) {
     throw new Error(err || '결제 내역을 불러올 수 없습니다.');
   }
 }
 
+export async function getUser(page, size) {
+  try {
+    const rs = await axios.get(`/admin/user/list?page=${page}&size=${size}`);
+    const data = re.data.userList.content;
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
 export async function getAllPayment() {
   try {
-    const rs = await axios.get('/admin/user/payment');
-    const data = rs.data;
+    const rs = await axios.get('/admin/payment');
+    const data = rs.data.paymentList.content;
     const transformedPayments = [];
 
     for (const key in data) {
