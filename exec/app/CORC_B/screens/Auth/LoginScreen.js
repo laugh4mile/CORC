@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet, View, Text, Image, Alert } from "react-native";
 import { useDispatch } from 'react-redux';
 
@@ -17,13 +17,16 @@ const LoginScreen = (props) => {
 
   const [idValid, setIdValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+
+  const userIdRef = useRef();
+  const passwordRef = useRef();
   
   const dispatch = useDispatch()
 
   useEffect(() => {
     let mounted = true;
     if (error) {
-      Alert.alert("Error Occurred!", error, [{ text: "Okay" }]);
+      Alert.alert("로그인 실패", error, [{ text: "확인" }]);
     }
 
     return () => (mounted = false)
@@ -76,6 +79,11 @@ const LoginScreen = (props) => {
             idCheckHandler(userId);
           }}
           returnKeyType="next"
+          onSubmitEditing={() => {
+            passwordRef.current.focus();
+          }}
+          blurOnSubmit={false}
+          ref={userIdRef}
         />
         <Input
           placeholder="비밀번호"
@@ -83,6 +91,10 @@ const LoginScreen = (props) => {
           onChangeText={(password) => {
             passwordCheckHandler(password);
           }}
+          onSubmitEditing={() => {
+            login()
+          }}
+          ref={passwordRef}
         />
       </View>
       <View style={styles.footer}>

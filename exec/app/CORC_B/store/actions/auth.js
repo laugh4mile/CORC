@@ -24,36 +24,53 @@ export const authenticate = (userId, email, token, expiryTime) => {
   };
 };
 
-export const signup = (email, password) => {
+export const registStore = (data) => {
   return async () => {
-    const response = await fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB7sXVMkbSY-RS8D2UKd5g2vrhKFackVzg",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorResData = await response.json();
-      const errorId = errorResData.error.message;
-      let message = "Something went wrong!";
-      if (errorId === "EMAIL_EXISTS") {
-        message = "This email exists already!";
-      }
-      throw new Error(message);
-    }
+    // const response = await fetch(
+    //   "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB7sXVMkbSY-RS8D2UKd5g2vrhKFackVzg",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       email: email,
+    //       password: password,
+    //       returnSecureToken: true,
+    //     }),
+    //   }
+    // );
+    
+    // if (!response.ok) {
+    //   const errorResData = await response.json();
+    //   const errorId = errorResData.error.message;
+    //   let message = "Something went wrong!";
+    //   if (errorId === "EMAIL_EXISTS") {
+    //     message = "This email exists already!";
+    //   }
+    //   throw new Error(message);
+    // }
+    const response = await axios.post(`${SERVER_URL}/store/regist`, JSON.stringify(data));
 
     console.log(response);
   };
 };
+
+export const getSidoList = () => {
+  return async () => {
+    const response = await axios.get(`${SERVER_URL}/store/sido`)
+
+    return response.data.sido;
+  }
+}
+
+export const getGugunList = (sidoCode) => {
+  return async () => {
+    const response = await axios.get(`${SERVER_URL}/store/gugun?sidoCode=${sidoCode}`)
+
+    return response.data.gugun;
+  }
+}
 
 export const login = (email, password) => {
   return async (dispatch) => {

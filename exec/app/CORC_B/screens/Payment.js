@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Alert,
   Dimensions,
@@ -31,11 +31,15 @@ const Payment = (props) => {
   const [items, setItems] = useState([]);
 
   const [productName, setProductName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [total, setTotal] = useState(0);
 
   const [qrVisible, setQRVisible] = useState(false);
+
+  const productNameRef = useRef();
+  const priceRef = useRef();
+  const quantityRef = useRef();
 
   useEffect(() => {
     getSum();
@@ -57,7 +61,7 @@ const Payment = (props) => {
     var spExp = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi; // special character
     var numExp = /^\d+$/; // number expression
     // const numExp = /^[0-9]*$/
-    if (spExp.test(productName) || productName.toString().trim().length <= 0) {
+    if (productName.toString().trim().length <= 0) {
       return Alert.alert(null, "이름을 확인해주세요.");
     }
     if (!numExp.test(price.toString()) || price <= 0) {
@@ -75,26 +79,33 @@ const Payment = (props) => {
         amount: quantity,
       },
     ]);
+
+    setProductName("");
+    setPrice("");
+    setQuantity("");
+
     toggleModal();
   };
 
   const addScannedItem = (data) => {
-      let jsonData = JSON.parse(data);
-      console.log(jsonData.productName, jsonData.price, jsonData.amount)
+    let jsonData = JSON.parse(data);
+    console.log(jsonData.productName, jsonData.price, jsonData.amount);
 
-        let productName = jsonData.productName
-        let price = jsonData.price.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
-      setItems([
-        ...items,
-        {
-          productName: productName,
-          price: price,
-          amount: "1",
-        },
-      ]);
+    let productName = jsonData.productName;
+    let price = jsonData.price
+      .replace(/[^0-9.]/g, "")
+      .replace(/(\..*)\./g, "$1");
+    setItems([
+      ...items,
+      {
+        productName: productName,
+        price: price,
+        amount: "1",
+      },
+    ]);
 
-      setScanOpened(false)
-  }
+    setScanOpened(false);
+  };
 
   const cancelAddItem = () => {
     setProductName("");
@@ -136,7 +147,7 @@ const Payment = (props) => {
     // const numExp = /^[0-9]*$/
     for (let index = 0; index < items.length; index++) {
       let e = items[index];
-      if (spExp.test(e.productName) || e.productName.trim().length <= 0) {
+      if (e.productName.trim().length <= 0) {
         return Alert.alert(
           null,
           `${index + 1}번째 품목의 이름을 다시 한 번 확인해주세요.`
@@ -215,7 +226,8 @@ const Payment = (props) => {
           style={{
             flexDirection: "row",
             marginVertical: 5,
-            alignItems:'center',
+            alignItems: "center",
+            paddingHorizontal: 3,
           }}
         >
           <View style={{ flex: 3.5, alignItems: "center" }}>
@@ -235,7 +247,7 @@ const Payment = (props) => {
               color="#a5a5a8"
               underlayColor="white"
               activeOpacity={0.6}
-              iconStyle={{ }}
+              iconStyle={{}}
             />
             <Modal isVisible={isVacateModalVisible}>
               <Card style={{ ...styles.modalBox, height: "25%" }}>
@@ -284,14 +296,25 @@ const Payment = (props) => {
                 }}
               >
                 <View style={{ flex: 3.5, alignItems: "center" }}>
-                  <Text style={{ fontSize: 15 }}>{item.productName}</Text>
+                  <Text style={{ fontSize: 15, textAlign: "center" }}>
+                    {item.productName}
+                  </Text>
                 </View>
-                <View style={{ flex: 2.5, alignItems:'center'}}>
-                  <Text style={{ textAlign: "right" }}>{item.price} 원</Text>
+                <View style={{ flex: 2.5, alignItems: "center" }}>
+                  <Text style={{ fontSize: 15 }}>{item.price} 원</Text>
                 </View>
-                <View style={{ flex: 1, alignItems: "center" }}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
                   <TextInput
-                    style={{ textAlign: "center" }}
+                    style={{
+                      textAlign: "center",
+                      borderBottomWidth: 1.3,
+                      fontSize: 15,
+                    }}
                     onChangeText={(amount) => amountHander(index, amount)}
                     keyboardType="numeric"
                     defaultValue={item.amount}
@@ -410,13 +433,15 @@ const Payment = (props) => {
                       }}
                     >
                       <View style={{ flex: 3, alignItems: "center" }}>
-                        <Text>{item.productName}</Text>
+                        <Text style={{ textAlign: "center", fontSize: 14 }}>
+                          {item.productName}
+                        </Text>
                       </View>
                       <View style={{ flex: 2, alignItems: "center" }}>
-                        <Text>{item.price} 원</Text>
+                        <Text style={{ fontSize: 14 }}>{item.price} 원</Text>
                       </View>
                       <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text>{item.amount}</Text>
+                        <Text style={{ fontSize: 14 }}>{item.amount}</Text>
                       </View>
                     </View>
                   ))}
@@ -473,18 +498,34 @@ const Payment = (props) => {
             placeholder="이름"
             onChangeText={(name) => setProductName(name)}
             value={productName}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              priceRef.current.focus();
+            }}
+            blurOnSubmit={false}
+            ref={productNameRef}
           />
           <Input
             placeholder="가격"
             onChangeText={(price) => setPrice(price)}
             keyboardType="numeric"
             value={price}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              quantityRef.current.focus();
+            }}
+            blurOnSubmit={false}
+            ref={priceRef}
           />
           <Input
             placeholder="수량"
             onChangeText={(quantity) => setQuantity(quantity)}
             keyboardType="numeric"
             value={quantity}
+            onSubmitEditing={() => {
+              addItem();
+            }}
+            ref={quantityRef}
           />
           <View
             style={{
@@ -521,6 +562,7 @@ const styles = StyleSheet.create({
   list: {
     marginBottom: 10,
     flex: 2,
+    paddingHorizontal: 3,
   },
   scanbox: {
     flex: 1,
@@ -531,7 +573,7 @@ const styles = StyleSheet.create({
   },
   footerItems: {
     alignItems: "center",
-    marginTop: 5
+    marginTop: 5,
   },
   textlink: {
     textDecorationLine: "underline",
