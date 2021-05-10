@@ -1,5 +1,12 @@
 import React from "react";
-import { Alert, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Card from "../components/Card";
@@ -43,8 +50,18 @@ const Main = (props) => {
     return year + "." + month;
   };
 
+  const formatMoney = (number) =>
+    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+
   if (isLoading) {
-    return <></>;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator
+          size="large"
+          color={Colors.primary.backgroundColor}
+        />
+      </View>
+    );
   }
   return (
     <View style={styles.container}>
@@ -76,7 +93,9 @@ const Main = (props) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 35 }}>{transacAmount.total} 원</Text>
+          <Text style={{ fontSize: 35 }}>
+            {formatMoney(transacAmount.total)} 원
+          </Text>
         </View>
         <View
           style={{
@@ -93,7 +112,7 @@ const Main = (props) => {
                 fontWeight: "bold",
               }}
             >
-              {transacAmount.notConfirmed}
+              {formatMoney(transacAmount.notConfirmed)}
             </Text>
             {" 원"}
           </Text>

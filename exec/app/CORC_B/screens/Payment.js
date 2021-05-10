@@ -109,8 +109,8 @@ const Payment = (props) => {
 
   const cancelAddItem = () => {
     setProductName("");
-    setPrice(0);
-    setQuantity(0);
+    setPrice("");
+    setQuantity("");
     toggleModal();
   };
 
@@ -179,6 +179,9 @@ const Payment = (props) => {
     console.log(JSON.stringify(data));
     return <QRCode value={JSON.stringify(data)} size={size} />;
   };
+
+  const formatMoney = (number) =>
+    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
 
   return (
     <View style={styles.container}>
@@ -301,7 +304,9 @@ const Payment = (props) => {
                   </Text>
                 </View>
                 <View style={{ flex: 2.5, alignItems: "center" }}>
-                  <Text style={{ fontSize: 15 }}>{item.price} 원</Text>
+                  <Text style={{ fontSize: 15 }}>
+                    {formatMoney(item.price)} 원
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -358,11 +363,14 @@ const Payment = (props) => {
         </View>
         <View style={{ alignItems: "flex-end" }}>
           <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
-            <Text style={{ fontSize: imgSize * 1.2 }}>{total}</Text> 원
+            <Text style={{ fontSize: imgSize * 1.2 }}>
+              {formatMoney(total)}
+            </Text>{" "}
+            원
           </Text>
         </View>
         <Button
-          title="결제하기"
+          title="QR Code 생성하기"
           onPress={() => {
             createPayment();
           }}
@@ -386,7 +394,7 @@ const Payment = (props) => {
                 alignItems: "center",
               }}
             >
-              <GenerateQR size={qrSize} />
+              {qrVisible && <GenerateQR size={qrSize} />}
             </View>
 
             <View style={{ flex: 1.5 }}>
@@ -438,10 +446,14 @@ const Payment = (props) => {
                         </Text>
                       </View>
                       <View style={{ flex: 2, alignItems: "center" }}>
-                        <Text style={{ fontSize: 14 }}>{item.price} 원</Text>
+                        <Text style={{ fontSize: 14 }}>
+                          {formatMoney(item.price)} 원
+                        </Text>
                       </View>
                       <View style={{ flex: 1, alignItems: "center" }}>
-                        <Text style={{ fontSize: 14 }}>{item.amount}</Text>
+                        <Text style={{ fontSize: 14 }}>
+                          {formatMoney(item.amount)}
+                        </Text>
                       </View>
                     </View>
                   ))}
@@ -497,7 +509,6 @@ const Payment = (props) => {
           <Input
             placeholder="이름"
             onChangeText={(name) => setProductName(name)}
-            value={productName}
             returnKeyType="next"
             onSubmitEditing={() => {
               priceRef.current.focus();
@@ -509,7 +520,6 @@ const Payment = (props) => {
             placeholder="가격"
             onChangeText={(price) => setPrice(price)}
             keyboardType="numeric"
-            value={price}
             returnKeyType="next"
             onSubmitEditing={() => {
               quantityRef.current.focus();
@@ -521,7 +531,6 @@ const Payment = (props) => {
             placeholder="수량"
             onChangeText={(quantity) => setQuantity(quantity)}
             keyboardType="numeric"
-            value={quantity}
             onSubmitEditing={() => {
               addItem();
             }}
