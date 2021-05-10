@@ -1,9 +1,9 @@
-import { AsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
-// export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
+export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
 const SERVER_URL = "http://192.168.0.14:8765/shinhan";
@@ -12,13 +12,12 @@ export const setDidTryAL = () => {
   return { type: SET_DID_TRY_AL };
 };
 
-export const authenticate = (userId, email, token, expiryTime) => {
+export const authenticate = (userId, token, expiryTime) => {
   return (dispatch) => {
     // dispatch(setLogoutTimer(expiryTime));
     dispatch({
       type: AUTHENTICATE,
       userId: userId,
-      email: email,
       token: token,
     });
   };
@@ -80,11 +79,12 @@ export const login = (email, password) => {
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
     }
 
-    // console.log(response.data);
     let userId = response.data["store-storeid"];
     let useremail = response.data["store-email"];
     let token = response.data["auth-token"];
     let accepted = response.data["store-accepted"];
+
+    let _6months = 60*24*30*6
 
     if (accepted === 0) {
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
@@ -96,25 +96,23 @@ export const login = (email, password) => {
       dispatch(
         authenticate(
           userId,
-          useremail,
           token,
-          // parseInt(resData.expiresIn) * 1000
-          3600 * 1000
+          _6months * 1000
         )
       );
     }
 
     const expirationDate = new Date(
-      // new Date().getTime() + parseInt(resData.expiresIn) * 1000
-      new Date().getTime() + 360 * 1000
+      new Date().getTime() + _6months * 1000
     );
-    // saveDataToStorage( userId, email, token, expirationDate);
+
+    saveDataToStorage( userId, token, expirationDate);
   };
 };
 
 export const logout = () => {
   clearLogoutTimer();
-  // AsyncStorage.removeItem("userData");
+  AsyncStorage.removeItem("userData");
   return { type: LOGOUT };
 };
 
@@ -132,12 +130,11 @@ const setLogoutTimer = (expirationTime) => {
   };
 };
 
-const saveDataToStorage = (userId, email, token, expirationDate) => {
+const saveDataToStorage = (userId, token, expirationDate) => {
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({
       userId: userId,
-      email: email,
       token: token,
       expiryDate: expirationDate.toISOString(),
     })
