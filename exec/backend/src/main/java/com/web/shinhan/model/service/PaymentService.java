@@ -223,4 +223,24 @@ public class PaymentService {
 		return dto;
 	}
 
+	public List<Integer[]> calcNotConfirmed() {
+		List<Integer[]> notConfirmed = paymentRepository.findTotalByStatusandStoreId();
+		return notConfirmed;
+	}
+
+	public int countStorePayment(int storeId) {
+		int count = paymentRepository.countStorePayment(storeId);
+		return count;
+	}
+
+	public int countPayment() {
+		int count = (int) paymentRepository.count();
+		return 0;
+	}
+
+	public int countUserPayment(int userId) {
+		int count = paymentRepository.countUserPayment(userId);
+		return 0;
+	}
+
 }
