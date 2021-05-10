@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { View, Text } from 'react-native';
 import StoreIcon from './icons/StoreIcon';
 import CoffeeIcon from './icons/CoffeeIcon';
@@ -22,33 +21,21 @@ import {
 import * as Icon from './icons/IconByCategory';
 
 function Payment({ date, store, total, categoryCode }) {
-  const now = () => {
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    return year + '.' + month;
-  };
-
   const year = date.substring(0, 4);
-  const month = date.substring(5, 7);
-  const day = date.substring(8, 10);
+  const month = +date.substring(5, 7);
+  const day = +date.substring(8, 10);
   const time = date.substring(11, 16);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
-  // var iconName = {};
   function getIconName(categoryCode) {
     const iconName = Icon.GetIcon(categoryCode);
-    console.log('iconName : ', iconName);
     return iconName;
   }
+
   return (
     <View>
-      {/* <Text>{date}</Text> */}
       <View
         style={{
           flexDirection: 'row',

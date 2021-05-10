@@ -7,8 +7,9 @@ import axios from 'axios';
 import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
 
-export default function Wallet() {
+const Wallet = (props) => {
   const userId = useSelector((state) => state.auth.userId);
+  var newDate = new Date();
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
@@ -18,6 +19,25 @@ export default function Wallet() {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
+  const match = (date) => {
+    const year = date.substring(0, 4);
+    const month = +date.substring(5, 7);
+    const day = +date.substring(8, 10);
+    if (year == newDate.getFullYear()) {
+      if (month == newDate.getMonth() + 1) {
+        if (day == newDate.getDate()) {
+          console.log('패스');
+          return true;
+        }
+      }
+    }
+    console.log('newDate : ', newDate);
+    console.log('좋게좋게 가자 제발 ');
+    console.log('결제 날짜 : ', year, '년,', month, '월,', day, '일');
+    newDate = new Date(year, month - 1, day);
+    return false;
+  };
 
   useEffect(() => {
     (async () => {
@@ -34,6 +54,7 @@ export default function Wallet() {
       setIsLoading(false);
     })();
   }, []);
+
   if (isLoading) {
     return <></>;
   }
@@ -74,7 +95,6 @@ export default function Wallet() {
         </View>
         <View
           style={{
-            // flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             paddingTop: 10,
@@ -92,8 +112,6 @@ export default function Wallet() {
           flex: 0.7,
           flexDirection: 'row',
           alignItems: 'flex-end',
-          // justifyContent: 'flex-start',
-          // borderBottomColor: '#737373',
           paddingBottom: '3%',
         }}
       >
@@ -104,8 +122,6 @@ export default function Wallet() {
       </View>
       <Card
         style={{
-          // marginHorizontal: 10,
-          // marginTop: 10,
           marginBottom: '10%',
           flex: 3.5,
         }}
@@ -119,20 +135,40 @@ export default function Wallet() {
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment) => (
-              <Payment
-                key={payment.paymentId}
-                date={payment.date}
-                store={payment.store}
-                total={payment.total}
-                categoryCode={payment.store.category.categoryCode}
-              />
+              <View>
+                {match(payment.date) && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontSize: 13, color: '#414251' }}>
+                        {+payment.date.substring(5, 7)}월{' '}
+                        {+payment.date.substring(8, 10)}일
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 3,
+                        backgroundColor: '#A09E9E',
+                        height: 0.7,
+                      }}
+                    ></View>
+                  </View>
+                )}
+                <Payment
+                  key={payment.paymentId}
+                  date={payment.date}
+                  store={payment.store}
+                  total={payment.total}
+                  categoryCode={payment.store.category.categoryCode}
+                />
+              </View>
             ))}
           </View>
         </ScrollView>
       </Card>
     </View>
   );
-}
+};
+export default Wallet;
 
 const styles = StyleSheet.create({
   container: {
