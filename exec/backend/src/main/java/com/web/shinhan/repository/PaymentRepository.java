@@ -37,6 +37,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 	@Query("select total from payment where status = 1")
 	List<Integer> findTotalByStatus();
 
+	@Query("select storeId, sum(total) as total from payment group by storeId")
+	List<Integer[]> findTotalByStatusandStoreId();
+
 	@Query("select total from payment where date between :startDate and :endDate")
 	List<Integer> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
 
@@ -56,5 +59,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 //	Select f from Foo as f order by f.id desc
 //	@Query("select p.paymentId from payment p order by p.paymentId desc limit 1")
 	Payment findTop1ByOrderByPaymentIdDesc();
+
+	@Query("select count(p) from payment p where storeId = :storeId")
+	int countStorePayment(int storeId);
+
+	@Query("select count(p) from payment p where userId = :userId")
+	int countUserPayment(int userId);
 
 }

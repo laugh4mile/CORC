@@ -1,6 +1,7 @@
 package com.web.shinhan.model.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.Store;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.mapper.StoreMapper;
+import com.web.shinhan.repository.PaymentRepository;
 import com.web.shinhan.repository.StoreRepository;
 
 @Service
@@ -23,6 +26,9 @@ public class StoreService {
 
 	@Autowired
 	private StoreRepository storeRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
 
 	private final StoreMapper mapper = Mappers.getMapper(StoreMapper.class);
 
@@ -120,6 +126,15 @@ public class StoreService {
 		Store storeInfo = storeRepository.findByEmail(email);
 		StoreDto storeDto = mapper.INSTANCE.storeToDto(storeInfo);
 		return storeDto;
+	}
+
+	public boolean checkCrNum(String crNum) {
+		return storeRepository.existsByCrNum(crNum);
+	}
+
+	public int countStore() {
+		int count = (int) storeRepository.count();
+		return count;
 	}
 
 }

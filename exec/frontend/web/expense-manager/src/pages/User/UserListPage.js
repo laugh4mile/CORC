@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-import UserList from "../../components/User/UserList";
-import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
-import useHttp from "../../hooks/use-http";
-import { getAllUsers } from "../../lib/api-user";
+import UserList from '../../components/User/UserList';
+import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
+import useHttp from '../../hooks/use-http';
+import { getAllUsers } from '../../lib/api-user';
 
-import classes from "./UserListPage.module.css";
+import classes from './UserListPage.module.css';
 
 const UserListPage = () => {
   const { sendRequest, status, data: loadedInfo, error } = useHttp(
