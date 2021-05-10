@@ -9,15 +9,28 @@ import { getAllUsers } from "../../lib/api-user";
 import classes from "./UserListPage.module.css";
 
 const UserListPage = () => {
-  //*** 백엔드 연결시 이 주석 부분을 풀 것 ***
-  const { sendRequest, status, data: loadedUsers, error } = useHttp(
+  const { sendRequest, status, data: loadedInfo, error } = useHttp(
     getAllUsers,
     true
   );
 
-  console.log("loadedUsers", loadedUsers, typeof loadedUsers);
-  // const loadedUsers = loadedInfo[0].content;
-  if (loadedUsers !== null) console.log(Object.values(loadedUsers)[0].content);
+  let loadedUsers = [
+    {
+      userId: 26,
+      employeeNum: 2600032,
+      email: "test3@corc.com",
+      userName: "한제현",
+      department: "총무부",
+      position: "주임",
+      contact: "010-1414-4141",
+      days: "1111111",
+      cardLimit: "100000",
+      balance: "1000",
+      active: 1,
+      accessTime: "2021-05-03 16:54:22",
+    },
+  ];
+  if (loadedInfo !== null) loadedUsers = Object.values(loadedInfo)[0].content;
 
   useEffect(() => {
     sendRequest();
@@ -25,8 +38,11 @@ const UserListPage = () => {
 
   if (status === "pending") {
     return (
-      <div className="centered">
-        <LoadingSpinner />
+      <div className="page">
+        <span className="title">사용자 목록</span>
+        <section className={classes.spinner}>
+          <LoadingSpinner />
+        </section>
       </div>
     );
   }
@@ -38,24 +54,6 @@ const UserListPage = () => {
   if (status === "completed" && (!loadedUsers || loadedUsers.length === 0)) {
     return <span>사용자가 없습니다.</span>;
   }
-
-  // *** 백엔드 연결시 밑의 const loadedUsers 부분을 주석처리 할 것  ***
-  // const loadedUsers = [
-  //   {
-  //     userId: 26,
-  //     employeeNum: 2600032,
-  //     email: "test3@corc.com",
-  //     userName: "한제현",
-  //     department: "총무부",
-  //     position: "주임",
-  //     contact: "010-1414-4141",
-  //     days: "1111111",
-  //     cardLimit: "100000",
-  //     balance: "1000",
-  //     active: 1,
-  //     accessTime: "2021-05-03 16:54:22",
-  //   },
-  // ];
 
   return (
     <div className="page">

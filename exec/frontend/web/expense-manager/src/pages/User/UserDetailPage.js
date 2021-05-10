@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "react-router-dom";
 
-const PaymentDetailPage = () => {
+const UserDetailPage = () => {
   const params = useParams();
   const location = useLocation();
   const { userName } = location.state;
@@ -15,4 +15,4 @@ const PaymentDetailPage = () => {
   );
 };
 
-export default PaymentDetailPage;
+export default UserDetailPage;
