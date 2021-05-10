@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import Constants from 'expo-constants';
 import { useSelector } from 'react-redux';
 import Card from '../components/Card';
@@ -7,7 +14,9 @@ import axios from 'axios';
 import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
 import MoneyIcon from '../components/icons/MoneyIcon';
-export default function Home() {
+import Colors from '../constants/Colors';
+
+const Home = (props) => {
   const userId = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState();
@@ -130,7 +139,7 @@ export default function Home() {
           flex: 3.5,
         }}
       >
-        <View
+        <ScrollView
           style={{
             flex: 1,
             marginHorizontal: 20,
@@ -144,14 +153,40 @@ export default function Home() {
                 date={payment.date}
                 store={payment.store}
                 total={payment.total}
+                categoryCode={payment.store.category.categoryCode}
               />
             ))}
           </View>
-        </View>
+        </ScrollView>
+
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderTopWidth: StyleSheet.hairlineWidth,
+            borderTopColor: '#737373',
+            paddingVertical: 10,
+          }}
+          onPress={() => {
+            props.navigation.navigate('Wallet');
+          }}
+          activeOpacity={1}
+        >
+          <Text
+            style={{
+              color: Colors.primary.backgroundColor,
+              fontSize: 15,
+              fontWeight: 'bold',
+            }}
+          >
+            상세 내역 보러 가기
+          </Text>
+        </TouchableOpacity>
       </Card>
     </View>
   );
-}
+};
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -167,6 +202,6 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
   },
   intro: {
-    fontSize: 24,
+    fontSize: 28,
   },
 });
