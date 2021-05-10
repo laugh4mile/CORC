@@ -353,13 +353,10 @@ public class AdminController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.OK;
 		Page<StoreDto> page = null;
-		List<Integer[]> payment = null;
-		// 가맹점 정보 조회
+
 		try {
 			page = storeService.findAllStore(pageable);
 			resultMap.put("storeLists", page);
-			payment = paymentService.calcNotConfirmed();
-			resultMap.put("payment", payment);
 			int count = storeService.countStore();
 			resultMap.put("count", count);
 			status = HttpStatus.OK;
