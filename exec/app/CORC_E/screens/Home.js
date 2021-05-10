@@ -153,7 +153,7 @@ const Home = (props) => {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
+            {payment.paymentList.content.map((payment, index) => (
               <View>
                 {match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -166,14 +166,14 @@ const Home = (props) => {
                     <View
                       style={{
                         flex: 3,
-                        backgroundColor: '#A09E9E',
-                        height: 0.7,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
-                    ></View>
+                    />
                   </View>
                 )}
                 <Payment
-                  key={payment.paymentId}
+                  key={index}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
@@ -195,7 +195,7 @@ const Home = (props) => {
           onPress={() => {
             props.navigation.navigate('Wallet');
           }}
-          activeOpacity={1}
+          activeOpacity={0.5}
         >
           <Text
             style={{

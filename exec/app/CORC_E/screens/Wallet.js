@@ -134,7 +134,7 @@ const Wallet = (props) => {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
+            {payment.paymentList.content.map((payment, index) => (
               <View>
                 {match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -147,14 +147,14 @@ const Wallet = (props) => {
                     <View
                       style={{
                         flex: 3,
-                        backgroundColor: '#A09E9E',
-                        height: 0.7,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
-                    ></View>
+                    />
                   </View>
                 )}
                 <Payment
-                  key={payment.paymentId}
+                  key={index}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
