@@ -36,12 +36,12 @@ const Home = (props) => {
     if (year == newDate.getFullYear()) {
       if (month == newDate.getMonth() + 1) {
         if (day == newDate.getDate()) {
-          console.log('패스');
+          // console.log('패스');
           return true;
         }
       }
     }
-    console.log('좋게 좋게 가자 제발 ');
+    // console.log('좋게 좋게 가자 제발 ');
     newDate = new Date(year, month - 1, day);
     return false;
   };
@@ -178,6 +178,7 @@ const Home = (props) => {
                   store={payment.store}
                   total={payment.total}
                   categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
                 />
               </View>
             ))}

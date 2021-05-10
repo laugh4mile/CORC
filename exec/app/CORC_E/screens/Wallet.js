@@ -159,6 +159,7 @@ const Wallet = (props) => {
                   store={payment.store}
                   total={payment.total}
                   categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
                 />
               </View>
             ))}

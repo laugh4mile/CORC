@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Modal, Pressable } from 'react-native';
 import StoreIcon from './icons/StoreIcon';
 import CoffeeIcon from './icons/CoffeeIcon';
 import {
@@ -20,12 +20,12 @@ import {
 } from '@expo/vector-icons';
 import * as Icon from './icons/IconByCategory';
 
-function Payment({ date, store, total, categoryCode }) {
+function Payment({ date, store, total, categoryCode, paymentitem }) {
   const year = date.substring(0, 4);
   const month = +date.substring(5, 7);
   const day = +date.substring(8, 10);
   const time = date.substring(11, 16);
-
+  // console.log(paymentitem);
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -33,9 +33,43 @@ function Payment({ date, store, total, categoryCode }) {
     const iconName = Icon.GetIcon(categoryCode);
     return iconName;
   }
-
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{store.storeName}</Text>
+            {paymentitem.map((item, index) => (
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 2 }}>
+                  <Text>
+                    {item.productName} x {item.amount}
+                  </Text>
+                  {/* <Text></Text> */}
+                </View>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <Text>￦ {item.price}</Text>
+                </View>
+              </View>
+            ))}
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>X</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
       <View
         style={{
           flexDirection: 'row',
@@ -58,9 +92,15 @@ function Payment({ date, store, total, categoryCode }) {
           )}
         </View>
         <View style={{ flex: 2 }}>
-          <Text style={{ fontSize: 18, color: '#414251' }}>
-            {store.storeName}
-          </Text>
+          <Pressable
+            style={{ backgroundColor: 'red' }}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={{ fontSize: 18, color: '#414251' }}>
+              {store.storeName}
+              {/*  */}
+            </Text>
+          </Pressable>
           <Text style={{ color: '#7B7A7A' }}>{time}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -80,3 +120,49 @@ function Payment({ date, store, total, categoryCode }) {
 Payment.propTypes = {};
 
 export default Payment;
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    // flex: 1,
+    width: '85%',
+    height: '80%',
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
