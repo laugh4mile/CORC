@@ -128,8 +128,14 @@ public class StoreController {
 		boolean flag = true;
 
 		try {
-			storeService.registStore(store);
-			status = HttpStatus.ACCEPTED;
+			if (!storeService.checkCrNum(store.getCrNum())) {
+				storeService.registStore(store);
+				status = HttpStatus.ACCEPTED;
+			} else {
+				flag = false;
+				status = HttpStatus.UNAUTHORIZED;
+				return new ResponseEntity<Boolean>(flag, status);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
