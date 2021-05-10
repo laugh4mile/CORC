@@ -47,7 +47,7 @@ export async function getSingleUser(userId) {
 export async function getUser(page, size) {
   try {
     const rs = await axios.get(`/admin/user/list?page=${page}&size=${size}`);
-    const data = re.data.userList.content;
+    const data = rs.data.userList.content;
 
     return data;
   } catch (err) {
