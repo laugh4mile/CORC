@@ -87,16 +87,25 @@ export const login = (email, password) => {
     let userId = response.data["store-storeid"];
     let useremail = response.data["store-email"];
     let token = response.data["auth-token"];
+    let accepted = response.data["store-accepted"];
 
-    dispatch(
-      authenticate(
-        userId,
-        useremail,
-        token,
-        // parseInt(resData.expiresIn) * 1000
-        3600 * 1000
-      )
-    );
+    if(accepted === 0) {
+      throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
+    }
+    if(accepted === 1) {
+      throw new Error('가맹점 승인이 완료되지 않았습니다.');
+    }
+    if(accepted === 2) {
+      dispatch(
+        authenticate(
+          userId,
+          useremail,
+          token,
+          // parseInt(resData.expiresIn) * 1000
+          3600 * 1000
+        )
+      );
+    }
 
     const expirationDate = new Date(
       // new Date().getTime() + parseInt(resData.expiresIn) * 1000
