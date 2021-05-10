@@ -44,6 +44,11 @@ public class StoreService {
 		return storeDto;
 	}
 
+	public boolean emailCheck(String email) {
+		boolean result = storeRepository.existsByEmail(email);
+		return result;
+	}
+	
 	@Transactional
 	public void registStore(StoreDto storeDto) {
 		String encodePassword = passwordEncoder.encode(storeDto.getPassword());
