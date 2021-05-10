@@ -357,7 +357,7 @@ public class AdminController {
 		// 가맹점 정보 조회
 		try {
 			page = storeService.findAllStore(pageable);
-			resultMap.put("storeList", page);
+			resultMap.put("storeLists", page);
 			payment = paymentService.calcNotConfirmed();
 			resultMap.put("payment", payment);
 			int count = storeService.countStore();
