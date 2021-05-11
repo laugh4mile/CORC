@@ -60,47 +60,43 @@ const Wallet = (props) => {
   }
   return (
     <View style={styles.container}>
+      <View style={{ flex: 1 }}></View>
       <View style={styles.contents}>
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            // justifyContent: 'flex-end',
           }}
         >
-          <Text style={{ fontSize: 35, color: '#414251', marginRight: 10 }}>
+          <Text
+            style={{
+              fontSize: 35,
+              color: '#414251',
+              // marginBottom: 10,
+              paddingBottom: 15,
+              fontWeight: 'bold',
+            }}
+          >
             {numberWithCommas(userInfo.info.balance)}
           </Text>
           <Text
             style={{
               fontSize: 24,
+              marginHorizontal: 10,
               color: '#414251',
+              paddingBottom: 10,
             }}
           >
             원
           </Text>
-        </View>
-
-        <View
-          style={{
-            alignItems: 'flex-end',
-            paddingRight: 25,
-            paddingBottom: 10,
-          }}
-        >
           <Text style={{ color: '#414251' }}>
-            / {numberWithCommas(userInfo.info.cardLimit)} 원
+            / {'  '}
+            {numberWithCommas(userInfo.info.cardLimit)} 원
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 10,
-            paddingLeft: 20,
-          }}
-        >
+        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
           <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
             남은 한도 / 총 한도
           </Text>
@@ -109,14 +105,21 @@ const Wallet = (props) => {
 
       <View
         style={{
-          flex: 0.7,
+          flex: 0.4,
           flexDirection: 'row',
           alignItems: 'flex-end',
           paddingBottom: '3%',
         }}
       >
         <PaymentHistoryIcon color={'#414251'} size="30" />
-        <Text style={{ fontSize: 24, marginLeft: 10, color: '#414251' }}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginLeft: 10,
+            color: '#414251',
+            fontWeight: 'bold',
+          }}
+        >
           이용 내역
         </Text>
       </View>
@@ -134,7 +137,7 @@ const Wallet = (props) => {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
+            {payment.paymentList.content.map((payment, index) => (
               <View>
                 {match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -147,18 +150,19 @@ const Wallet = (props) => {
                     <View
                       style={{
                         flex: 3,
-                        backgroundColor: '#A09E9E',
-                        height: 0.7,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
-                    ></View>
+                    />
                   </View>
                 )}
                 <Payment
-                  key={payment.paymentId}
+                  key={index}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
                   categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
                 />
               </View>
             ))}
@@ -178,7 +182,8 @@ const styles = StyleSheet.create({
   },
   contents: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 20,
   },
 });

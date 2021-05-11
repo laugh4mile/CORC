@@ -36,12 +36,12 @@ const Home = (props) => {
     if (year == newDate.getFullYear()) {
       if (month == newDate.getMonth() + 1) {
         if (day == newDate.getDate()) {
-          console.log('패스');
+          // console.log('패스');
           return true;
         }
       }
     }
-    console.log('좋게 좋게 가자 제발 ');
+    // console.log('좋게 좋게 가자 제발 ');
     newDate = new Date(year, month - 1, day);
     return false;
   };
@@ -57,7 +57,7 @@ const Home = (props) => {
         SERVER_URL + 'user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      // console.log('paymentList ===> : ', response2.data);
+      console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);
@@ -153,7 +153,7 @@ const Home = (props) => {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
+            {payment.paymentList.content.map((payment, index) => (
               <View>
                 {match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -166,18 +166,19 @@ const Home = (props) => {
                     <View
                       style={{
                         flex: 3,
-                        backgroundColor: '#A09E9E',
-                        height: 0.7,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
-                    ></View>
+                    />
                   </View>
                 )}
                 <Payment
-                  key={payment.paymentId}
+                  key={index}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
                   categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
                 />
               </View>
             ))}
@@ -195,7 +196,7 @@ const Home = (props) => {
           onPress={() => {
             props.navigation.navigate('Wallet');
           }}
-          activeOpacity={1}
+          activeOpacity={0.5}
         >
           <Text
             style={{
@@ -227,5 +228,6 @@ const styles = StyleSheet.create({
   },
   intro: {
     fontSize: 28,
+    fontWeight: 'bold',
   },
 });
