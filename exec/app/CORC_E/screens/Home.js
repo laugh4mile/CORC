@@ -57,7 +57,7 @@ const Home = (props) => {
         SERVER_URL + 'user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      console.log('paymentList ===> : ', response2.data);
+      // console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);
