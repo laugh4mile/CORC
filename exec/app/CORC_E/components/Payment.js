@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Modal, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  Pressable,
+  ScrollView,
+} from 'react-native';
 import StoreIcon from './icons/StoreIcon';
 import CoffeeIcon from './icons/CoffeeIcon';
 import {
@@ -22,10 +29,9 @@ import * as Icon from './icons/IconByCategory';
 
 function Payment({ date, store, total, categoryCode, paymentitem }) {
   const year = date.substring(0, 4);
-  const month = +date.substring(5, 7);
-  const day = +date.substring(8, 10);
+  const month = date.substring(5, 7);
+  const day = date.substring(8, 10);
   const time = date.substring(11, 16);
-  // console.log(paymentitem);
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -46,26 +52,67 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{store.storeName}</Text>
-            {paymentitem.map((item, index) => (
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 2 }}>
-                  <Text>
-                    {item.productName} x {item.amount}
+            <ScrollView
+              style={{
+                flex: 1,
+                // marginHorizontal: 20,
+                // marginTop: 10,
+              }}
+            >
+              <Text style={styles.modalText}>{store.storeName}</Text>
+              <Text style={styles.modalDate}>
+                {' '}
+                {year}-{month}-{day} {time}{' '}
+              </Text>
+              {paymentitem.map((item, index) => (
+                <View style={{ flexDirection: 'row', marginVertical: 5 }}>
+                  <View style={{ flex: 2 }}>
+                    <Text>
+                      {item.productName} x {item.amount}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Text>￦ {numberWithCommas(item.price * item.amount)}</Text>
+                  </View>
+                </View>
+              ))}
+              <View
+                style={{
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  marginVertical: 15,
+                }}
+              />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Total
                   </Text>
-                  {/* <Text></Text> */}
                 </View>
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                  <Text>￦ {item.price}</Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ￦ {numberWithCommas(total)}
+                  </Text>
                 </View>
               </View>
-            ))}
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>X</Text>
-            </Pressable>
+            </ScrollView>
+            <View style={{ justifyContent: 'flex-end', marginTop: 10 }}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>X</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -92,10 +139,7 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
           )}
         </View>
         <View style={{ flex: 2 }}>
-          <Pressable
-            style={{ backgroundColor: 'red' }}
-            onPress={() => setModalVisible(true)}
-          >
+          <Pressable onPress={() => setModalVisible(true)}>
             <Text style={{ fontSize: 18, color: '#414251' }}>
               {store.storeName}
               {/*  */}
@@ -126,11 +170,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.50)',
   },
   modalView: {
     // flex: 1,
     width: '85%',
-    height: '80%',
+    height: '70%',
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -150,9 +195,6 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
   buttonClose: {
     backgroundColor: '#2196F3',
   },
@@ -162,6 +204,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  modalDate: {
     marginBottom: 15,
     textAlign: 'center',
   },
