@@ -173,7 +173,7 @@ const Home = (props) => {
                   </View>
                 )}
                 <Payment
-                  key={index}
+                  key={payment.paymentId}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
