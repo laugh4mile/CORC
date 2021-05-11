@@ -367,6 +367,29 @@ public class AdminController {
 
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	@ApiOperation(value = "가맹점 신청 목록", notes = "신청 대기 중인 가맹점들의 정보를 반환한다.", response = HashMap.class)
+	@GetMapping("/store/list/unassigned")
+	public ResponseEntity<Map<String, Object>> findUnassignedStoreList(Pageable pageable) throws Exception {
+		logger.info("findStoreList - 호출");
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.OK;
+		Page<StoreDto> page = null;
+		
+		try {
+			page = storeService.findAllUnassignedStore(pageable);
+			resultMap.put("storeLists", page);
+			int count = storeService.countStore();
+			resultMap.put("count", count);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
 
 	@ApiOperation(value = "가맹점 정보 조회", notes = "가맹점의 정보를 가지고 온다.", response = HashMap.class)
 	@GetMapping("/store/info")
