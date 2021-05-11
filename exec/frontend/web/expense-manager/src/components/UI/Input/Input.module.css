@@ -11,7 +11,8 @@
     line-height: 1.5rem;
     padding: 0.7rem 1rem;
     display: block;
-    width: 100%;
+    width: auto;
+
     border: none;
     border-radius: 0.5rem;
     margin: 1rem 0;
@@ -28,6 +29,12 @@
     font-size: 0.85rem;
     color: #3f3f42;
     font-weight: bold;
+}
+
+.input:disabled {
+    color: #3f3f42;
+    background-color: white;
+    font-weight: 600;
 }
 
 
