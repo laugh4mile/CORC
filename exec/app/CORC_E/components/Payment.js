@@ -110,7 +110,7 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.textStyle}>X</Text>
+                <Text style={styles.textStyle}>Close</Text>
               </Pressable>
             </View>
           </View>
