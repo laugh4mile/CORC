@@ -70,12 +70,6 @@ const Payment = (props) => {
   const checkPrice = (text) => {
     setisPriceValid(numExp.test(text.toString()) && text > 0);
     setPrice(text);
-    // if (!numExp.test(text.toString()) || price <= 0) {
-    //   setisPriceValid(false)
-    // }
-    // else {
-    //   setisPriceValid(true)
-    // }
   };
 
   const checkQuantity = (text) => {
@@ -92,13 +86,11 @@ const Payment = (props) => {
         { text: "확인", onPress: () => productNameRef.current.focus() },
       ]);
     }
-    // if (!numExp.test(price.toString()) || price <= 0) {
     if (!isPriceValid) {
       return Alert.alert(null, "가격을 확인해주세요.", [
         { text: "확인", onPress: () => priceRef.current.focus() },
       ]);
     }
-    // if (!numExp.test(quantity.toString()) || quantity <= 0) {
     if (!isQuantityValid) {
       return Alert.alert(null, "수량을 확인해주세요.", [
         { text: "확인", onPress: () => quantityRef.current.focus() },
@@ -121,14 +113,9 @@ const Payment = (props) => {
     toggleModal();
   };
 
-  const addScannedItem = (data) => {
-    let jsonData = JSON.parse(data);
-    console.log(jsonData.productName, jsonData.price, jsonData.amount);
+  const addScannedItem = (productName, price) => {
+    setScanOpened(false);
 
-    let productName = jsonData.productName;
-    let price = jsonData.price
-      .replace(/[^0-9.]/g, "")
-      .replace(/(\..*)\./g, "$1");
     setItems([
       ...items,
       {
@@ -138,7 +125,6 @@ const Payment = (props) => {
       },
     ]);
 
-    setScanOpened(false);
   };
 
   const cancelAddItem = () => {
@@ -244,7 +230,7 @@ const Payment = (props) => {
         />
         <FontAwesome.Button
           name="qrcode"
-          onPress={() => setScanOpened(!scanOpened)}
+          onPress={() => setScanOpened(true)}
           backgroundColor="white"
           color={scanOpened ? "#7986FF" : "#a5a5a8"}
           size={imgSize}
@@ -254,7 +240,7 @@ const Payment = (props) => {
         <Modal isVisible={scanOpened}>
           <BarcodeScan
             onCancel={() => setScanOpened(false)}
-            onScanned={(data) => addScannedItem(data)}
+            onScanned={(name, price) => addScannedItem(name, price)}
           />
         </Modal>
       </View>
@@ -273,7 +259,7 @@ const Payment = (props) => {
           <View style={{ flex: 2.5, alignItems: "center" }}>
             <Text style={{ fontWeight: "bold", fontSize: 17 }}>가격</Text>
           </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 1.5, alignItems: "center" }}>
             <Text style={{ fontWeight: "bold", fontSize: 17 }}>수량</Text>
           </View>
           <View style={{}}>
@@ -338,13 +324,13 @@ const Payment = (props) => {
                   </Text>
                 </View>
                 <View style={{ flex: 2.5, alignItems: "center" }}>
-                  <Text style={{ fontSize: 15 }}>
+                  <Text style={{ fontSize: 15, textAlign: "center" }}>
                     {formatMoney(item.price)} 원
                   </Text>
                 </View>
                 <View
                   style={{
-                    flex: 1,
+                    flex: 1.5,
                     alignItems: "center",
                   }}
                 >
@@ -508,7 +494,10 @@ const Payment = (props) => {
               </View>
               <View style={{ alignItems: "flex-end", marginBottom: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
-                  <Text style={{ fontSize: imgSize * 1.2 }}>{total}</Text> 원
+                  <Text style={{ fontSize: imgSize * 1.2 }}>
+                    {formatMoney(total)}
+                  </Text>{" "}
+                  원
                 </Text>
               </View>
               <Button

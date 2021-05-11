@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Dimensions } from "react-native";
 
@@ -17,10 +17,42 @@ export default function BarcodeScan(props) {
     })();
   }, []);
 
+  const isJson = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      Alert.alert(null, "QR Code is Not Valid!");
+      setScanned(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    props.onScanned(data);
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    let jsonData;
+
+    if (isJson(jsonData)) {
+      const numExp = /^\d+$/;
+
+      let productName = jsonData.productName;
+      let price = jsonData.price;
+      price = price
+        ? numExp.test(price.toString()) && +price > 0
+          ? price.toString()
+          : ""
+        : "";
+
+      if (!productName || !price || productName === "" || price === "") {
+        Alert.alert(null, "QR Code is Not Valid!");
+        setScanned(true);
+        return;
+      }
+
+      price = price.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+
+      setScanned(true);
+      props.onScanned(productName, price);
+    }
   };
 
   if (hasPermission === null) {
@@ -61,7 +93,7 @@ export default function BarcodeScan(props) {
       </BarCodeScanner>
       {scanned && (
         <Text onPress={() => setScanned(false)} style={styles.cancel}>
-          Tap to Scan Again
+          Tap This to Scan Again
         </Text>
       )}
     </View>
