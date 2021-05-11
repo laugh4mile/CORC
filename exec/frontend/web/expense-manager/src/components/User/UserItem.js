@@ -22,7 +22,7 @@ const UserItem = (props) => {
   const trClickHandler = () =>
     history.push({
       pathname: `/user/list/${props.employeeNum}`,
-      state: { userName: `${props.userName}` },
+      state: { userName: `${props.userName}`, userId: `${props.userId}` },
     });
 
   return (
