@@ -130,8 +130,7 @@ public class UserController {
 
 	@ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = HashMap.class)
 	@PostMapping("/pay")
-	public ResponseEntity<Map<String, Object>> pay(@RequestParam String storeGugunCode,
-			@RequestParam String userGugunCode, @RequestParam int total, @RequestParam int userId,
+	public ResponseEntity<Map<String, Object>> pay(@RequestParam int total, @RequestParam int userId,
 			@RequestParam int storeId, @RequestBody List<PaymentitemDto> paymentitems) throws Exception {
 		logger.info("pay - 호출");
 
@@ -139,8 +138,10 @@ public class UserController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		try {
-			System.out.println(storeId + storeGugunCode);
 			UserDto user = userService.findUserInfo(userId);
+			StoreDto store = storeService.findStoreInfo(storeId);
+			String storeGugunCode = store.getGugunCode();
+			String userGugunCode = user.getGugunCode();
 			String userDays = user.getDays();
 			LocalDateTime now = LocalDateTime.now();
 			int nowDay = now.getDayOfWeek().getValue();
