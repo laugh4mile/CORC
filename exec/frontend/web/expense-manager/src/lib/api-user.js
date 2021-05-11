@@ -44,10 +44,10 @@ export async function getSingleUser(userId) {
   }
 }
 
-export async function getUser(page, size) {
+export async function getUsers({ page, size }) {
   try {
     const rs = await axios.get(`/admin/user/list?page=${page}&size=${size}`);
-    const data = rs.data.userList.content;
+    const data = rs.data.userList;
 
     return data;
   } catch (err) {
@@ -73,5 +73,24 @@ export async function getAllPayment() {
     return transformedPayments;
   } catch (err) {
     throw new Error(err || '결제 내역을 불러올 수 없습니다.');
+  }
+}
+
+export async function getCities() {
+  try {
+    const rs = await axios.get('/admin/sido');
+    return rs.data.sido;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
+export async function getRegions(cityId) {
+  if (cityId == undefined) throw new Error('Insert cityId');
+  try {
+    const rs = await axios.get(`/admin/gugun?sidoCode=${cityId}`);
+    return rs.data.gugun;
+  } catch (err) {
+    throw new Error(err);
   }
 }
