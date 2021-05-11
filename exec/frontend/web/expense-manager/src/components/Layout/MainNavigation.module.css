@@ -3,8 +3,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  justify-content: center;
+  justify-content: start;
   color: #a5a5a8;
   background-color: white;
 }
