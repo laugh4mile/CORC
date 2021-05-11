@@ -19,6 +19,7 @@ export default function BarcodeScan(props) {
 
   const isJson = (str) => {
     try {
+      console.log(str)
       JSON.parse(str);
     } catch (e) {
       Alert.alert(null, "QR Code is Not Valid!");
@@ -29,9 +30,8 @@ export default function BarcodeScan(props) {
   };
 
   const handleBarCodeScanned = ({ type, data }) => {
-    let jsonData;
-
-    if (isJson(jsonData)) {
+    if (isJson(data)) {
+      let jsonData = JSON.parse(data)
       const numExp = /^\d+$/;
 
       let productName = jsonData.productName;
