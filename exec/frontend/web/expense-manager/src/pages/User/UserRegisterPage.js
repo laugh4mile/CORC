@@ -11,6 +11,8 @@ const UserRegisterPage = () => {
 
   useEffect(() => {
     if (status === "completed") {
+      // 임시 prompt
+      alert("유저 등록 완료")
       history.push("/user/list");
     }
   }, [status, history]);
