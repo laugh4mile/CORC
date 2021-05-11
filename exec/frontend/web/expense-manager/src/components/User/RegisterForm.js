@@ -139,6 +139,7 @@ const RegisterForm = (props) => {
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));
     }
+    setGuguns([]);
   }, [enteredArea.enteredCity]);
 
   return (
