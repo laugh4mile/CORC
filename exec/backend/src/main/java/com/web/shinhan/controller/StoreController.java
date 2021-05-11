@@ -144,6 +144,16 @@ public class StoreController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
+	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이메일로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
+	@PostMapping("/check/email")
+	public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
+		logger.info("emailCheck - 호출");
+
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		return new ResponseEntity<Boolean>(storeService.emailCheck(email), status);
+	}
+	
 	@ApiOperation(value = "거래 내역/미 정산금", notes = "거래 내역/미 정산금을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/total")
 	public ResponseEntity<Map<String, Object>> findTransactionalInfo(@RequestParam int storeId) throws Exception {

@@ -67,6 +67,8 @@ public class AdminController {
 		try {
 			page = userService.findAllUser(pageable);
 			resultMap.put("userList", page);
+			int count = userService.countUser();
+			resultMap.put("count", count);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -110,6 +112,8 @@ public class AdminController {
 			resultMap.put("info", userService.findUserInfo(userId));
 			page = paymentService.findUserPayment(userId, pageable);
 			resultMap.put("paymentList", page);
+			int count = paymentService.countUserPayment(userId);
+			resultMap.put("count", count);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -306,6 +310,8 @@ public class AdminController {
 		try {
 			page = paymentService.findAll(pageable);
 			resultMap.put("paymentList", page);
+			int count = paymentService.countPayment();
+			resultMap.put("count", count);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -348,10 +354,11 @@ public class AdminController {
 		HttpStatus status = HttpStatus.OK;
 		Page<StoreDto> page = null;
 
-		// 가맹점 정보 조회
 		try {
 			page = storeService.findAllStore(pageable);
-			resultMap.put("storeList", page);
+			resultMap.put("storeLists", page);
+			int count = storeService.countStore();
+			resultMap.put("count", count);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -396,6 +403,8 @@ public class AdminController {
 			resultMap.put("info", storeService.findStoreInfo(storeId));
 			page = paymentService.findStorePayment(storeId, pageable);
 			resultMap.put("paymentList", page);
+			int count = paymentService.countStorePayment(storeId);
+			resultMap.put("count", count);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());

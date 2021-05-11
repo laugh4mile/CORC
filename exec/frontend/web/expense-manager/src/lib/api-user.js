@@ -44,10 +44,10 @@ export async function getSingleUser(userId) {
   }
 }
 
-export async function getUser(page, size) {
+export async function getUsers({ page, size }) {
   try {
     const rs = await axios.get(`/admin/user/list?page=${page}&size=${size}`);
-    const data = rs.data.userList.content;
+    const data = rs.data.userList;
 
     return data;
   } catch (err) {

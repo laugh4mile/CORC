@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { View, Text } from 'react-native';
 import StoreIcon from './icons/StoreIcon';
 import CoffeeIcon from './icons/CoffeeIcon';
+import {
+  AntDesign,
+  Entypo,
+  EvilIcons,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  Fontisto,
+  Foundation,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Octicons,
+  SimpleLineIcons,
+  Zocial,
+} from '@expo/vector-icons';
 import * as Icon from './icons/IconByCategory';
-import Icons, { AntDesign } from '@expo/vector-icons';
 
 function Payment({ date, store, total, categoryCode }) {
-  const now = () => {
-    let today = new Date();
-
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    return year + '.' + month;
-  };
-
   const year = date.substring(0, 4);
-  const month = date.substring(5, 7);
-  const day = date.substring(8, 10);
+  const month = +date.substring(5, 7);
+  const day = +date.substring(8, 10);
   const time = date.substring(11, 16);
+
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
-
   function getIconName(categoryCode) {
     const iconName = Icon.GetIcon(categoryCode);
-    // console.log('iconName : ', iconName);
-    // return iconName;
+    return iconName;
   }
+
   return (
     <View>
-      {/* <Text>{date}</Text> */}
       <View
         style={{
           flexDirection: 'row',
@@ -41,8 +43,19 @@ function Payment({ date, store, total, categoryCode }) {
         }}
       >
         <View style={{ justifyContent: 'center', marginRight: 20 }}>
-          <StoreIcon color={'#414251'} size={27} />
-          {/* {getIconName(categoryCode)} */}
+          {getIconName(categoryCode).family == 'StoreIcon' && (
+            <StoreIcon color={'#414251'} size={27} />
+          )}
+          {getIconName(categoryCode).family == 'CoffeeIcon' && (
+            <CoffeeIcon color={'#414251'} size={27} />
+          )}
+          {getIconName(categoryCode).family == 'MaterialCommunityIcons' && (
+            <MaterialCommunityIcons
+              name={getIconName(categoryCode).iconName}
+              size={24}
+              color="#414251"
+            />
+          )}
         </View>
         <View style={{ flex: 2 }}>
           <Text style={{ fontSize: 18, color: '#414251' }}>
