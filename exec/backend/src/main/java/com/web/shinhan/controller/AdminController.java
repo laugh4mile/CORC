@@ -1,5 +1,7 @@
 package com.web.shinhan.controller;
 
+import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.service.BlockchainService;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +55,9 @@ public class AdminController {
 
 	@Autowired
 	AreaService areaService;
+
+	@Autowired
+	BlockchainService blockchainService;
 
 	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보를 반환한다.", response = HashMap.class)
 	@GetMapping("/user/list")
@@ -180,6 +185,16 @@ public class AdminController {
 			userService.registUser(user);
 			flag = true;
 			status = HttpStatus.ACCEPTED;
+
+			// call chian api
+			// GetUser Test
+			// BlockUserDto testUser = blockchainService.gerUser("TestUser");
+			// logger.info(testUser.toString());
+
+			// PostUser
+			BlockUserDto blockUser = BlockUserDto.builder().userId(user.getEmail()).type("User").balance(0).build();
+			// SetBalance
+			// ...
 		} catch (Exception e) {
 			e.printStackTrace();
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
