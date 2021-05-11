@@ -17,8 +17,8 @@ import MoneyIcon from '../components/icons/MoneyIcon';
 import Colors from '../constants/Colors';
 
 const Home = (props) => {
-  console.log('---------------------------------------------------------');
   const userId = useSelector((state) => state.auth.userId);
+  var newDate = new Date();
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
@@ -28,6 +28,23 @@ const Home = (props) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
+  const match = (date) => {
+    const year = date.substring(0, 4);
+    const month = +date.substring(5, 7);
+    const day = +date.substring(8, 10);
+    if (year == newDate.getFullYear()) {
+      if (month == newDate.getMonth() + 1) {
+        if (day == newDate.getDate()) {
+          // console.log('패스');
+          return true;
+        }
+      }
+    }
+    // console.log('좋게 좋게 가자 제발 ');
+    newDate = new Date(year, month - 1, day);
+    return false;
+  };
 
   useEffect(() => {
     (async () => {
@@ -40,7 +57,7 @@ const Home = (props) => {
         SERVER_URL + 'user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      // console.log('paymentList ===> : ', response2.data);
+      console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);
@@ -57,18 +74,10 @@ const Home = (props) => {
       </View>
       <Card
         style={{
-          // marginHorizontal: 0,
           marginTop: 10,
-          // marginBottom: '0%',
           flex: 1.6,
         }}
       >
-        {/* <View style={{ paddingTop: 10, paddingLeft: 15 }}>
-          <Text style={{ color: 'gray', fontSize: 13 }}>
-            남은 한도 / 총 한도
-          </Text>
-        </View> */}
-
         <View
           style={{
             // flex: 1,
@@ -122,8 +131,6 @@ const Home = (props) => {
           flex: 0.7,
           flexDirection: 'row',
           alignItems: 'flex-end',
-          // justifyContent: 'flex-start',
-          // borderBottomColor: '#737373',
           paddingBottom: '3%',
         }}
       >
@@ -134,8 +141,6 @@ const Home = (props) => {
       </View>
       <Card
         style={{
-          // marginHorizontal: 10,
-          // marginTop: 10,
           marginBottom: '10%',
           flex: 3.5,
         }}
@@ -148,14 +153,34 @@ const Home = (props) => {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
-              <Payment
-                key={payment.paymentId}
-                date={payment.date}
-                store={payment.store}
-                total={payment.total}
-                categoryCode={payment.store.category.categoryCode}
-              />
+            {payment.paymentList.content.map((payment, index) => (
+              <View>
+                {match(payment.date) && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontSize: 13, color: '#414251' }}>
+                        {+payment.date.substring(5, 7)}월{' '}
+                        {+payment.date.substring(8, 10)}일
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 3,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                      }}
+                    />
+                  </View>
+                )}
+                <Payment
+                  key={index}
+                  date={payment.date}
+                  store={payment.store}
+                  total={payment.total}
+                  categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
+                />
+              </View>
             ))}
           </View>
         </ScrollView>
@@ -171,7 +196,7 @@ const Home = (props) => {
           onPress={() => {
             props.navigation.navigate('Wallet');
           }}
-          activeOpacity={1}
+          activeOpacity={0.5}
         >
           <Text
             style={{
@@ -200,9 +225,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '15%',
-    // backgroundColor: 'red',
   },
   intro: {
     fontSize: 28,
+    fontWeight: 'bold',
   },
 });

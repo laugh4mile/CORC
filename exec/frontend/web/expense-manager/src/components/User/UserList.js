@@ -21,8 +21,8 @@ const UserList = (props) => {
       <Card type="nofit">
         <table>
           <thead>
-            <tr>
-              <th>
+            <tr className={classes.tr}>
+              <th className={classes.checkbox}>
                 <input type="checkbox" name="status" />
               </th>
               <th>아이디</th>

@@ -7,8 +7,9 @@ import axios from 'axios';
 import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
 
-export default function Wallet() {
+const Wallet = (props) => {
   const userId = useSelector((state) => state.auth.userId);
+  var newDate = new Date();
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
@@ -18,6 +19,25 @@ export default function Wallet() {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
+  const match = (date) => {
+    const year = date.substring(0, 4);
+    const month = +date.substring(5, 7);
+    const day = +date.substring(8, 10);
+    if (year == newDate.getFullYear()) {
+      if (month == newDate.getMonth() + 1) {
+        if (day == newDate.getDate()) {
+          console.log('패스');
+          return true;
+        }
+      }
+    }
+    console.log('newDate : ', newDate);
+    console.log('좋게좋게 가자 제발 ');
+    console.log('결제 날짜 : ', year, '년,', month, '월,', day, '일');
+    newDate = new Date(year, month - 1, day);
+    return false;
+  };
 
   useEffect(() => {
     (async () => {
@@ -34,53 +54,49 @@ export default function Wallet() {
       setIsLoading(false);
     })();
   }, []);
+
   if (isLoading) {
     return <></>;
   }
   return (
     <View style={styles.container}>
+      <View style={{ flex: 1 }}></View>
       <View style={styles.contents}>
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            // justifyContent: 'flex-end',
           }}
         >
-          <Text style={{ fontSize: 35, color: '#414251', marginRight: 10 }}>
+          <Text
+            style={{
+              fontSize: 35,
+              color: '#414251',
+              // marginBottom: 10,
+              paddingBottom: 15,
+              fontWeight: 'bold',
+            }}
+          >
             {numberWithCommas(userInfo.info.balance)}
           </Text>
           <Text
             style={{
               fontSize: 24,
+              marginHorizontal: 10,
               color: '#414251',
+              paddingBottom: 10,
             }}
           >
             원
           </Text>
-        </View>
-
-        <View
-          style={{
-            alignItems: 'flex-end',
-            paddingRight: 25,
-            paddingBottom: 10,
-          }}
-        >
           <Text style={{ color: '#414251' }}>
-            / {numberWithCommas(userInfo.info.cardLimit)} 원
+            / {'  '}
+            {numberWithCommas(userInfo.info.cardLimit)} 원
           </Text>
         </View>
-        <View
-          style={{
-            // flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 10,
-            paddingLeft: 20,
-          }}
-        >
+        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
           <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
             남은 한도 / 총 한도
           </Text>
@@ -89,23 +105,26 @@ export default function Wallet() {
 
       <View
         style={{
-          flex: 0.7,
+          flex: 0.4,
           flexDirection: 'row',
           alignItems: 'flex-end',
-          // justifyContent: 'flex-start',
-          // borderBottomColor: '#737373',
           paddingBottom: '3%',
         }}
       >
         <PaymentHistoryIcon color={'#414251'} size="30" />
-        <Text style={{ fontSize: 24, marginLeft: 10, color: '#414251' }}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginLeft: 10,
+            color: '#414251',
+            fontWeight: 'bold',
+          }}
+        >
           이용 내역
         </Text>
       </View>
       <Card
         style={{
-          // marginHorizontal: 10,
-          // marginTop: 10,
           marginBottom: '10%',
           flex: 3.5,
         }}
@@ -118,21 +137,42 @@ export default function Wallet() {
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment) => (
-              <Payment
-                key={payment.paymentId}
-                date={payment.date}
-                store={payment.store}
-                total={payment.total}
-                categoryCode={payment.store.category.categoryCode}
-              />
+            {payment.paymentList.content.map((payment, index) => (
+              <View>
+                {match(payment.date) && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontSize: 13, color: '#414251' }}>
+                        {+payment.date.substring(5, 7)}월{' '}
+                        {+payment.date.substring(8, 10)}일
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 3,
+                        borderBottomColor: '#A09E9E',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                      }}
+                    />
+                  </View>
+                )}
+                <Payment
+                  key={index}
+                  date={payment.date}
+                  store={payment.store}
+                  total={payment.total}
+                  categoryCode={payment.store.category.categoryCode}
+                  paymentitem={payment.paymentitem}
+                />
+              </View>
             ))}
           </View>
         </ScrollView>
       </Card>
     </View>
   );
-}
+};
+export default Wallet;
 
 const styles = StyleSheet.create({
   container: {
@@ -142,7 +182,8 @@ const styles = StyleSheet.create({
   },
   contents: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 20,
   },
 });

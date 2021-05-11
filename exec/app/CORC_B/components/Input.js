@@ -1,31 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 
-const Input = ({placeholder, type, returnKeyType, keyboardType, onChangeText}) => {
+const Input = forwardRef((props, ref) => {
   const [secure, setSecure] = useState(true);
   const [focus, setFocus] = useState(false);
-  const placeholderV = placeholder ? placeholder : null;
-  const returnKeyTypeV = returnKeyType ? returnKeyType : "done"
-  const keyboardTypeV = keyboardType ? keyboardType : "default"
+
+  const {style: cStyle, ...others} = props;
 
   return (
-    <View style={!focus ? styles.container : styles.containerFocused}>
-      {type === "password" ? (
+    <View style={[!focus ? styles.container : styles.containerFocused, cStyle]}>
+      {props.type && props.type === "password" ? (
         <>
           <TextInput
+            {...others}
             style={styles.input}
-            placeholder={placeholderV}
             secureTextEntry={secure}
-            onChangeText={onChangeText}
             onFocus={() => {
               setFocus(true);
             }}
             onBlur={() => {
               setFocus(false);
             }}
-            returnKeyType={returnKeyTypeV}
-            keyboardType={keyboardTypeV}
+            ref={ref? ref: null}
           />
           <TouchableOpacity
             onPress={() => {
@@ -37,22 +34,20 @@ const Input = ({placeholder, type, returnKeyType, keyboardType, onChangeText}) =
         </>
       ) : (
         <TextInput
+          {...others}
           style={styles.input}
-          placeholder={placeholderV}
-          onChangeText={onChangeText}
           onFocus={() => {
             setFocus(true);
           }}
           onBlur={() => {
             setFocus(false);
           }}
-          returnKeyType={returnKeyTypeV}
-          keyboardType={keyboardTypeV}
+          ref={ref? ref: null}
         />
       )}
     </View>
   );
-};
+});
 
 export default Input;
 
@@ -67,17 +62,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 5,
-},
-containerFocused: {
-      flexDirection: "row",
-      alignItems: "center",
-      alignSelf: "stretch",
-      height: 44,
-      borderColor: "#979797",
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 10,
-      marginVertical: 5,
+  },
+  containerFocused: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "stretch",
+    height: 44,
+    borderColor: "#979797",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginVertical: 5,
   },
   input: {
     height: 44,

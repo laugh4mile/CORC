@@ -30,5 +30,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer>, PagingAn
 	Page<Store> findAllUnassignedStore(Pageable pageable);
 
 	boolean existsByCrNum(String crNum);
+	
+	boolean existsByEmail(String email);
 
 }

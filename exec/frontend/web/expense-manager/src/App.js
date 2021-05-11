@@ -9,6 +9,7 @@ import DashBoardPage from "./pages/DashBoardPage";
 // User
 import UserRegisterPage from "./pages/User/UserRegisterPage";
 import UserListPage from "./pages/User/UserListPage";
+import UserDetailPage from "./pages/User/UserDetailPage";
 import PaymentPage from "./pages/User/PaymentPage";
 import PaymentDetailPage from "./pages/User/PaymentDetailPage";
 // Store
@@ -41,6 +42,9 @@ const App = () => {
         </Route>
         <Route path="/user/list" exact>
           <UserListPage />
+        </Route>
+        <Route path="/user/list/:employeeNum">
+          <UserDetailPage />
         </Route>
         <Route exact path="/user/payment">
           <PaymentPage />

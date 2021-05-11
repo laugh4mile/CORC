@@ -26,6 +26,7 @@ public class Store {
 
 	private String crNum;
 	private String categoryCode;
+	@Column(unique = true)
 	private String email;
 	private String password;
 	private String storeName;

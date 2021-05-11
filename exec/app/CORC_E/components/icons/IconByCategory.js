@@ -1,5 +1,4 @@
 export const GetIcon = (categoryCode) => {
-  // console.log('code', categoryCode);
   let iconInfo = {};
   switch (categoryCode) {
     case '10302':
@@ -24,10 +23,10 @@ export const GetIcon = (categoryCode) => {
       break;
 
     default:
+      // 기본 : 슈퍼마켓 아이콘
       iconInfo.iconName = 'store';
       iconInfo.family = 'StoreIcon';
       break;
   }
-  // console.log('code', iconInfo);
   return iconInfo;
 };
