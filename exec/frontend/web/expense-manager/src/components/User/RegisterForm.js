@@ -93,6 +93,7 @@ const RegisterForm = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    setIsEntering(false);
 
     let transformedDays = '';
     for (let i = 1; i <= 7; i++) {
@@ -117,10 +118,6 @@ const RegisterForm = (props) => {
 
     console.log(userData);
     props.onAddUser(userData);
-  };
-
-  const finishEnteringHandler = () => {
-    setIsEntering(false);
   };
 
   const formFocusedHandler = () => {
@@ -271,7 +268,7 @@ const RegisterForm = (props) => {
             </article>
           </div>
           <div className={classes.buttons}>
-            <Button onClick={finishEnteringHandler}>등록</Button>
+            <Button>등록</Button>
           </div>
         </form>
       </Card>
