@@ -16,7 +16,8 @@ import com.web.shinhan.entity.User;
 import com.web.shinhan.model.UserDto;
 
 @Repository
-public interface SidoRepository extends JpaRepository<Sido, Integer>, PagingAndSortingRepository<Sido, Integer>,
-		QueryByExampleExecutor<Sido> {
+public interface SidoRepository extends JpaRepository<Sido, Integer>,
+    PagingAndSortingRepository<Sido, Integer>,
+    QueryByExampleExecutor<Sido> {
 
 }

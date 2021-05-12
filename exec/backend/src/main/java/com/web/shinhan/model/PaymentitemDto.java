@@ -12,30 +12,33 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentitemDto {
-	private int paymentItemId;
-	private int paymentId;
-	private String productName;
-	private int price;
-	private int amount;
 
-	@Builder
-	public PaymentitemDto(int paymentItemId, int paymentId, String productName, int price, int amount) {
-		this.paymentItemId = paymentItemId;
-		this.paymentId = paymentId;
-		this.productName = productName;
-		this.price = price;
-		this.amount = amount;
-	}
+  private int paymentItemId;
+  private int paymentId;
+  private String productName;
+  private int price;
+  private int amount;
 
-	public Paymentitem toEntity() {
-		return Paymentitem.builder().paymentItemId(paymentItemId).paymentId(paymentId).productName(productName)
-				.price(price).amount(amount).build();
-	}
+  @Builder
+  public PaymentitemDto(int paymentItemId, int paymentId, String productName, int price,
+      int amount) {
+    this.paymentItemId = paymentItemId;
+    this.paymentId = paymentId;
+    this.productName = productName;
+    this.price = price;
+    this.amount = amount;
+  }
 
-	public static PaymentitemDto of(Paymentitem paymentitem) {
-		return PaymentitemDto.builder().paymentItemId(paymentitem.getPaymentItemId())
-				.productName(paymentitem.getProductName()).paymentId(paymentitem.getPaymentId())
-				.price(paymentitem.getPrice()).amount(paymentitem.getAmount()).build();
-	}
+  public Paymentitem toEntity() {
+    return Paymentitem.builder().paymentItemId(paymentItemId).paymentId(paymentId)
+        .productName(productName)
+        .price(price).amount(amount).build();
+  }
+
+  public static PaymentitemDto of(Paymentitem paymentitem) {
+    return PaymentitemDto.builder().paymentItemId(paymentitem.getPaymentItemId())
+        .productName(paymentitem.getProductName()).paymentId(paymentitem.getPaymentId())
+        .price(paymentitem.getPrice()).amount(paymentitem.getAmount()).build();
+  }
 
 }

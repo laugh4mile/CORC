@@ -11,8 +11,9 @@ import com.web.shinhan.model.UserDto;
 
 @Mapper
 public interface PaymentMapper {
-	PaymentMapper INSTANCE = Mappers.getMapper(PaymentMapper.class); // 2
 
-	@Mapping(target = "")
-	PaymentDto paymentToDto(Payment payment);
+  PaymentMapper INSTANCE = Mappers.getMapper(PaymentMapper.class); // 2
+
+  @Mapping(target = "")
+  PaymentDto paymentToDto(Payment payment);
 }
