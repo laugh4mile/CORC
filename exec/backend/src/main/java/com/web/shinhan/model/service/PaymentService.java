@@ -42,15 +42,18 @@ public class PaymentService {
   }
 
   @Transactional
-  public boolean confirmPayment(int paymentId) {
-    Payment payment = paymentRepository.findByPaymentId(paymentId);
-    if (payment.getStatus() == 1) {
-      PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payment);
-      paymentDto.setStatus(2);
-      paymentRepository.save(paymentDto.toEntity());
-      return true;
+  public boolean confirmPayment(int storeId) {
+    List<Payment> payment = paymentRepository.findByStoreId(storeId);
+    for(Payment py : payment) {
+    	if (py.getStatus() == 1) {
+    		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
+    		paymentDto.setStatus(2);
+    		paymentRepository.save(paymentDto.toEntity());
+    	} else {
+    		return false;
+    	}
     }
-    return false;
+    return true;
   }
 
   @Transactional

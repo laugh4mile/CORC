@@ -1,7 +1,7 @@
-import { Fragment } from "react";
+import { Fragment } from 'react';
 
-import UserLogItem from "./UserLogItem";
-import classes from "./UserList.module.css";
+import UserLogItem from './UserLogItem';
+import classes from './UserList.module.css';
 
 const UserInfo = (props) => {
   return (

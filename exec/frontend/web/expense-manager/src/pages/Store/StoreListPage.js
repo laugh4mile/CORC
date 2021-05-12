@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import StoreList from '../../components/Store/StoreList';
 import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
 import useHttp from '../../hooks/use-http';
-import { getAllStores } from '../../lib/api-store';
+import { getStores } from '../../lib/api-store';
+import Page from '../../components/Pagenation';
 
 import classes from './StoreListPage.module.css';
 
@@ -14,17 +15,21 @@ const StoreListPage = () => {
     status,
     data: loadedStores,
     error,
-  } = useHttp(getAllStores, true);
+  } = useHttp(getStores, true);
+
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 1 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {
-    sendRequest();
-    console.log(loadedStores);
-  }, [sendRequest]);
+    sendRequest(pageInfo);
+  }, [sendRequest, pageInfo]);
 
   if (status === 'pending') {
     return (
-      <div className="centered">
-        <LoadingSpinner />
+      <div className="page">
+        <span className="title">가맹점 목록</span>
+        <section className={classes.spinner}>
+          <LoadingSpinner />
+        </section>
       </div>
     );
   }
@@ -41,10 +46,19 @@ const StoreListPage = () => {
     <div className="page">
       <span className="title">가맹점 목록</span>
       <section className={classes.section}>
-        <Link className="btn" to="/store/register">
-          가맹점 등록
-        </Link>
-        <StoreList stores={loadedStores} />
+        <div className={classes.section}>
+          <button className="btn">가맹점 등록</button>
+          <button className="btn">가맹점 정지</button>
+          <button className="btn">가맹점 정산</button>
+        </div>
+        <StoreList stores={loadedStores.content} />
+        <Page
+          totalElements={loadedStores.totalElements}
+          blockSize={4}
+          number={loadedStores.number}
+          size={loadedStores.size}
+          onClick={setPageInfo}
+        ></Page>
       </section>
     </div>
   );

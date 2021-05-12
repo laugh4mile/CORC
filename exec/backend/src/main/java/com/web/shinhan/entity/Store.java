@@ -77,4 +77,15 @@ public class Store {
     this.gugun = gugun;
   }
 
+@Override
+public String toString() {
+	return "Store [storeId=" + storeId + ", crNum=" + crNum + ", categoryCode=" + categoryCode + ", email=" + email
+			+ ", password=" + password + ", storeName=" + storeName + ", contact=" + contact + ", bankName=" + bankName
+			+ ", account=" + account + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode + ", requestDate="
+			+ requestDate + ", accepted=" + accepted + ", total=" + total + ", category=" + category + ", sido=" + sido
+			+ ", gugun=" + gugun + "]";
+}
+  
+  
+
 }

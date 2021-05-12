@@ -17,11 +17,19 @@ import com.web.shinhan.entity.Payment;
 public interface PaymentRepository extends JpaRepository<Payment, Integer>,
     PagingAndSortingRepository<Payment, Integer>, QueryByExampleExecutor<Payment> {
 
+  @Query(value = "select p.paymentId, p.userId, p.storeId, p.total, p.date, p.status from payment p inner join (select s.storeId from store s where s.accepted = 2) as t using(storeId)", 
+		  countQuery = "select count(*) from payment p inner join (select s.storeId from store s where s.accepted = 2) as t using(storeId)",
+	      nativeQuery = true)
+  Page<Payment> findAll(Pageable pageable);
+
   @Query("select p from payment p where userId = :userId")
   Page<Payment> findAllByUserId(int userId, Pageable pageable);
 
   @Query("select p from payment p where storeId = :storeId")
   Page<Payment> findAllByStoreId(int storeId, Pageable pageable);
+
+  @Query("select p from payment p where storeId = :storeId")
+  List<Payment> findByStoreId(int storeId);
 
   @Query("select p from payment p where department = :department")
   Page<Payment> findAllByDepartment(String department, Pageable pageable);
