@@ -338,15 +338,15 @@ public class AdminController {
 
   @ApiOperation(value = "정산", notes = "선택된 결제 내역을 정산한다.", response = Boolean.class)
   @PutMapping("/payment/confirm")
-  public ResponseEntity<Boolean> confirmPayment(@RequestBody int[] paymentIds) {
+  public ResponseEntity<Boolean> confirmPayment(@RequestBody int[] storeIds) {
     logger.info("confirmPayment - 호출 ");
 
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
 
     try {
-      for (int paymentId : paymentIds) {
-        flag = paymentService.confirmPayment(paymentId);
+      for (int storeId : storeIds) {
+        flag = paymentService.confirmPayment(storeId);
         if (!flag) {
           return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
         }
