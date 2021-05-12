@@ -1,6 +1,7 @@
+import { Fragment } from "react";
 import { useHistory } from "react-router-dom";
 
-import classes from "./UserItem.module.css";
+import classes from "./Item.module.css";
 
 const UserItem = (props) => {
   const history = useHistory();
@@ -26,7 +27,7 @@ const UserItem = (props) => {
     });
 
   return (
-    <tbody>
+    <Fragment>
       <tr className={classes.tr}>
         <td className={`${classes.td} ${classes.checkbox}`}>
           <input type="checkbox" />
@@ -57,7 +58,7 @@ const UserItem = (props) => {
           {props.accessTime.slice(0, 10)}
         </td>
       </tr>
-    </tbody>
+    </Fragment>
   );
 };
 

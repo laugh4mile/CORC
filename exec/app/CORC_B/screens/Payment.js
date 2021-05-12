@@ -12,19 +12,23 @@ import { FontAwesome } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import QRCode from "react-native-qrcode-svg";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Colors from "../constants/Colors";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import Input from "../components/Input";
-import BarcodeScan from "./Payment/BarcodeScan";
+import QRcodeScan from "./Payment/QRcodeScan";
 
 const { width } = Dimensions.get("window");
 const imgSize = width * 0.06;
 const qrSize = width * 0.55;
 
+const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+
 const Payment = (props) => {
   const userId = useSelector((state) => state.auth.userId);
+  const [storeName, setstoreName] = useState("");
   const [scanOpened, setScanOpened] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isVacateModalVisible, setVacateModalVisible] = useState(false);
@@ -46,6 +50,15 @@ const Payment = (props) => {
   const quantityRef = useRef();
 
   useEffect(() => {
+    (async () => {
+      let response = await axios.get(
+        SERVER_URL + "/store/payment?storeId=" + userId
+      );
+      setstoreName(response.data.info.storeName);
+    })();
+  }, []);
+
+  useEffect(() => {
     getSum();
   }, [items]);
 
@@ -63,7 +76,7 @@ const Payment = (props) => {
 
   const checkProductName = (text) => {
     setisProductNameValid(text.toString().trim().length > 0);
-    setProductName(text);
+    setProductName(text.toString().trim());
   };
   const numExp = /^\d+$/; // number expression
 
@@ -79,7 +92,6 @@ const Payment = (props) => {
 
   const addItem = () => {
     var spExp = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi; // special character
-    // const numExp = /^[0-9]*$/
     // if (productName.toString().trim().length <= 0) {
     if (!isProductNameValid) {
       return Alert.alert(null, "이름을 확인해주세요.", [
@@ -124,7 +136,6 @@ const Payment = (props) => {
         amount: "1",
       },
     ]);
-
   };
 
   const cancelAddItem = () => {
@@ -193,6 +204,7 @@ const Payment = (props) => {
     let size = props.size ? props.size : 100;
     let data = {
       storeid: userId,
+      storeName: storeName,
       orderList: items,
       total: total,
     };
@@ -238,7 +250,7 @@ const Payment = (props) => {
           iconStyle={{ marginRight: 0 }}
         />
         <Modal isVisible={scanOpened}>
-          <BarcodeScan
+          <QRcodeScan
             onCancel={() => setScanOpened(false)}
             onScanned={(name, price) => addScannedItem(name, price)}
           />

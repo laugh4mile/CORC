@@ -64,22 +64,12 @@ public class AreaService {
   @Transactional
   public List<GugunDto> findGugun(String sidoCode) {
     sidoCode = sidoCode.substring(0, 2);
-    System.out.println(sidoCode);
     List<Gugun> gugunEN = guguncodeRepository.findAllBySidocode(sidoCode);
-    System.out.println(gugunEN.toString());
     List<GugunDto> gugunDto = new ArrayList<>();
     for (Gugun gugun : gugunEN) {
       gugunDto.add(gugunMapper.INSTANCE.guguncodeToDto(gugun));
     }
     return gugunDto;
   }
-
-//	@Transactional
-//	public Map<String, Object> findItems(int storeId, int paymentId) {
-//		Map<String, Object> resultMap = new HashMap<>();
-//		List<Paymentitem> paymentItem = paymentitemRepository.findByStoreIdandPaymentId(storeId, paymentId);
-//		resultMap.put("paymentItem", paymentItem);
-//		return resultMap;
-//	}
 
 }

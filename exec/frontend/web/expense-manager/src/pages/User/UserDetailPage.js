@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
-import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
-import useHttp from '../../hooks/use-http';
-import { getSingleUser, getUserPaymentDetails } from '../../lib/api-user';
+import { useState, useEffect } from "react";
+import { useParams, useLocation, useHistory } from "react-router-dom";
+import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
+import useHttp from "../../hooks/use-http";
+import { getSingleUser, getUserPaymentDetails } from "../../lib/api-user";
 
-import UserInfo from '../../components/User/UserInfo';
-import UserLog from '../../components/User/UserLog';
-import Card from '../../components/UI/Card/Card';
+import UserInfo from "../../components/User/UserInfo";
+import PaymentList from "../../components/User/PaymentList";
 
-import classes from './UserDetailPage.module.css';
+import classes from "./UserDetailPage.module.css";
 
 const UserDetailPage = () => {
   const params = useParams();
@@ -34,8 +33,8 @@ const UserDetailPage = () => {
 
   const goBackHandler = () => history.goBack();
 
-  const infoActiveStyle = () => (infoStyle ? classes.active : '');
-  const logActiveStyle = () => (logStyle ? classes.active : '');
+  const infoActiveStyle = () => (infoStyle ? classes.active : "");
+  const logActiveStyle = () => (logStyle ? classes.active : "");
 
   const { userId } = location.state;
 
@@ -58,7 +57,7 @@ const UserDetailPage = () => {
     sendUserLogRequest(userId);
   }, [sendUserInfoRequest, sendUserLogRequest, userId]);
 
-  if (userInfoStatus === 'pending' && userLogStatus === 'pending') {
+  if (userInfoStatus === "pending" && userLogStatus === "pending") {
     return (
       <div>
         <LoadingSpinner />
@@ -67,28 +66,62 @@ const UserDetailPage = () => {
   }
 
   if (userInfoError) {
-    return <p>{userInfoError}</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>{userInfoError}</span>
+      </div>
+    );
   }
 
   if (userLogError) {
-    return <p>{userLogError}</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>{userLogError}</span>
+      </div>
+    );
   }
 
   if (!loadedUser) {
-    return <p>결제 내역이 없습니다.</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>유저 정보를 불러올 수 없습니다.</span>
+      </div>
+    );
   }
 
-  console.log('loadedUser', loadedUser);
-  console.log('loadedLogs', loadedLogs);
+  if (!loadedLogs) {
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>유저 로그를 불러올 수 없습니다.</span>
+      </div>
+    );
+  }
+
+  console.log("loadedUser", loadedUser);
+  console.log("loadedLogs", loadedLogs);
 
   return (
     <section className="page">
       <span className="title">{`${userName} (${params.employeeNum})`}</span>
-
       <span className="btn" onClick={goBackHandler}>
         목록으로
       </span>
-
       <article className={classes.tabs}>
         <span
           className={`${classes.tab} ${infoActiveStyle()}`}
@@ -103,10 +136,8 @@ const UserDetailPage = () => {
           사용자 로그
         </span>
       </article>
-      <Card type={'nofit'}>
-        {infoStyle && <UserInfo {...loadedUser} />}
-        {logStyle && <UserLog logs={loadedLogs.content} />}
-      </Card>
+      {infoStyle && <UserInfo {...loadedUser} />}
+      {logStyle && <PaymentList payments={loadedLogs} />}
     </section>
   );
 };

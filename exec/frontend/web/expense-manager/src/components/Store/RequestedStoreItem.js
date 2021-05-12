@@ -52,7 +52,16 @@ const RequestedStoreItem = (props) => {
     <tbody>
       <tr className={classes.tr}>
         <td>
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            value={props.storeId}
+            name="storeId"
+            onChange={(e) =>
+              props.handleSingleCheck(e.target.checked, props.storeId)
+            }
+            // checkItems에 data.id가 있으면 체크 아니면 체크 해제
+            checked={props.checkItems.includes(props.storeId) ? true : false}
+          />
         </td>
         <td className={classes.link} onClick={trClickHandler}>
           {props.crNum}
