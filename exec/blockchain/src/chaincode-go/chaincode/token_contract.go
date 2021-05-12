@@ -169,8 +169,13 @@ func (s *SmartContract) GetUser(ctx contractapi.TransactionContextInterface, id 
 	return &user, nil
 }
 
-func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, _id string, _type string) (*User, error) {
-	user := User{ID: _id, Type: _type, Balance: 0}
+func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, _id string, _type string, _balance int) (*User, error) {
+	exist, _ := s.UserExist(ctx, _id)
+	if exist {
+		return nil, fmt.Errorf("user %s exist", _id)
+	}
+
+	user := User{ID: _id, Type: _type, Balance: _balance}
 	userJSON, err := json.Marshal(user)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create user: %v", err)
