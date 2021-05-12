@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams, useLocation, useHistory } from "react-router-dom";
-import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
-import useHttp from "../../hooks/use-http";
-import { getSingleUser, getUserPaymentDetails } from "../../lib/api-user";
+import { useState, useEffect } from 'react';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
+import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
+import useHttp from '../../hooks/use-http';
+import { getSingleUser, getUserPaymentDetails } from '../../lib/api-user';
 
-import UserInfo from "../../components/User/UserInfo";
-import UserLog from "../../components/User/UserLog";
-import Card from "../../components/UI/Card/Card";
+import UserInfo from '../../components/User/UserInfo';
+import UserLog from '../../components/User/UserLog';
+import Card from '../../components/UI/Card/Card';
 
-import classes from "./UserDetailPage.module.css";
+import classes from './UserDetailPage.module.css';
 
 const UserDetailPage = () => {
   const params = useParams();
@@ -34,8 +34,8 @@ const UserDetailPage = () => {
 
   const goBackHandler = () => history.goBack();
 
-  const infoActiveStyle = () => (infoStyle ? classes.active : "");
-  const logActiveStyle = () => (logStyle ? classes.active : "");
+  const infoActiveStyle = () => (infoStyle ? classes.active : '');
+  const logActiveStyle = () => (logStyle ? classes.active : '');
 
   const { userId } = location.state;
 
@@ -58,7 +58,7 @@ const UserDetailPage = () => {
     sendUserLogRequest(userId);
   }, [sendUserInfoRequest, sendUserLogRequest, userId]);
 
-  if (userInfoStatus === "pending" && userLogStatus === "pending") {
+  if (userInfoStatus === 'pending' && userLogStatus === 'pending') {
     return (
       <div>
         <LoadingSpinner />
@@ -78,8 +78,8 @@ const UserDetailPage = () => {
     return <p>결제 내역이 없습니다.</p>;
   }
 
-  console.log("loadedUser", loadedUser);
-  console.log("loadedLogs", loadedLogs);
+  console.log('loadedUser', loadedUser);
+  console.log('loadedLogs', loadedLogs);
 
   return (
     <section className="page">
@@ -103,9 +103,9 @@ const UserDetailPage = () => {
           사용자 로그
         </span>
       </article>
-      <Card type={"nofit"}>
+      <Card type={'nofit'}>
         {infoStyle && <UserInfo {...loadedUser} />}
-        {logStyle && <UserLog logs={loadedLogs} />}
+        {logStyle && <UserLog logs={loadedLogs.content} />}
       </Card>
     </section>
   );
