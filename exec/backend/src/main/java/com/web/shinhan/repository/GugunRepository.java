@@ -17,9 +17,9 @@ import com.web.shinhan.model.UserDto;
 
 @Repository
 public interface GugunRepository extends JpaRepository<Gugun, Integer>,
-		PagingAndSortingRepository<Gugun, Integer>, QueryByExampleExecutor<Gugun> {
+    PagingAndSortingRepository<Gugun, Integer>, QueryByExampleExecutor<Gugun> {
 
-	@Query("select g from guguncode g where SUBSTRING(g.gugunCode,1,2) = :sido")
-	List<Gugun> findAllBySidocode(String sido);
+  @Query("select g from guguncode g where SUBSTRING(g.gugunCode,1,2) = :sido")
+  List<Gugun> findAllBySidocode(String sido);
 
 }

@@ -9,8 +9,9 @@ import com.web.shinhan.model.PaymentitemDto;
 
 @Mapper
 public interface PaymentitemMapper {
-	PaymentitemMapper INSTANCE = Mappers.getMapper(PaymentitemMapper.class); // 2
 
-	@Mapping(target = "")
-	PaymentitemDto paymentitemToDto(Paymentitem paymentitem);
+  PaymentitemMapper INSTANCE = Mappers.getMapper(PaymentitemMapper.class); // 2
+
+  @Mapping(target = "")
+  PaymentitemDto paymentitemToDto(Paymentitem paymentitem);
 }

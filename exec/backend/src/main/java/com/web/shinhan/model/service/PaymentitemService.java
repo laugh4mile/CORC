@@ -28,32 +28,32 @@ import com.web.shinhan.repository.PaymentitemRepository;
 @Service
 public class PaymentitemService {
 
-	@Autowired
-	PasswordEncoder passwordEncoder;
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private PaymentitemRepository paymentitemRepository;
+  @Autowired
+  private PaymentitemRepository paymentitemRepository;
 
-	private final PaymentitemMapper mapper = Mappers.getMapper(PaymentitemMapper.class);
+  private final PaymentitemMapper mapper = Mappers.getMapper(PaymentitemMapper.class);
 
-	@Transactional
-	public Map<String, Object> findItems(int storeId, int paymentId) {
-		Map<String, Object> resultMap = new HashMap<>();
-		List<Paymentitem> paymentItem = paymentitemRepository.findByPaymentId(paymentId);
-		resultMap.put("paymentItem", paymentItem);
-		return resultMap;
-	}
+  @Transactional
+  public Map<String, Object> findItems(int storeId, int paymentId) {
+    Map<String, Object> resultMap = new HashMap<>();
+    List<Paymentitem> paymentItem = paymentitemRepository.findByPaymentId(paymentId);
+    resultMap.put("paymentItem", paymentItem);
+    return resultMap;
+  }
 
-	@Transactional
-	public void registPaymentitem(String productName, int price, int amount, int paymentId) {
-		PaymentitemDto paymentitem = new PaymentitemDto();
-		paymentitem.setPaymentId(paymentId);
-		paymentitem.setProductName(productName);
-		paymentitem.setPrice(price);
-		paymentitem.setAmount(amount);
-		paymentitemRepository.save(paymentitem.toEntity());
+  @Transactional
+  public void registPaymentitem(String productName, int price, int amount, int paymentId) {
+    PaymentitemDto paymentitem = new PaymentitemDto();
+    paymentitem.setPaymentId(paymentId);
+    paymentitem.setProductName(productName);
+    paymentitem.setPrice(price);
+    paymentitem.setAmount(amount);
+    paymentitemRepository.save(paymentitem.toEntity());
 //		return 
 //		int paymentitemId = paymentitemRepository.findPaymentitemIdBy
-	}
+  }
 
 }

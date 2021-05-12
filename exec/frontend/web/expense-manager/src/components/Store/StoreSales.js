@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 
-import Card from '../../components/UI/Card/Card';
 import StoreSalesItem from '../Payment/PaymentItem';
 import classes from './StoreList.module.css';
 
 const StoreSales = (props) => {
+  console.log('props', props);
   return (
     <Fragment>
       <table>

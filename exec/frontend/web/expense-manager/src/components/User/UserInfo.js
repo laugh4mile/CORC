@@ -1,8 +1,10 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
+import { Prompt } from "react-router-dom";
 
 import classes from "./UserInfo.module.css";
 
 import Button from "../UI/Button/Button";
+import Card from "../UI/Card/Card";
 import Input from "../UI/Input/Input";
 
 const UserInfo = (props) => {
@@ -22,12 +24,6 @@ const UserInfo = (props) => {
     enteredBorough: props.gugun.gugunCode,
   });
 
-  // useEffect(() => {
-  //   console.log(enteredArea);
-  // }, [enteredArea]);
-
-  // console.log("enteredCity", enteredArea.enteredCity);
-  // console.log("enteredBorough", enteredArea.enteredBorough);
   let days = [
     { id: 1, value: "월", checked: false },
     { id: 2, value: "화", checked: false },
@@ -157,176 +153,184 @@ const UserInfo = (props) => {
 
   return (
     <Fragment>
-      <form onFocus={formFocusedHandler} onSubmit={submitHandler}>
-        <div className={classes.container}>
-          <article className={classes.section}>
-            <div>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={enteredEmail}
-                onChange={changeHandler}
-                label="아이디"
-                disabled
-              />
-            </div>
-            <div>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                required
-                value={enteredPassword}
-                onChange={changeHandler}
-                label="비밀번호"
-              />
-            </div>
-            <div>
-              <Input
-                type="text"
-                id="employeeNum"
-                name="employeeNum"
-                required
-                value={enteredEmployeeNum}
-                onChange={changeHandler}
-                label="사원 번호"
-                disabled
-              />
-            </div>
-            <div>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={enteredName}
-                onChange={changeHandler}
-                label="이름"
-                disabled
-              />
-            </div>
-            <div>
-              <Input
-                type="text"
-                id="contact"
-                name="contact"
-                required
-                value={enteredContact}
-                onChange={changeHandler}
-                label="전화번호"
-                placeholder="010-XXXX-XXXX"
-              />
-            </div>
-          </article>
-          <article className={classes.section}>
-            <div>
-              <label className={classes.label}>Position</label>
-              <div className={classes.control}>
-                <select
-                  type="text"
-                  id="department"
-                  name="department"
+      <Prompt
+        when={!isEntering}
+        message={(location) =>
+          "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."
+        }
+      />
+      <Card type={"nofit"}>
+        <form onFocus={formFocusedHandler} onSubmit={submitHandler}>
+          <div className={classes.container}>
+            <article className={classes.section}>
+              <div>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
                   required
-                  value={enteredPosition.enteredDepartment}
+                  value={enteredEmail}
                   onChange={changeHandler}
-                >
-                  <option value="">부서</option>
-                  {departments.map((department) => (
-                    <option key={department.value} value={department.value}>
-                      {department.value}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  type="text"
-                  id="role"
-                  name="role"
-                  required
-                  value={enteredPosition.enteredRole}
-                  onChange={changeHandler}
-                >
-                  <option value="">직위</option>
-                  <option value="수석">수석</option>
-                  <option value="선임">선임</option>
-                  <option value="주임">주임</option>
-                </select>
+                  label="아이디"
+                  disabled
+                />
               </div>
-            </div>
-            <div>
-              <Input
-                type="number"
-                id="limit"
-                name="limit"
-                min="0"
-                required
-                value={enteredLimit}
-                onChange={changeHandler}
-                label="한도 (원)"
-              />
-            </div>
-            <div>
-              <label className={classes.label}>지역</label>
-              <div className={classes.control}>
-                <select
-                  type="text"
-                  id="city"
-                  name="city"
+              <div>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
                   required
-                  value={enteredArea.enteredCity}
+                  value={enteredPassword}
                   onChange={changeHandler}
-                >
-                  <option value="">시/도</option>
-                  {cities.map((city) => (
-                    <option key={city.code} value={city.code}>
-                      {city.value}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  type="text"
-                  id="borough"
-                  name="borough"
-                  required
-                  value={enteredArea.enteredBorough}
-                  onChange={changeHandler}
-                >
-                  <option value="">구/군</option>
-                  <option value="1168000000">강남구</option>
-                  <option value="1165000000">서초구</option>
-                  <option value="1171000000">송파구</option>
-                </select>
+                  label="비밀번호"
+                />
               </div>
-            </div>
-            <div>
-              <label className={classes.label}>사용 가능 요일</label>
-              <div className={classes.control}>
-                {days.map((day, index) => (
-                  <label
-                    className={`${classes.label} ${classes.checkbox}`}
-                    key={day.id}
+              <div>
+                <Input
+                  type="text"
+                  id="employeeNum"
+                  name="employeeNum"
+                  required
+                  value={enteredEmployeeNum}
+                  onChange={changeHandler}
+                  label="사원 번호"
+                  disabled
+                />
+              </div>
+              <div>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={enteredName}
+                  onChange={changeHandler}
+                  label="이름"
+                  disabled
+                />
+              </div>
+              <div>
+                <Input
+                  type="text"
+                  id="contact"
+                  name="contact"
+                  required
+                  value={enteredContact}
+                  onChange={changeHandler}
+                  label="전화번호"
+                  placeholder="010-XXXX-XXXX"
+                />
+              </div>
+            </article>
+            <article className={classes.section}>
+              <div>
+                <label className={classes.label}>Position</label>
+                <div className={classes.control}>
+                  <select
+                    type="text"
+                    id="department"
+                    name="department"
+                    required
+                    value={enteredPosition.enteredDepartment}
+                    onChange={changeHandler}
                   >
-                    <input
-                      className={`${classes.checkboxStyles}`}
-                      type="checkbox"
-                      // id="day"
-                      name="day"
-                      value={day.id}
-                      defaultChecked={days[index].checked}
-                      onChange={changeHandler}
-                    />
-                    <span>{day.value}</span>
-                  </label>
-                ))}
+                    <option value="">부서</option>
+                    {departments.map((department) => (
+                      <option key={department.value} value={department.value}>
+                        {department.value}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    type="text"
+                    id="role"
+                    name="role"
+                    required
+                    value={enteredPosition.enteredRole}
+                    onChange={changeHandler}
+                  >
+                    <option value="">직위</option>
+                    <option value="수석">수석</option>
+                    <option value="선임">선임</option>
+                    <option value="주임">주임</option>
+                  </select>
+                </div>
               </div>
-            </div>
-          </article>
-        </div>
-        <div className={classes.buttons}>
-          <Button onClick={finishEnteringHandler}>수정</Button>
-        </div>
-      </form>
+              <div>
+                <Input
+                  type="number"
+                  id="limit"
+                  name="limit"
+                  min="0"
+                  required
+                  value={enteredLimit}
+                  onChange={changeHandler}
+                  label="한도 (원)"
+                />
+              </div>
+              <div>
+                <label className={classes.label}>지역</label>
+                <div className={classes.control}>
+                  <select
+                    type="text"
+                    id="city"
+                    name="city"
+                    required
+                    value={enteredArea.enteredCity}
+                    onChange={changeHandler}
+                  >
+                    <option value="">시/도</option>
+                    {cities.map((city) => (
+                      <option key={city.code} value={city.code}>
+                        {city.value}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    type="text"
+                    id="borough"
+                    name="borough"
+                    required
+                    value={enteredArea.enteredBorough}
+                    onChange={changeHandler}
+                  >
+                    <option value="">구/군</option>
+                    <option value="1168000000">강남구</option>
+                    <option value="1165000000">서초구</option>
+                    <option value="1171000000">송파구</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className={classes.label}>사용 가능 요일</label>
+                <div className={classes.control}>
+                  {days.map((day, index) => (
+                    <label
+                      className={`${classes.label} ${classes.checkbox}`}
+                      key={day.id}
+                    >
+                      <input
+                        className={`${classes.checkboxStyles}`}
+                        type="checkbox"
+                        // id="day"
+                        name="day"
+                        value={day.id}
+                        defaultChecked={days[index].checked}
+                        onChange={changeHandler}
+                      />
+                      <span>{day.value}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </article>
+          </div>
+          <div className={classes.buttons}>
+            <Button onClick={finishEnteringHandler}>수정</Button>
+          </div>
+        </form>
+      </Card>
     </Fragment>
   );
 };

@@ -38,142 +38,144 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = {"*"})
 public class UserController {
 
-	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
+  public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	@Autowired
-	UserService userService;
+  @Autowired
+  UserService userService;
 
-	@Autowired
-	StoreService storeService;
+  @Autowired
+  StoreService storeService;
 
-	@Autowired
-	PaymentService paymentService;
+  @Autowired
+  PaymentService paymentService;
 
-	@Autowired
-	PaymentitemService paymentitemService;
+  @Autowired
+  PaymentitemService paymentitemService;
 
-	@ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment")
-	public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId, Pageable pageable)
-			throws Exception {
-		logger.info("findUserPayment - 호출");
+  @ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
+  @GetMapping("/payment")
+  public ResponseEntity<Map<String, Object>> findUserPayment(@RequestParam int userId,
+      Pageable pageable)
+      throws Exception {
+    logger.info("findUserPayment - 호출");
 
-		Map<String, Object> resultMap = new HashMap<>();
-		Page<PaymentDto> page = null;
-		HttpStatus status = HttpStatus.ACCEPTED;
-		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-				Sort.by(Sort.Direction.DESC, "date"));
+    Map<String, Object> resultMap = new HashMap<>();
+    Page<PaymentDto> page = null;
+    HttpStatus status = HttpStatus.ACCEPTED;
+    pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+        Sort.by(Sort.Direction.DESC, "date"));
 
-		try {
+    try {
 //			resultMap.put("info", userService.findUserInfo(userId));
-			page = paymentService.findUserPayment(userId, pageable);
-			resultMap.put("paymentList", page);
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+      page = paymentService.findUserPayment(userId, pageable);
+      resultMap.put("paymentList", page);
+      status = HttpStatus.ACCEPTED;
+    } catch (RuntimeException e) {
+      resultMap.put("message", e.getMessage());
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+  }
 
-	@ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment/custom")
-	public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
-			@RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
-		logger.info("findUserPaymentCustom - 호출");
+  @ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
+  @GetMapping("/payment/custom")
+  public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
+      @RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
+    logger.info("findUserPaymentCustom - 호출");
 
-		Map<String, Object> resultMap = new HashMap<>();
-		Page<PaymentDto> page = null;
-		HttpStatus status = HttpStatus.ACCEPTED;
-		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-				Sort.by(Sort.Direction.DESC, "date"));
+    Map<String, Object> resultMap = new HashMap<>();
+    Page<PaymentDto> page = null;
+    HttpStatus status = HttpStatus.ACCEPTED;
+    pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+        Sort.by(Sort.Direction.DESC, "date"));
 
-		try {
-			resultMap.put("info", userService.findUserInfo(userId));
-			page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
-			resultMap.put("paymentList", page);
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+    try {
+      resultMap.put("info", userService.findUserInfo(userId));
+      page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
+      resultMap.put("paymentList", page);
+      status = HttpStatus.ACCEPTED;
+    } catch (RuntimeException e) {
+      resultMap.put("message", e.getMessage());
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+  }
 
-	@ApiOperation(value = "영수증", notes = "영수증을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment/single")
-	public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId, @RequestParam int paymentId)
-			throws Exception {
-		logger.info("showPayment - 호출");
+  @ApiOperation(value = "영수증", notes = "영수증을 가지고 온다.", response = HashMap.class)
+  @GetMapping("/payment/single")
+  public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId,
+      @RequestParam int paymentId)
+      throws Exception {
+    logger.info("showPayment - 호출");
 
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
+    Map<String, Object> resultMap = new HashMap<>();
+    HttpStatus status = HttpStatus.ACCEPTED;
 
-		try {
-			Map<String, Object> items = paymentitemService.findItems(storeId, paymentId);
-			resultMap.put("items", items);
-			StoreDto storeInfo = storeService.findStoreInfo(storeId);
-			resultMap.put("storeInfo", storeInfo);
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+    try {
+      Map<String, Object> items = paymentitemService.findItems(storeId, paymentId);
+      resultMap.put("items", items);
+      StoreDto storeInfo = storeService.findStoreInfo(storeId);
+      resultMap.put("storeInfo", storeInfo);
+      status = HttpStatus.ACCEPTED;
+    } catch (RuntimeException e) {
+      resultMap.put("message", e.getMessage());
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+  }
 
-	@ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = HashMap.class)
-	@PostMapping("/pay")
-	public ResponseEntity<Map<String, Object>> pay(@RequestParam int total, @RequestParam int userId,
-			@RequestParam int storeId, @RequestBody List<PaymentitemDto> paymentitems) throws Exception {
-		logger.info("pay - 호출");
+  @ApiOperation(value = "결제", notes = "결제를 하여 영수증을 만든다.", response = HashMap.class)
+  @PostMapping("/pay")
+  public ResponseEntity<Map<String, Object>> pay(@RequestParam int total, @RequestParam int userId,
+      @RequestParam int storeId, @RequestBody List<PaymentitemDto> paymentitems) throws Exception {
+    logger.info("pay - 호출");
 
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
+    Map<String, Object> resultMap = new HashMap<>();
+    HttpStatus status = HttpStatus.ACCEPTED;
 
-		try {
-			UserDto user = userService.findUserInfo(userId);
-			StoreDto store = storeService.findStoreInfo(storeId);
-			String storeGugunCode = store.getGugunCode();
-			String userGugunCode = user.getGugunCode();
-			String userDays = user.getDays();
-			LocalDateTime now = LocalDateTime.now();
-			int nowDay = now.getDayOfWeek().getValue();
-			if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
-				if (storeGugunCode.equals(userGugunCode)) {
-					if (!userService.pay(userId, total)) {
-						status = HttpStatus.UNAUTHORIZED;
-						resultMap.put("message", "잔고 부족");
-						return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
-					} else {
-						paymentService.pay(userId, storeId, total);
-						int paymentId = paymentService.findLastPayment();
-						for (int i = 0; i < paymentitems.size(); i++) {
-							paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
-									paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
-						}
-						resultMap.put("message", "결제 완료");
-						status = HttpStatus.ACCEPTED;
-					}
-				} else {
-					resultMap.put("message", "사용 불가 지역");
-					return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
-				}
-			} else {
-				resultMap.put("message", "사용 불가 요일");
-				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
-			}
-		} catch (RuntimeException e) {
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+    try {
+      UserDto user = userService.findUserInfo(userId);
+      StoreDto store = storeService.findStoreInfo(storeId);
+      String storeGugunCode = store.getGugunCode();
+      String userGugunCode = user.getGugunCode();
+      String userDays = user.getDays();
+      LocalDateTime now = LocalDateTime.now();
+      int nowDay = now.getDayOfWeek().getValue();
+      if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
+        if (storeGugunCode.equals(userGugunCode)) {
+          if (!userService.pay(userId, total)) {
+            status = HttpStatus.UNAUTHORIZED;
+            resultMap.put("message", "잔고 부족");
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+          } else {
+            paymentService.pay(userId, storeId, total);
+            int paymentId = paymentService.findLastPayment();
+            for (int i = 0; i < paymentitems.size(); i++) {
+              paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
+                  paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
+            }
+            resultMap.put("message", "결제 완료");
+            status = HttpStatus.ACCEPTED;
+          }
+        } else {
+          resultMap.put("message", "사용 불가 지역");
+          return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+        }
+      } else {
+        resultMap.put("message", "사용 불가 요일");
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+    } catch (RuntimeException e) {
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+  }
 
 }

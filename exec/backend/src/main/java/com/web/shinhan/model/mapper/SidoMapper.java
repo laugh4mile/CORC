@@ -10,8 +10,9 @@ import com.web.shinhan.model.SidoDto;
 
 @Mapper
 public interface SidoMapper {
-	SidoMapper INSTANCE = Mappers.getMapper(SidoMapper.class); // 2
 
-	@Mapping(target = "")
-	SidoDto sidocodeToDto(Sido sidocode);
+  SidoMapper INSTANCE = Mappers.getMapper(SidoMapper.class); // 2
+
+  @Mapping(target = "")
+  SidoDto sidocodeToDto(Sido sidocode);
 }

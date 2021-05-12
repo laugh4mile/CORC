@@ -14,20 +14,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "guguncode")
 public class Gugun {
-	@Id
-	private String gugunCode;
 
-	private String gugunName;
+  @Id
+  private String gugunCode;
 
-	@Builder
-	public Gugun(String gugunCode, String gugunName) {
-		this.gugunCode = gugunCode;
-		this.gugunName = gugunName;
-	}
+  private String gugunName;
 
-	@Override
-	public String toString() {
-		return "Guguncode [gugunCode=" + gugunCode + ", gugunName=" + gugunName + "]";
-	}
+  @Builder
+  public Gugun(String gugunCode, String gugunName) {
+    this.gugunCode = gugunCode;
+    this.gugunName = gugunName;
+  }
+
+  @Override
+  public String toString() {
+    return "Guguncode [gugunCode=" + gugunCode + ", gugunName=" + gugunName + "]";
+  }
 
 }

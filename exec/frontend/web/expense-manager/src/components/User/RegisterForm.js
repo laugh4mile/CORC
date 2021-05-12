@@ -10,6 +10,7 @@ import Input from "../UI/Input/Input";
 import { getCities, getRegions } from "../../lib/api-user";
 
 const RegisterForm = (props) => {
+  console.log("props", props);
   const [isEntering, setIsEntering] = useState(false);
 
   const [enteredEmployeeNum, setEmployeeNum] = useState("");
@@ -117,6 +118,7 @@ const RegisterForm = (props) => {
     };
 
     console.log(userData);
+    console.log("props", props);
     props.onAddUser(userData);
   };
 
@@ -131,7 +133,7 @@ const RegisterForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (enteredArea.enteredCity != "") {
+    if (enteredArea.enteredCity !== "") {
       getRegions(enteredArea.enteredCity)
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));
@@ -142,7 +144,7 @@ const RegisterForm = (props) => {
   return (
     <Fragment>
       <Prompt
-        when={isEntering}
+        when={!isEntering}
         message={(location) =>
           "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."
         }
@@ -298,7 +300,7 @@ const RegisterForm = (props) => {
                       key={day.id}
                     >
                       <input
-                        className={`${classes.checkboxStyles}`}
+                        className={classes.checkboxStyles}
                         type="checkbox"
                         // id="day"
                         name="day"

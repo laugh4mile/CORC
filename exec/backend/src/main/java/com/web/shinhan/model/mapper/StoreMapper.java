@@ -9,8 +9,9 @@ import com.web.shinhan.model.StoreDto;
 
 @Mapper
 public interface StoreMapper {
-	StoreMapper INSTANCE = Mappers.getMapper(StoreMapper.class); // 2
 
-	@Mapping(target = "")
-	StoreDto storeToDto(Store store);
+  StoreMapper INSTANCE = Mappers.getMapper(StoreMapper.class); // 2
+
+  @Mapping(target = "")
+  StoreDto storeToDto(Store store);
 }

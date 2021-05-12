@@ -20,41 +20,42 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "payment")
 public class Payment {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int paymentId;
 
-	private int userId;
-	private int storeId;
-	private int total;
-	private int status;
-	private LocalDateTime date;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int paymentId;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Paymentitem> paymentitem = new ArrayList<>();
+  private int userId;
+  private int storeId;
+  private int total;
+  private int status;
+  private LocalDateTime date;
 
-	@OneToOne
-	@JoinColumn(name = "userId", insertable = false, updatable = false)
-	private User user;
+  @JsonManagedReference
+  @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Paymentitem> paymentitem = new ArrayList<>();
 
-	@OneToOne
-	@JoinColumn(name = "storeId", insertable = false, updatable = false)
-	private Store store;
+  @OneToOne
+  @JoinColumn(name = "userId", insertable = false, updatable = false)
+  private User user;
 
-	@Builder
-	public Payment(int paymentId, int userId, int storeId, int total, int status, LocalDateTime date,
-			List<Paymentitem> paymentitem, User user, Store store) {
-		this.paymentId = paymentId;
-		this.userId = userId;
-		this.storeId = storeId;
-		this.total = total;
-		this.status = status;
-		this.date = date;
-		this.paymentitem = paymentitem;
-		this.user = user;
-		this.store = store;
-	}
+  @OneToOne
+  @JoinColumn(name = "storeId", insertable = false, updatable = false)
+  private Store store;
+
+  @Builder
+  public Payment(int paymentId, int userId, int storeId, int total, int status, LocalDateTime date,
+      List<Paymentitem> paymentitem, User user, Store store) {
+    this.paymentId = paymentId;
+    this.userId = userId;
+    this.storeId = storeId;
+    this.total = total;
+    this.status = status;
+    this.date = date;
+    this.paymentitem = paymentitem;
+    this.user = user;
+    this.store = store;
+  }
 
 //	@JsonManagedReference
 //	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)

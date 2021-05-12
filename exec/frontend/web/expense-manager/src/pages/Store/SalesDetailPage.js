@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 
 import StoreInfo from '../../components/Store/StoreInfo';
@@ -7,7 +6,8 @@ import StoreSales from '../../components/Store/StoreSales';
 import Card from '../../components/UI/Card/Card';
 import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
 import useHttp from '../../hooks/use-http';
-import { getSingleStore, getStorePayment } from '../../lib/api-store';
+import { getSingleStore, getStorePayment, addStore } from '../../lib/api-store';
+import Page from '../../components/Pagenation';
 
 import classes from './SalesDetailPage.module.css';
 
@@ -15,6 +15,8 @@ const SalesDetailPage = () => {
   const params = useParams();
   const location = useLocation();
   const history = useHistory();
+
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 1 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   const storeName = location.state.storeName;
   const storeCrNum = location.state.storeCrNum;
@@ -53,14 +55,16 @@ const SalesDetailPage = () => {
 
   useEffect(() => {
     sendSingleStore(storeId);
-    sendStorePayment(storeId);
-    console.log(loadedStore);
-  }, [sendSingleStore, sendStorePayment, storeId]);
+    sendStorePayment(storeId, pageInfo);
+  }, [sendSingleStore, sendStorePayment, storeId, pageInfo]);
 
   if (paymentStatus === 'pending' && storeStatus === 'pending') {
     return (
-      <div className="centered">
-        <LoadingSpinner />
+      <div className="page">
+        <span className="title">가맹점 결제 내역 목록</span>
+        <section className={classes.spinner}>
+          <LoadingSpinner />
+        </section>
       </div>
     );
   }
@@ -86,6 +90,9 @@ const SalesDetailPage = () => {
   ) {
     return <span>가맹점 결제 내역이 없습니다.</span>;
   }
+  // console.log('loadedPayment', typeof loadedPayment.totalElements);
+
+  console.log('loadedPayment', loadedPayment);
 
   return (
     <section className="page">
@@ -109,7 +116,16 @@ const SalesDetailPage = () => {
       </article>
       <Card type={'nofit'}>
         {infoStyle && <StoreInfo {...loadedStore} />}
-        {logStyle && <StoreSales logs={loadedPayment} />}
+        {logStyle && <StoreSales logs={loadedPayment.content} />}
+        {logStyle && (
+          <Page
+            totalElements={loadedPayment.totalElements}
+            blockSize={4}
+            number={loadedPayment.number}
+            size={loadedPayment.size}
+            onClick={setPageInfo}
+          />
+        )}
       </Card>
     </section>
   );

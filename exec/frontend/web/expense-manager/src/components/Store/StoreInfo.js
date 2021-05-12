@@ -5,6 +5,8 @@ import classes from './StoreInfo.module.css';
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 
+import { getCities, getRegions } from '../../lib/api-user';
+
 const StoreInfo = (props) => {
   const [isEntering, setIsEntering] = useState(false);
   const [enteredCrNum, setCrNum] = useState(props.crNum);
@@ -20,26 +22,8 @@ const StoreInfo = (props) => {
   const [enteredAccepted, setAccepted] = useState(props.accepted);
   const [enteredAccount, setAccount] = useState(props.account);
   const [enteredBank, setBank] = useState(props.bank);
-
-  const cities = [
-    { code: '1100000000', value: '서울특별시' },
-    { code: '2600000000', value: '부산광역시' },
-    { code: '2700000000', value: '대구광역시' },
-    { code: '2800000000', value: '인천광역시' },
-    { code: '2900000000', value: '광주광역시' },
-    { code: '3000000000', value: '대전광역시' },
-    { code: '3100000000', value: '울산광역시' },
-    { code: '3611000000', value: '세종특별자치시' },
-    { code: '4100000000', value: '경기도' },
-    { code: '4200000000', value: '강원도' },
-    { code: '4300000000', value: '충청북도' },
-    { code: '4400000000', value: '충청남도' },
-    { code: '4500000000', value: '전라북도' },
-    { code: '4600000000', value: '전라남도' },
-    { code: '4700000000', value: '경상북도' },
-    { code: '4800000000', value: '경상남도' },
-    { code: '5000000000', value: '제주특별자치도' },
-  ];
+  const [cities, setCities] = useState([]);
+  const [guguns, setGuguns] = useState([]);
 
   const changeHandler = (event) => {
     const { value, name } = event.target;
@@ -84,6 +68,7 @@ const StoreInfo = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    setIsEntering(false);
 
     const storeData = {
       crNum: enteredCrNum,
@@ -100,8 +85,25 @@ const StoreInfo = (props) => {
     };
 
     console.log(storeData);
+    console.log('props', props);
+
     props.onAddStore(storeData);
   };
+
+  useEffect(() => {
+    getCities()
+      .then((rs) => setCities(rs))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    if (enteredArea.enteredCity != '') {
+      getRegions(enteredArea.enteredCity)
+        .then((rs) => setGuguns(rs))
+        .catch((err) => console.log(err));
+    }
+    setGuguns([]);
+  }, [enteredArea.enteredCity]);
 
   const finishEnteringHandler = () => {
     setIsEntering(false);
@@ -202,8 +204,8 @@ const StoreInfo = (props) => {
                 >
                   <option value="">{enteredArea.enteredCity}</option>
                   {cities.map((city) => (
-                    <option key={city.code} value={city.code}>
-                      {city.value}
+                    <option key={city.sidoCode} value={city.sidoCode}>
+                      {city.sidoName}
                     </option>
                   ))}
                 </select>
@@ -216,9 +218,11 @@ const StoreInfo = (props) => {
                   onChange={changeHandler}
                 >
                   <option value="">{enteredArea.enteredBorough}</option>
-                  <option value="1168000000">강남구</option>
-                  <option value="1165000000">서초구</option>
-                  <option value="1171000000">송파구</option>
+                  {guguns.map((gugun) => (
+                    <option key={gugun.gugunCode} value={gugun.gugunCode}>
+                      {gugun.gugunName}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

@@ -7,19 +7,10 @@
 
 const express = require('express');
 const router = express.Router();
-const {
-    getResult
-} = require("../util/MyUtil")
+const { getResult } = require('../util/MyUtil');
 
 // chaincode
-const {
-    createUser,
-    deleteUser,
-    getTransaction,
-    getUser,
-    setBalance,
-    transferFrom,
-} = require("../service.js")
+const { createUser, deleteUser, getTransaction, getUser, setBalance, transferFrom } = require('../service.js');
 
 /**
  * @swagger
@@ -49,17 +40,18 @@ const {
  *          description: Invalid params
  */
 router.post('/user', async (req, res) => {
-    try {
-        if (!req.body['userId'] || !req.body['type']) throw new Error()
-        const userId = req.body.userId
-        const type = req.body.type
+  try {
+    if (!req.body['userId'] || !req.body['type'] || !req.body['balance']) throw new Error();
+    const userId = req.body.userId;
+    const type = req.body.type;
+    const balance = req.body.balance;
 
-        let result = await createUser(userId, type)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+    let result = await createUser(userId, type, balance);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 /**
  * @swagger
@@ -88,15 +80,15 @@ router.post('/user', async (req, res) => {
  *          description: Invalid params
  */
 router.get('/user/:userId', async (req, res) => {
-    const userId = req.params.userId
+  const userId = req.params.userId;
 
-    try {
-        let result = await getUser(userId)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+  try {
+    let result = await getUser(userId);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 /**
  * @swagger
@@ -121,15 +113,15 @@ router.get('/user/:userId', async (req, res) => {
  *          description: Invalid params
  */
 router.delete('/user/:userId', async (req, res) => {
-    const userId = req.params.userId
+  const userId = req.params.userId;
 
-    try {
-        let result = await deleteUser(userId)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+  try {
+    let result = await deleteUser(userId);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 /**
  * @swagger
@@ -159,17 +151,17 @@ router.delete('/user/:userId', async (req, res) => {
  *          description: Invalid params
  */
 router.put('/balance', async (req, res) => {
-    try {
-        if (!req.body['userId'] || !req.body['balance']) throw new Error()
-        const userId = req.body.userId
-        const balance = req.body.balance
+  try {
+    if (!req.body['userId'] || !req.body['balance']) throw new Error();
+    const userId = req.body.userId;
+    const balance = req.body.balance;
 
-        let result = await setBalance(userId, balance)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+    let result = await setBalance(userId, balance);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 /**
  * @swagger
@@ -199,18 +191,18 @@ router.put('/balance', async (req, res) => {
  *          description: Invalid params
  */
 router.post('/transfer', async (req, res) => {
-    try {
-        if (!req.body['from'] || !req.body['to'] || !req.body['value']) throw new Error()
-        const from = req.body.from
-        const to = req.body.to
-        const value = req.body.value
+  try {
+    if (!req.body['from'] || !req.body['to'] || !req.body['value']) throw new Error();
+    const from = req.body.from;
+    const to = req.body.to;
+    const value = req.body.value;
 
-        let result = await transferFrom(from, to, value)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+    let result = await transferFrom(from, to, value);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 /**
  * @swagger
@@ -239,15 +231,15 @@ router.post('/transfer', async (req, res) => {
  *          description: Invalid params
  */
 router.get('/transaction/:txId', async (req, res) => {
-    const txId = req.params.txId
+  const txId = req.params.txId;
 
-    try {
-        let result = await getTransaction(txId)
-        return res.status(200).json(getResult(true, result))
-    } catch (error) {
-        return res.status(400).json(getResult(false, error))
-    }
-})
+  try {
+    let result = await getTransaction(txId);
+    return res.status(200).json(getResult(true, result));
+  } catch (error) {
+    return res.status(400).json(getResult(false, error));
+  }
+});
 
 exports.indexRouter = router;
 

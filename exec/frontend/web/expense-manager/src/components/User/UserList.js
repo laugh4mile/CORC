@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import Card from "../../components/UI/Card/Card";
 import UserItem from "./UserItem";
-import classes from "./UserList.module.css";
+import classes from "./List.module.css";
 
 const sortUsers = (users, ascending) => {
   return users.sort((userA, userB) => {
@@ -35,9 +35,11 @@ const UserList = (props) => {
               <th>마지막 접속일</th>
             </tr>
           </thead>
-          {props.users.map((user) => (
-            <UserItem key={user.userId} {...user} />
-          ))}
+          <tbody>
+            {props.users.map((user) => (
+              <UserItem key={user.userId} {...user} />
+            ))}
+          </tbody>
         </table>
       </Card>
     </Fragment>

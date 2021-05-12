@@ -16,14 +16,15 @@ import com.web.shinhan.entity.User;
 import com.web.shinhan.model.UserDto;
 
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, Integer>, PagingAndSortingRepository<Admin, Integer>,
-		QueryByExampleExecutor<Admin> {
+public interface AdminRepository extends JpaRepository<Admin, Integer>,
+    PagingAndSortingRepository<Admin, Integer>,
+    QueryByExampleExecutor<Admin> {
 
-	@Query("select password from admin where email = :email")
-	String findPwd(String email);
+  @Query("select password from admin where email = :email")
+  String findPwd(String email);
 
-	boolean existsByEmailAndPassword(String email, String password);
+  boolean existsByEmailAndPassword(String email, String password);
 
-	Admin findByEmail(String email);
+  Admin findByEmail(String email);
 
 }

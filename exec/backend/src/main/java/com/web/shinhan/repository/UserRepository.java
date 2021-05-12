@@ -17,26 +17,28 @@ import com.web.shinhan.model.UserDto;
 
 @Repository
 public interface UserRepository
-		extends JpaRepository<User, Integer>, PagingAndSortingRepository<User, Integer>, QueryByExampleExecutor<User> {
-	boolean existsByEmail(String email);
+    extends JpaRepository<User, Integer>, PagingAndSortingRepository<User, Integer>,
+    QueryByExampleExecutor<User> {
 
-	boolean existsByEmployeeNum(int employee_num);
+  boolean existsByEmail(String email);
 
-	boolean existsByUserId(int userId);
+  boolean existsByEmployeeNum(int employee_num);
 
-	User findByEmail(String email);
+  boolean existsByUserId(int userId);
 
-	User findByUserId(int userId);
+  User findByEmail(String email);
 
-	@Query("select password from user where email = :email")
-	String findPwd(String email);
+  User findByUserId(int userId);
 
-	boolean existsByEmailAndPassword(String email, String password);
+  @Query("select password from user where email = :email")
+  String findPwd(String email);
 
-	@Query("select cardLimit from user where active = 1")
-	List<Integer> findCardLimitByActive();
+  boolean existsByEmailAndPassword(String email, String password);
 
-	@Query("select userId from user where email = :email")
-	int findUserIdByEmail(String email);
+  @Query("select cardLimit from user where active = 1")
+  List<Integer> findCardLimitByActive();
+
+  @Query("select userId from user where email = :email")
+  int findUserIdByEmail(String email);
 
 }

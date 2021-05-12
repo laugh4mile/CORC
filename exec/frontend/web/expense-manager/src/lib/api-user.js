@@ -49,7 +49,7 @@ export async function getSingleUser(userId) {
 export async function getUserPaymentDetails(userId) {
   try {
     const rs = await axios.get(`/admin/user/payment?userId=${userId}`);
-    const data = rs.data.info;
+    const data = rs.data.paymentList.content;
 
     return data;
   } catch (err) {
@@ -68,22 +68,12 @@ export async function getUsers({ page, size }) {
   }
 }
 
-export async function getAllPayment() {
+export async function getAllPayment({ page, size }) {
   try {
-    const rs = await axios.get("/admin/payment");
-    const data = rs.data.paymentList.content;
-    const transformedPayments = [];
+    const rs = await axios.get(`/admin/payment?page=${page}&size=${size}`);
+    const data = rs.data.paymentList;
 
-    for (const key in data) {
-      const paymentObj = {
-        id: key,
-        ...data[key],
-      };
-
-      transformedPayments.push(paymentObj);
-    }
-
-    return transformedPayments;
+    return data;
   } catch (err) {
     throw new Error(err || "결제 내역을 불러올 수 없습니다.");
   }
@@ -91,7 +81,7 @@ export async function getAllPayment() {
 
 export async function getCities() {
   try {
-    const rs = await axios.get('/admin/sido');
+    const rs = await axios.get("/admin/sido");
     return rs.data.sido;
   } catch (err) {
     throw new Error(err);
@@ -99,7 +89,7 @@ export async function getCities() {
 }
 
 export async function getRegions(cityId) {
-  if (cityId == undefined) throw new Error('Insert cityId');
+  if (cityId === undefined) throw new Error("Insert cityId");
   try {
     const rs = await axios.get(`/admin/gugun?sidoCode=${cityId}`);
     return rs.data.gugun;
