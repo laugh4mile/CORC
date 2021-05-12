@@ -7,7 +7,7 @@ import useHttp from "../../hooks/use-http";
 import { getUsers } from "../../lib/api-user";
 import Page from "../../components/Pagenation";
 
-import classes from "./UserListPage.module.css";
+import classes from "./list.module.css";
 
 const UserListPage = () => {
   // *** 백엔드 연결시 이 주석 부분을 풀 것 ***
@@ -40,7 +40,12 @@ const UserListPage = () => {
     status === "completed" &&
     (!loadedUsers.content || loadedUsers.content.length === 0)
   ) {
-    return <span>사용자가 없습니다.</span>;
+    return (
+      <div className="page">
+        <span className="title">사용자 목록</span>
+        <span className={classes.inform}>등록된 사용자가 없습니다.</span>
+      </div>
+    );
   }
 
   return (

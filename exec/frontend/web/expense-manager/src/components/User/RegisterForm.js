@@ -131,7 +131,7 @@ const RegisterForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (enteredArea.enteredCity != "") {
+    if (enteredArea.enteredCity !== "") {
       getRegions(enteredArea.enteredCity)
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));
@@ -142,7 +142,7 @@ const RegisterForm = (props) => {
   return (
     <Fragment>
       <Prompt
-        when={isEntering}
+        when={!isEntering}
         message={(location) =>
           "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."
         }

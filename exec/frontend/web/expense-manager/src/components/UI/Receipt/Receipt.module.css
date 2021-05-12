@@ -1,0 +1,21 @@
+.storeName {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.05em;
+}
+
+.date {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #696A6E;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.25rem;
+}
+
+.totalPrice {
+    justify-self: end;
+}

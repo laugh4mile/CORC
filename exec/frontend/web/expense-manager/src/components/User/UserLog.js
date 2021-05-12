@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 
-import UserLogItem from "./UserLogItem";
-import classes from "./UserList.module.css";
+import PaymentItem from "./PaymentItem";
+import classes from "./List.module.css";
 
-const UserInfo = (props) => {
+const UserLog = (props) => {
   return (
     <Fragment>
       <table>
@@ -18,12 +18,14 @@ const UserInfo = (props) => {
             <th>금액</th>
           </tr>
         </thead>
-        {/* {props.logs.map((log) => (
-            <UserLogItem key={log.userId} {...log} />
-          ))} */}
+        <tbody>
+          {props.logs.map((log) => (
+            <PaymentItem key={log.userId} {...log} />
+          ))}
+        </tbody>
       </table>
     </Fragment>
   );
 };
 
-export default UserInfo;
+export default UserLog;

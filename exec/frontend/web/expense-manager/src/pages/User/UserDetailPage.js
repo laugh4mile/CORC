@@ -5,8 +5,7 @@ import useHttp from "../../hooks/use-http";
 import { getSingleUser, getUserPaymentDetails } from "../../lib/api-user";
 
 import UserInfo from "../../components/User/UserInfo";
-import UserLog from "../../components/User/UserLog";
-import Card from "../../components/UI/Card/Card";
+import PaymentList from "../../components/User/PaymentList";
 
 import classes from "./UserDetailPage.module.css";
 
@@ -67,15 +66,51 @@ const UserDetailPage = () => {
   }
 
   if (userInfoError) {
-    return <p>{userInfoError}</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>{userInfoError}</span>
+      </div>
+    );
   }
 
   if (userLogError) {
-    return <p>{userLogError}</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>{userLogError}</span>
+      </div>
+    );
   }
 
   if (!loadedUser) {
-    return <p>결제 내역이 없습니다.</p>;
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>유저 정보를 불러올 수 없습니다.</span>
+      </div>
+    );
+  }
+
+  if (!loadedLogs) {
+    return (
+      <div className="page">
+        <span className="title">{`${userName} (${params.employeeNum})`}</span>
+        <span className="btn" onClick={goBackHandler}>
+          목록으로
+        </span>
+        <span className={classes.inform}>유저 로그를 불러올 수 없습니다.</span>
+      </div>
+    );
   }
 
   console.log("loadedUser", loadedUser);
@@ -84,11 +119,9 @@ const UserDetailPage = () => {
   return (
     <section className="page">
       <span className="title">{`${userName} (${params.employeeNum})`}</span>
-
       <span className="btn" onClick={goBackHandler}>
         목록으로
       </span>
-
       <article className={classes.tabs}>
         <span
           className={`${classes.tab} ${infoActiveStyle()}`}
@@ -103,10 +136,8 @@ const UserDetailPage = () => {
           사용자 로그
         </span>
       </article>
-      <Card type={"nofit"}>
-        {infoStyle && <UserInfo {...loadedUser} />}
-        {logStyle && <UserLog logs={loadedLogs} />}
-      </Card>
+      {infoStyle && <UserInfo {...loadedUser} />}
+      {logStyle && <PaymentList payments={loadedLogs} />}
     </section>
   );
 };
