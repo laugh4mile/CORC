@@ -16,7 +16,7 @@ const SalesPage = () => {
     error,
   } = useHttp(getAllPayment, true);
 
-  const [pageInfo, setPageInfo] = useState({ page: 0, size: 1 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {
     sendRequest(pageInfo);
