@@ -110,7 +110,7 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.textStyle}>X</Text>
+                <Text style={styles.textStyle}>Close</Text>
               </Pressable>
             </View>
           </View>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    // marginTop: 22,
     backgroundColor: 'rgba(0,0,0,0.50)',
   },
   modalView: {

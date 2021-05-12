@@ -29,6 +29,8 @@ public class StoreMapperImpl implements StoreMapper {
 		storeDto.total(store.getTotal());
 		storeDto.accepted(store.getAccepted());
 		storeDto.category(store.getCategory());
+		storeDto.sido(store.getSido());
+		storeDto.gugun(store.getGugun());
 
 		return storeDto.build();
 	}

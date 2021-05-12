@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Modal,
+  Pressable,
+  ScrollView,
+} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function QRScan() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [paymentData, setPaymentData] = useState();
 
   useEffect(() => {
     (async () => {
@@ -13,10 +23,17 @@ export default function QRScan() {
     })();
   }, []);
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    console.log(JSON.parse(data));
-    alert(`${data}`);
+    setModalVisible(true);
+    // console.log(JSON.parse(data));
+    setPaymentData(JSON.parse(data));
+    // console.log('몇번 호출되나');
+    // alert(`${data}`);
   };
 
   if (hasPermission === null) {
@@ -43,6 +60,87 @@ export default function QRScan() {
               title={'Tap to Scan Again'}
               onPress={() => setScanned(false)}
             />
+          )}
+          {scanned && ( // 모달
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <ScrollView
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={styles.modalText}>
+                        {paymentData.storeName}
+                      </Text>
+                      {paymentData.orderList.map((item, index) => (
+                        <View
+                          style={{ flexDirection: 'row', marginVertical: 5 }}
+                        >
+                          <View style={{ flex: 2 }}>
+                            <Text>
+                              {item.productName} x {item.amount}
+                            </Text>
+                          </View>
+                          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                            <Text>
+                              ￦ {numberWithCommas(item.price * item.amount)}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                      <View
+                        style={{
+                          // flex: 1,
+                          borderBottomWidth: StyleSheet.hairlineWidth,
+                          marginVertical: 15,
+                        }}
+                      />
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                      >
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            Total
+                          </Text>
+                        </View>
+                        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                          <Text
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            ￦ {numberWithCommas(paymentData.total)}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </ScrollView>
+                  <View style={{ justifyContent: 'flex-end', marginTop: 10 }}>
+                    <Pressable
+                      style={[styles.button, styles.buttonClose]}
+                      onPress={() => setModalVisible(!modalVisible)}
+                    >
+                      <Text style={styles.textStyle}>Close</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            </Modal>
           )}
         </View>
       </BarCodeScanner>
@@ -76,5 +174,49 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '60%',
+  },
+  // 모달 관련
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.50)',
+  },
+  modalView: {
+    // flex: 1,
+    width: '80%',
+    height: '70%',
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 20,
+    // textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
