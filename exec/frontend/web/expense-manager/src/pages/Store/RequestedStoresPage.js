@@ -17,7 +17,7 @@ const RequestedStoresPage = () => {
     error,
   } = useHttp(getAllRequestedStores, true);
 
-  const [pageInfo, setPageInfo] = useState({ page: 0, size: 1 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {
     sendRequest(pageInfo);
@@ -45,10 +45,10 @@ const RequestedStoresPage = () => {
     <div className="page">
       <span className="title">가맹점 신청 목록</span>
       <section className={classes.section}>
-        <Link className="btn" to="/store/register">
-          Allow
-        </Link>
-        <RequestedStoreList stores={loadedStores.content} />
+        <RequestedStoreList
+          stores={loadedStores.content}
+          page={loadedStores.numberOfElements}
+        />
         <Page
           totalElements={loadedStores.totalElements}
           blockSize={4}

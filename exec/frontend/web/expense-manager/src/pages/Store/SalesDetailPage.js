@@ -6,7 +6,7 @@ import StoreSales from '../../components/Store/StoreSales';
 import Card from '../../components/UI/Card/Card';
 import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
 import useHttp from '../../hooks/use-http';
-import { getSingleStore, getStorePayment } from '../../lib/api-store';
+import { getSingleStore, getStorePayment, addStore } from '../../lib/api-store';
 import Page from '../../components/Pagenation';
 
 import classes from './SalesDetailPage.module.css';
