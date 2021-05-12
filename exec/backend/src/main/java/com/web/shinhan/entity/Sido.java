@@ -14,15 +14,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "sidocode")
 public class Sido {
-	@Id
-	private String sidoCode;
 
-	private String sidoName;
+  @Id
+  private String sidoCode;
 
-	@Builder
-	public Sido(String sidoCode, String sidoName) {
-		this.sidoCode = sidoCode;
-		this.sidoName = sidoName;
-	}
+  private String sidoName;
+
+  @Builder
+  public Sido(String sidoCode, String sidoName) {
+    this.sidoCode = sidoCode;
+    this.sidoName = sidoName;
+  }
 
 }

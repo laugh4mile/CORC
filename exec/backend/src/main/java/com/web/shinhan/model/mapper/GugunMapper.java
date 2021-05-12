@@ -12,8 +12,9 @@ import com.web.shinhan.model.SidoDto;
 
 @Mapper
 public interface GugunMapper {
-	GugunMapper INSTANCE = Mappers.getMapper(GugunMapper.class); // 2
 
-	@Mapping(target = "")
-	GugunDto guguncodeToDto(Gugun guguncode);
+  GugunMapper INSTANCE = Mappers.getMapper(GugunMapper.class); // 2
+
+  @Mapping(target = "")
+  GugunDto guguncodeToDto(Gugun guguncode);
 }

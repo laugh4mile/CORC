@@ -18,56 +18,59 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "user")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int userId;
 
-	private int employeeNum;
-	private String email;
-	private String userName;
-	private String password;
-	private String department;
-	private String position;
-	private String contact;
-	private String days;
-	private String sidoCode;
-	private String gugunCode;
-	private int balance;
-	private int cardLimit;
-	private int active;
-	private LocalDateTime accessTime;
-	private LocalDateTime limitTime;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int userId;
 
-	@OneToOne
-	@JoinColumn(name = "sidoCode", insertable = false, updatable = false)
-	private Sido sido;
+  private int employeeNum;
+  private String email;
+  private String userName;
+  private String password;
+  private String department;
+  private String position;
+  private String contact;
+  private String days;
+  private String sidoCode;
+  private String gugunCode;
+  private int balance;
+  private int cardLimit;
+  private int active;
+  private LocalDateTime accessTime;
+  private LocalDateTime limitTime;
 
-	@OneToOne
-	@JoinColumn(name = "gugunCode", insertable = false, updatable = false)
-	private Gugun gugun;
+  @OneToOne
+  @JoinColumn(name = "sidoCode", insertable = false, updatable = false)
+  private Sido sido;
 
-	@Builder
-	public User(int userId, int employeeNum, String email, String userName, String password, String department,
-			String position, String contact, String days, String sidoCode, String gugunCode, int balance, int cardLimit,
-			int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
-		this.userId = userId;
-		this.employeeNum = employeeNum;
-		this.email = email;
-		this.userName = userName;
-		this.password = password;
-		this.department = department;
-		this.position = position;
-		this.contact = contact;
-		this.days = days;
-		this.sidoCode = sidoCode;
-		this.gugunCode = gugunCode;
-		this.balance = balance;
-		this.cardLimit = cardLimit;
-		this.active = active;
-		this.accessTime = accessTime;
-		this.limitTime = limitTime;
-		this.sido = sido;
-		this.gugun = gugun;
-	}
+  @OneToOne
+  @JoinColumn(name = "gugunCode", insertable = false, updatable = false)
+  private Gugun gugun;
+
+  @Builder
+  public User(int userId, int employeeNum, String email, String userName, String password,
+      String department,
+      String position, String contact, String days, String sidoCode, String gugunCode, int balance,
+      int cardLimit,
+      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
+    this.userId = userId;
+    this.employeeNum = employeeNum;
+    this.email = email;
+    this.userName = userName;
+    this.password = password;
+    this.department = department;
+    this.position = position;
+    this.contact = contact;
+    this.days = days;
+    this.sidoCode = sidoCode;
+    this.gugunCode = gugunCode;
+    this.balance = balance;
+    this.cardLimit = cardLimit;
+    this.active = active;
+    this.accessTime = accessTime;
+    this.limitTime = limitTime;
+    this.sido = sido;
+    this.gugun = gugun;
+  }
 
 }

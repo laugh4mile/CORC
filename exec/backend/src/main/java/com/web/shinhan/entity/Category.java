@@ -14,20 +14,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "category")
 public class Category {
-	@Id
-	private String categoryCode;
 
-	private String categoryClassification;
-	private String categoryName;
+  @Id
+  private String categoryCode;
+
+  private String categoryClassification;
+  private String categoryName;
 
 //	@OneToOne(mappedBy = "category")
 //	private Store store;
 
-	@Builder
-	public Category(String categoryCode, String categoryClassification, String categoryName) {
-		this.categoryCode = categoryCode;
-		this.categoryClassification = categoryClassification;
-		this.categoryName = categoryName;
-	}
+  @Builder
+  public Category(String categoryCode, String categoryClassification, String categoryName) {
+    this.categoryCode = categoryCode;
+    this.categoryClassification = categoryClassification;
+    this.categoryName = categoryName;
+  }
 
 }
