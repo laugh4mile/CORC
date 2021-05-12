@@ -153,7 +153,7 @@ public class StoreController {
 
 		return new ResponseEntity<Boolean>(storeService.emailCheck(email), status);
 	}
-	
+
 	@ApiOperation(value = "거래 내역/미 정산금", notes = "거래 내역/미 정산금을 가지고 온다.", response = HashMap.class)
 	@GetMapping("/payment/total")
 	public ResponseEntity<Map<String, Object>> findTransactionalInfo(@RequestParam int storeId) throws Exception {
@@ -190,6 +190,34 @@ public class StoreController {
 			resultMap.put("payment", payment);
 			Map<String, Object> items = paymentitemService.findItems(storeId, paymentId);
 			resultMap.put("items", items);
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ApiOperation(value = "가맹점 판매 상세 내역", notes = "가맹점의 판매 상세 내역을 가지고 온다.", response = HashMap.class)
+	@GetMapping("/payment/custom")
+	public ResponseEntity<Map<String, Object>> findStorePaymentCustom(@RequestParam int storeId,
+			@RequestParam int startDate, @RequestParam int endDate, @RequestParam(required = false) boolean forStatistics,
+			Pageable pageable) throws Exception {
+		logger.info("findStorePaymentCustom - 호출");
+		Map<String, Object> resultMap = new HashMap<>();
+		Page<PaymentDto> page = null;
+		HttpStatus status = HttpStatus.ACCEPTED;
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Sort.by(Sort.Direction.DESC, "date"));
+		if (forStatistics) {
+			pageable = Pageable.unpaged();
+		}
+
+		try {
+			resultMap.put("info", storeService.findStoreInfo(storeId));
+			page = paymentService.findStorePaymentCustom(storeId, pageable, startDate, endDate);
+			resultMap.put("paymentList", page);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());

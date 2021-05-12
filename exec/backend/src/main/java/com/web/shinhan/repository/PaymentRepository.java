@@ -66,4 +66,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
 	@Query("select count(p) from payment p where userId = :userId")
 	int countUserPayment(int userId);
 
+	@Query("select p from payment p where storeId= :storeId and date between :startDate and :endDate")
+	Page<Payment> findAllByStoreCustom(int storeId, Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
 }
