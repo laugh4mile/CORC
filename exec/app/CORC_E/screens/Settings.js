@@ -6,14 +6,10 @@ import Button from '../components/Button';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
 
-export default function Settings() {
+const Settings = () => {
   const dispatch = useDispatch();
-  console.log(Platform);
   return (
     <View style={styles.container}>
-      <View style={styles.center}>
-        <View style={styles.behind}></View>
-      </View>
       <Button
         title="Logout"
         backgroundColor={Colors.cancel.backgroundColor}
@@ -24,7 +20,9 @@ export default function Settings() {
       />
     </View>
   );
-}
+};
+
+export default Settings;
 
 const styles = StyleSheet.create({
   container: {

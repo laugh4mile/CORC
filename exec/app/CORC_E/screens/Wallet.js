@@ -20,21 +20,31 @@ const Wallet = (props) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  var first = true;
   const match = (date) => {
     const year = date.substring(0, 4);
     const month = +date.substring(5, 7);
     const day = +date.substring(8, 10);
-    if (year == newDate.getFullYear()) {
-      if (month == newDate.getMonth() + 1) {
-        if (day == newDate.getDate()) {
-          console.log('패스');
-          return true;
+    if (first) {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            // console.log('패스');
+            first = false;
+            return false;
+          }
+        }
+      }
+    } else {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            // console.log('패스');
+            return true;
+          }
         }
       }
     }
-    console.log('newDate : ', newDate);
-    console.log('좋게좋게 가자 제발 ');
-    console.log('결제 날짜 : ', year, '년,', month, '월,', day, '일');
     newDate = new Date(year, month - 1, day);
     return false;
   };
@@ -139,7 +149,7 @@ const Wallet = (props) => {
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment, index) => (
               <View>
-                {match(payment.date) && (
+                {!match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 13, color: '#414251' }}>
