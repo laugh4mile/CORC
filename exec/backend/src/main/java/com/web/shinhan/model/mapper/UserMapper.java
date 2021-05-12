@@ -9,8 +9,9 @@ import com.web.shinhan.model.UserDto;
 
 @Mapper
 public interface UserMapper {
-	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class); // 2
 
-	@Mapping(target = "")
-	UserDto userToDto(User user);
+  UserMapper INSTANCE = Mappers.getMapper(UserMapper.class); // 2
+
+  @Mapping(target = "")
+  UserDto userToDto(User user);
 }

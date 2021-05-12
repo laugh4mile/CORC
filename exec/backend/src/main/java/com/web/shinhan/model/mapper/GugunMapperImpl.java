@@ -6,18 +6,18 @@ import com.web.shinhan.model.GugunDto.GugunDtoBuilder;
 
 public class GugunMapperImpl implements GugunMapper {
 
-	@Override
-	public GugunDto guguncodeToDto(Gugun guguncode) {
-		if (guguncode == null) {
-			return null;
-		}
+  @Override
+  public GugunDto guguncodeToDto(Gugun guguncode) {
+    if (guguncode == null) {
+      return null;
+    }
 
-		GugunDtoBuilder guguncodeDto = GugunDto.builder();
+    GugunDtoBuilder guguncodeDto = GugunDto.builder();
 
-		guguncodeDto.gugunCode(guguncode.getGugunCode());
-		guguncodeDto.gugunName(guguncode.getGugunName());
+    guguncodeDto.gugunCode(guguncode.getGugunCode());
+    guguncodeDto.gugunName(guguncode.getGugunName());
 
-		return guguncodeDto.build();
-	}
+    return guguncodeDto.build();
+  }
 
 }

@@ -6,18 +6,18 @@ import com.web.shinhan.model.SidoDto.SidoDtoBuilder;
 
 public class SidoMapperImpl implements SidoMapper {
 
-	@Override
-	public SidoDto sidocodeToDto(Sido sidocode) {
-		if (sidocode == null) {
-			return null;
-		}
+  @Override
+  public SidoDto sidocodeToDto(Sido sidocode) {
+    if (sidocode == null) {
+      return null;
+    }
 
-		SidoDtoBuilder sidocodeDto = SidoDto.builder();
+    SidoDtoBuilder sidocodeDto = SidoDto.builder();
 
-		sidocodeDto.sidoCode(sidocode.getSidoCode());
-		sidocodeDto.sidoName(sidocode.getSidoName());
+    sidocodeDto.sidoCode(sidocode.getSidoCode());
+    sidocodeDto.sidoName(sidocode.getSidoName());
 
-		return sidocodeDto.build();
-	}
+    return sidocodeDto.build();
+  }
 
 }

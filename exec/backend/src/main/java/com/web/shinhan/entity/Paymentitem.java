@@ -16,14 +16,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "paymentItem")
 public class Paymentitem {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int paymentItemId;
 
-	private int paymentId;
-	private String productName;
-	private int price;
-	private int amount;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int paymentItemId;
+
+  private int paymentId;
+  private String productName;
+  private int price;
+  private int amount;
 
 //	@OneToMany(mappedBy = "paymentitem")
 ////	@JoinTable(name = "paymentitem_product", // 조인테이블명
@@ -33,18 +34,18 @@ public class Paymentitem {
 //	private Set<Product> product = new HashSet<>();
 //	= new ArrayList<>();
 
-	@JsonBackReference
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
-	private Payment payment;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "paymentId", insertable = false, updatable = false)
+  private Payment payment;
 
-	@Builder
-	public Paymentitem(int paymentItemId, int paymentId, String productName, int price, int amount) {
-		this.paymentItemId = paymentItemId;
-		this.paymentId = paymentId;
-		this.productName = productName;
-		this.price = price;
-		this.amount = amount;
-	}
+  @Builder
+  public Paymentitem(int paymentItemId, int paymentId, String productName, int price, int amount) {
+    this.paymentItemId = paymentItemId;
+    this.paymentId = paymentId;
+    this.productName = productName;
+    this.price = price;
+    this.amount = amount;
+  }
 
 }
