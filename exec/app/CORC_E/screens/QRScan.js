@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import Colors from '../constants/Colors';
 
 export default function QRScan() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -75,6 +76,7 @@ export default function QRScan() {
                   <ScrollView
                     style={{
                       flex: 1,
+                      padding: 35,
                     }}
                   >
                     <View style={{ alignItems: 'center' }}>
@@ -130,15 +132,31 @@ export default function QRScan() {
                       </View>
                     </View>
                   </ScrollView>
-                  <View style={{ justifyContent: 'flex-end', marginTop: 10 }}>
-                    <Pressable
-                      style={[styles.button, styles.buttonClose]}
-                      onPress={() => setModalVisible(!modalVisible)}
-                    >
-                      <Text style={styles.textStyle}>Close</Text>
-                    </Pressable>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#414251', fontSize: 12 }}>
+                      주문 내역이 맞는지 확인해주세요.
+                    </Text>
+                  </View>
+                  <View style={{ justifyContent: 'center', marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Pressable
+                        style={[styles.payButton, styles.buttonPay]}
+                        onPress={() => setModalVisible(!modalVisible)}
+                      >
+                        <Text style={styles.payText}>결제 </Text>
+                      </Pressable>
+                      <Pressable
+                        style={[styles.closeButton, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}
+                      >
+                        <Text style={styles.closeText}>취소</Text>
+                      </Pressable>
+                    </View>
                   </View>
                 </View>
+                {/* <View style={{ flex: 1, backgroundColor: '#000' }}>
+                  <Text>??</Text>
+                </View> */}
               </View>
             </Modal>
           )}
@@ -175,6 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: '60%',
   },
+
   // 모달 관련
   centeredView: {
     flex: 1,
@@ -189,7 +208,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    // padding: 35,
     // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -206,17 +225,34 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
+  payButton: {
+    flex: 1,
+    borderBottomLeftRadius: 20,
+    padding: '5%',
     elevation: 2,
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
+  closeButton: {
+    flex: 1,
+    borderBottomRightRadius: 20,
+    padding: '5%',
+    elevation: 2,
   },
-  textStyle: {
-    color: 'white',
+  buttonPay: {
+    backgroundColor: Colors.primary.backgroundColor,
+  },
+  buttonClose: {
+    backgroundColor: Colors.cancel.backgroundColor,
+  },
+  payText: {
+    color: Colors.primary.fontColor,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 16,
+  },
+  closeText: {
+    color: Colors.cancel.fontColor,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });

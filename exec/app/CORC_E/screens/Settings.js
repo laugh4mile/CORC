@@ -8,6 +8,7 @@ import * as authActions from '../store/actions/auth';
 
 export default function Settings() {
   const dispatch = useDispatch();
+  console.log(Platform);
   return (
     <View style={styles.container}>
       <View style={styles.center}>
