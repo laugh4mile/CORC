@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import classes from './PaymentItem.module.css';
 
 const PaymentItem = (props) => {
+  console.log('PIPIPIPIPI', props);
   const history = useHistory();
 
   const isAccepted = (accepted) => {
