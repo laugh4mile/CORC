@@ -1,27 +1,27 @@
 const axios = require('axios').default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
-export async function getAllStores() {
-  try {
-    const rs = await axios.get('/admin/store/list');
-    const storeData = rs.data.storeLists.content;
-    console.log(rs);
-    const transformedStores = [];
+// export async function getAllStores() {
+//   try {
+//     const rs = await axios.get('/admin/store/list');
+//     const storeData = rs.data.storeLists.content;
+//     console.log(rs);
+//     const transformedStores = [];
 
-    for (const key in storeData) {
-      const storeObj = {
-        id: key,
-        ...storeData[key],
-      };
+//     for (const key in storeData) {
+//       const storeObj = {
+//         id: key,
+//         ...storeData[key],
+//       };
 
-      transformedStores.push(storeObj);
-    }
+//       transformedStores.push(storeObj);
+//     }
 
-    return transformedStores;
-  } catch (err) {
-    throw new Error(err || '가맹점 목록을 불러올 수 없습니다.');
-  }
-}
+//     return transformedStores;
+//   } catch (err) {
+//     throw new Error(err || '가맹점 목록을 불러올 수 없습니다.');
+//   }
+// }
 
 export async function getSingleStore(storeId) {
   try {
@@ -59,7 +59,6 @@ export async function storeApplication({ storeStatus, storeIds }) {
 
 export async function confirmPayment(paymentIds) {
   try {
-    console.log('paymentIds', paymentIds);
     const rs = await axios.put(`/admin/payment/confirm`, paymentIds);
     return rs.data;
   } catch (err) {
@@ -69,7 +68,7 @@ export async function confirmPayment(paymentIds) {
 
 export async function modifyStore(storeData) {
   try {
-    const rs = await axios.post(`/admin/store/modify`, storeData);
+    const rs = await axios.put(`/admin/store/modify`, storeData);
     return rs.data;
   } catch (err) {
     throw new Error(err || '가맹점 정보를 수정할 수 없습니다.');

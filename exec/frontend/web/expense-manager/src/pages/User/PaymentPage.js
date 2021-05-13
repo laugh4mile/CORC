@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import PaymentList from "../../components/User/PaymentList";
-import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
-import useHttp from "../../hooks/use-http";
-import { getAllPayment } from "../../lib/api-user";
-import Page from "../../components/Pagenation";
+import PaymentList from '../../components/User/PaymentList';
+import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
+import useHttp from '../../hooks/use-http';
+import { getAllPayment } from '../../lib/api-user';
+import Page from '../../components/Pagenation';
 
-import classes from "./list.module.css";
+import classes from './list.module.css';
 
 const PaymentPage = () => {
-  const { sendRequest, status, data: loadedPayments, error } = useHttp(
-    getAllPayment,
-    true
-  );
+  const {
+    sendRequest,
+    status,
+    data: loadedPayments,
+    error,
+  } = useHttp(getAllPayment, true);
   const [pageInfo, setPageInfo] = useState({ page: 0, size: 3 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   // console.log(loadedPayments);
@@ -21,7 +23,7 @@ const PaymentPage = () => {
     sendRequest(pageInfo);
   }, [sendRequest, pageInfo]);
 
-  if (status === "pending") {
+  if (status === 'pending') {
     return (
       <div className="page">
         <span className="title">결제 내역</span>
@@ -42,7 +44,7 @@ const PaymentPage = () => {
   }
 
   if (
-    status === "completed" &&
+    status === 'completed' &&
     (!loadedPayments.content || loadedPayments.content.length === 0)
   ) {
     return (

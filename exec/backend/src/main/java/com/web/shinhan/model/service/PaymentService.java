@@ -49,7 +49,7 @@ public class PaymentService {
     		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
     		paymentDto.setStatus(2);
     		paymentRepository.save(paymentDto.toEntity());
-    	} else if(py.getStatus() == 2){
+    	} else if(py.getStatus() == 2 || py.getStatus() == 0){
     		continue;
     	} else {
     		return false;
