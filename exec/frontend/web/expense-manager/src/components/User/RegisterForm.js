@@ -10,6 +10,7 @@ import Input from "../UI/Input/Input";
 import { getCities, getRegions } from "../../lib/api-user";
 
 const RegisterForm = (props) => {
+  console.log("props", props);
   const [isEntering, setIsEntering] = useState(false);
 
   const [enteredEmployeeNum, setEmployeeNum] = useState("");
@@ -47,6 +48,7 @@ const RegisterForm = (props) => {
   ];
 
   const changeHandler = (event) => {
+    setIsEntering(true);
     const { value, name } = event.target;
     switch (name) {
       case "email":
@@ -121,7 +123,7 @@ const RegisterForm = (props) => {
   };
 
   const formFocusedHandler = () => {
-    setIsEntering(true);
+    // setIsEntering(true);
   };
 
   useEffect(() => {
@@ -142,7 +144,7 @@ const RegisterForm = (props) => {
   return (
     <Fragment>
       <Prompt
-        when={!isEntering}
+        when={isEntering}
         message={(location) =>
           "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."
         }
