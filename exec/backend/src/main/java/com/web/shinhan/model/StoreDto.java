@@ -38,6 +38,8 @@ public class StoreDto {
 
   private int testCode;
 
+  private boolean isVerified;
+
   @Builder
   public StoreDto(int storeId, String crNum, String categoryCode, String email, String password,
       String storeName,
