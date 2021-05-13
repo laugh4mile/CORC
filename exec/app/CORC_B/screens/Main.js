@@ -15,7 +15,7 @@ import Card from '../components/Card';
 import PaymentItem from '../components/PaymentItem';
 import PaymentHistoryIcon from '../navigations/icons/PaymentHistoryIcon';
 
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
+const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
 
 const Main = (props) => {
   const [isLoading, setIsLoading] = React.useState(true);

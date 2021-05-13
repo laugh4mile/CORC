@@ -24,7 +24,7 @@ const { width } = Dimensions.get('window');
 const imgSize = width * 0.06;
 const qrSize = width * 0.55;
 
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
+const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
 
 const Payment = (props) => {
   const userId = useSelector((state) => state.auth.userId);
