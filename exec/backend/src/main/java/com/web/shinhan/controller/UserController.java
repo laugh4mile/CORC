@@ -174,22 +174,6 @@ public class UserController {
                   paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
             }
 
-            logger.info("payment: " + payment.toString());
-            // 블록체인 트렌젝션 생성
-            TransactionDto tx = TransactionDto.builder()
-                .from(user.getEmail())
-                .to(store.getEmail())
-                .value(total)
-                .build();
-            Mono<TransactionDto> t = blockchainService.createTransaction(tx);
-            t.subscribe(response -> {
-              // 생성된 경우 상태 변경
-              payment.setTransactionId(response.getTxId());
-              payment.setTestCode(1);
-              paymentService.setTransaction(payment);
-              logger.info("payment: " + payment.toString());
-            });
-
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;
           }

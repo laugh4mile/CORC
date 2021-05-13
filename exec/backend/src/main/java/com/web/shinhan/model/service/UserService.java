@@ -205,9 +205,11 @@ public class UserService {
   public Boolean pay(int userId, int bill) {
     User user = userRepository.findByUserId(userId);
     UserDto userDto = mapper.INSTANCE.userToDto(user);
-    if (userDto.getBalance() - bill >= 0) {
-      userDto.setBalance(userDto.getBalance() - bill);
+    int afterBalance = userDto.getBalance() - bill;
+    if (afterBalance >= 0) {
+      userDto.setBalance(afterBalance);
       userRepository.save(userDto.toEntity());
+      setBlockUserBalance(userDto);
       return true;
     } else {
       return false;
@@ -239,7 +241,7 @@ public class UserService {
         .userId(user.getEmail())
         .balance(user.getBalance())
         .build();
-    blockchainService.setBalance(blockUser);
+    blockchainService.setBalance(blockUser).subscribe();
   }
 
   public void createBlockUser(UserDto user) {
@@ -248,7 +250,6 @@ public class UserService {
         .type("User")
         .balance(user.getBalance())
         .build();
-    blockchainService.createUser(blockUser);
 
     Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
     u.subscribe(response -> {
