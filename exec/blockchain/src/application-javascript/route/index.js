@@ -41,7 +41,8 @@ const { createUser, deleteUser, getTransaction, getUser, setBalance, transferFro
  */
 router.post('/user', async (req, res) => {
   try {
-    if (!req.body['userId'] || !req.body['type'] || !req.body['balance']) throw new Error();
+    if (typeof req.body['userId'] !== 'string' || typeof req.body['type'] !== 'string' || typeof req.body['balance'] !== 'number')
+      throw new Error();
     const userId = req.body.userId;
     const type = req.body.type;
     const balance = req.body.balance;
@@ -152,7 +153,7 @@ router.delete('/user/:userId', async (req, res) => {
  */
 router.put('/balance', async (req, res) => {
   try {
-    if (!req.body['userId'] || !req.body['balance']) throw new Error();
+    if (typeof req.body['userId'] !== 'string' || req.body['balance'] !== 'number') throw new Error();
     const userId = req.body.userId;
     const balance = req.body.balance;
 
@@ -192,7 +193,8 @@ router.put('/balance', async (req, res) => {
  */
 router.post('/transfer', async (req, res) => {
   try {
-    if (!req.body['from'] || !req.body['to'] || !req.body['value']) throw new Error();
+    if (typeof req.body['from'] !== 'string' || typeof req.body['to'] !== 'string' || typeof req.body['value'] !== 'number')
+      throw new Error();
     const from = req.body.from;
     const to = req.body.to;
     const value = req.body.value;
