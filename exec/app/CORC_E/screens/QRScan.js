@@ -8,15 +8,81 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import Colors from '../constants/Colors';
+import * as LocalAuthentication from 'expo-local-authentication';
+import axios from 'axios';
 
 export default function QRScan() {
+  const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
+
+  const userId = useSelector((state) => state.auth.userId);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [paymentData, setPaymentData] = useState();
 
+  //지문
+  const [compatible, setCompatible] = useState(false);
+  const [fingerprints, setFingerprints] = useState(false);
+  const [result, setResult] = useState();
+
+  const checkDeviceForHardware = async () => {
+    let compatible = await LocalAuthentication.hasHardwareAsync();
+    setCompatible(compatible);
+    console.log('compatible : ', compatible);
+  };
+  const checkForFingerprints = async () => {
+    let fingerprints = await LocalAuthentication.isEnrolledAsync();
+    setFingerprints(fingerprints);
+    console.log('fingerprints : ', fingerprints);
+  };
+  const scanFingerprint = async () => {
+    if (!compatible) {
+      if (!fingerprints) {
+        return;
+      }
+    }
+    let result = await LocalAuthentication.authenticateAsync(
+      'Scan your finger.'
+    );
+    console.log('Scan Result:', result.success);
+
+    setResult(result);
+    if (result.success) {
+      pay();
+    }
+  };
+  //
+  // var param = new FormData();
+  const pay = async () => {
+    console.log(paymentData.orderList);
+
+    // console.log(userId);
+    // console.log(paymentData.storeid);
+    // param.append('total', +paymentData.total);
+    // param.append('userId', +userId);
+    // param.append('storeId', +paymentData.storeId);
+    // console.log(param);
+
+    // let response = await axios.post(
+    //   `${SERVER_URL}user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
+    //     paymentData.storeid
+    //   }`,
+    //   paymentData.orderList
+
+    //   // json.parse(paymentData.orderList)
+    //   // total: +paymentData.total,
+    //   // userId: +userId,
+    //   // storeId: +paymentData.storeid,
+    // );
+    // console.log('response : ', response);
+  };
+
   useEffect(() => {
+    checkDeviceForHardware();
+    checkForFingerprints();
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -31,7 +97,11 @@ export default function QRScan() {
     setScanned(true);
     setModalVisible(true);
     // console.log(JSON.parse(data));
-    setPaymentData(JSON.parse(data));
+    const temp = JSON.parse(data);
+    console.log(temp);
+    setPaymentData(temp);
+    // console.log('paymentData : ' + paymentData);
+    console.log(temp.orderList);
     // console.log('몇번 호출되나');
     // alert(`${data}`);
   };
@@ -75,6 +145,7 @@ export default function QRScan() {
                   <ScrollView
                     style={{
                       flex: 1,
+                      padding: 35,
                     }}
                   >
                     <View style={{ alignItems: 'center' }}>
@@ -130,15 +201,31 @@ export default function QRScan() {
                       </View>
                     </View>
                   </ScrollView>
-                  <View style={{ justifyContent: 'flex-end', marginTop: 10 }}>
-                    <Pressable
-                      style={[styles.button, styles.buttonClose]}
-                      onPress={() => setModalVisible(!modalVisible)}
-                    >
-                      <Text style={styles.textStyle}>Close</Text>
-                    </Pressable>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#414251', fontSize: 12 }}>
+                      주문 내역이 맞는지 확인해주세요.
+                    </Text>
+                  </View>
+                  <View style={{ justifyContent: 'center', marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Pressable
+                        style={[styles.payButton, styles.buttonPay]}
+                        onPress={scanFingerprint}
+                      >
+                        <Text style={styles.payText}>결제 </Text>
+                      </Pressable>
+                      <Pressable
+                        style={[styles.closeButton, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}
+                      >
+                        <Text style={styles.closeText}>취소</Text>
+                      </Pressable>
+                    </View>
                   </View>
                 </View>
+                {/* <View style={{ flex: 1, backgroundColor: '#000' }}>
+                  <Text>??</Text>
+                </View> */}
               </View>
             </Modal>
           )}
@@ -175,6 +262,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: '60%',
   },
+
   // 모달 관련
   centeredView: {
     flex: 1,
@@ -189,7 +277,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    // padding: 35,
     // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -206,17 +294,34 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
+  payButton: {
+    flex: 1,
+    borderBottomLeftRadius: 20,
+    padding: '5%',
     elevation: 2,
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
+  closeButton: {
+    flex: 1,
+    borderBottomRightRadius: 20,
+    padding: '5%',
+    elevation: 2,
   },
-  textStyle: {
-    color: 'white',
+  buttonPay: {
+    backgroundColor: Colors.primary.backgroundColor,
+  },
+  buttonClose: {
+    backgroundColor: Colors.cancel.backgroundColor,
+  },
+  payText: {
+    color: Colors.primary.fontColor,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 16,
+  },
+  closeText: {
+    color: Colors.cancel.fontColor,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });
