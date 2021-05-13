@@ -10,12 +10,12 @@ import { PieChart } from 'react-native-chart-kit';
 import { Picker } from '@react-native-picker/picker';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import Colors from '../../constants/Colors';
+import Colors from '../constants/Colors';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
+const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -115,6 +115,7 @@ const Statistics = () => {
   const [itemList, setitemList] = useState([]);
   const [total, settotal] = useState(0);
   const [startDate, setstartDate] = useState(7);
+  const [storeList, setStoreList] = useState([]);
 
   var searchDateList = [
     { label: '일간', value: 1 },
@@ -129,16 +130,17 @@ const Statistics = () => {
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
-      `${SERVER_URL}/store/payment/custom?storeId=${userId}&forStatistics=true&startDate=${dateStrToNum(
+      `${SERVER_URL}user/payment/custom?userId=${userId}&forStatistics=true&startDate=${dateStrToNum(
         dateFrom(startDate)
       )}&endDate=${dateStrToNum(new Date())}`
     );
-
+    // console.log('response: ', response);
     setitemList([]);
-
+    setStoreList([]);
     var payments;
     var copiedItemList = [];
     var totalSum = 0;
+    var storesList = [];
 
     if (response.data !== undefined && !response.data.paymentList.empty) {
       payments = response.data.paymentList.content;
@@ -167,6 +169,28 @@ const Statistics = () => {
             });
           }
         }
+        // 스토어별 통계
+
+        var isContained2 = false;
+        const item2 = payments[i].store;
+        for (let k = 0; k < storesList.length; k++) {
+          if (storesList[k].storeName == item2.storeName) {
+            storesList[k].amount += 1;
+            // storesList[k].priceSum += item.amount * item.price;
+            isContained2 = true;
+            break;
+          }
+        }
+        if (!isContained2) {
+          storesList.push({
+            storeName: item2.storeName,
+            amount: 1,
+            priceSum: 'sibal',
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
+        }
+        // storesList = payments[i].store.storeName;
       }
 
       for (let index = 0; index < copiedItemList.length; index++) {
@@ -176,7 +200,17 @@ const Statistics = () => {
             ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
           ).toString(16);
       }
+      for (let index = 0; index < storesList.length; index++) {
+        storesList[index].color =
+          '#' +
+          Math.round(
+            ((index + 1) * 0xffffff) / (storesList.length + 2)
+          ).toString(16);
+      }
     }
+    // console.log(copiedItemList);
+    console.log(sort(storesList, 'amount', 'priceSum'));
+    // setStoreList(storesList);
     setitemList(sort(copiedItemList, 'amount', 'priceSum'));
     settotal(totalSum);
 

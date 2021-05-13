@@ -91,15 +91,18 @@ public class UserController {
   @ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment/custom")
   public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
-      @RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
+      @RequestParam int startDate, @RequestParam int endDate, @RequestParam(required = false) boolean forStatistics, 
+      Pageable pageable) throws Exception {
     logger.info("findUserPaymentCustom - 호출");
-
     Map<String, Object> resultMap = new HashMap<>();
     Page<PaymentDto> page = null;
     HttpStatus status = HttpStatus.ACCEPTED;
     pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
         Sort.by(Sort.Direction.DESC, "date"));
-
+    if (forStatistics) {
+		pageable = Pageable.unpaged();
+	}
+    
     try {
       resultMap.put("info", userService.findUserInfo(userId));
       page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
