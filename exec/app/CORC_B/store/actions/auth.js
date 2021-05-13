@@ -1,12 +1,12 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-export const AUTHENTICATE = "AUTHENTICATE";
-export const LOGOUT = "LOGOUT";
+export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
 
 export const setDidTryAL = () => {
   return { type: SET_DID_TRY_AL };
@@ -41,10 +41,10 @@ export const registStore = (data) => {
     } catch (e) {
       let errorStatus = e.response.status;
       if (errorStatus && errorStatus === 401) {
-        throw new Error("이미 등록된 가맹점입니다.");
+        throw new Error('이미 등록된 가맹점입니다.');
       }
       if (errorStatus && errorStatus === 500) {
-        throw new Error("가맹점 신청에 실패하였습니다. ");
+        throw new Error('가맹점 신청에 실패하였습니다. ');
       }
     }
   };
@@ -74,45 +74,37 @@ export const login = (email, password) => {
       `${SERVER_URL}/login/store?email=${email}&password=${password}`
     );
 
-    if (response.data["message"]) {
-      let message = response.data["message"];
+    if (response.data['message']) {
+      let message = response.data['message'];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
     }
 
-    let userId = response.data["store-storeid"];
-    let useremail = response.data["store-email"];
-    let token = response.data["auth-token"];
-    let accepted = response.data["store-accepted"];
+    let userId = response.data['store-storeid'];
+    let useremail = response.data['store-email'];
+    let token = response.data['auth-token'];
+    let accepted = response.data['store-accepted'];
 
-    let _6months = 60*24*30*6
+    let _6months = 60 * 24 * 30 * 6;
 
     if (accepted === 0) {
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
     }
     if (accepted === 1) {
-      throw new Error("가맹점 승인이 완료되지 않았습니다.");
+      throw new Error('가맹점 승인이 완료되지 않았습니다.');
     }
     if (accepted === 2) {
-      dispatch(
-        authenticate(
-          userId,
-          token,
-          _6months * 1000
-        )
-      );
+      dispatch(authenticate(userId, token, _6months * 1000));
     }
 
-    const expirationDate = new Date(
-      new Date().getTime() + _6months * 1000
-    );
+    const expirationDate = new Date(new Date().getTime() + _6months * 1000);
 
-    saveDataToStorage( userId, token, expirationDate);
+    saveDataToStorage(userId, token, expirationDate);
   };
 };
 
 export const logout = () => {
   clearLogoutTimer();
-  AsyncStorage.removeItem("userData");
+  AsyncStorage.removeItem('userData');
   return { type: LOGOUT };
 };
 
@@ -132,7 +124,7 @@ const setLogoutTimer = (expirationTime) => {
 
 const saveDataToStorage = (userId, token, expirationDate) => {
   AsyncStorage.setItem(
-    "userData",
+    'userData',
     JSON.stringify({
       userId: userId,
       token: token,
