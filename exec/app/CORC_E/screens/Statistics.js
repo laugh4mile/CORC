@@ -116,6 +116,7 @@ const Statistics = () => {
   const [total, settotal] = useState(0);
   const [startDate, setstartDate] = useState(7);
   const [storeList, setStoreList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   var searchDateList = [
     { label: '일간', value: 1 },
@@ -134,13 +135,12 @@ const Statistics = () => {
         dateFrom(startDate)
       )}&endDate=${dateStrToNum(new Date())}`
     );
-    // console.log('response: ', response);
     setitemList([]);
-    setStoreList([]);
     var payments;
     var copiedItemList = [];
     var totalSum = 0;
-    var storesList = [];
+    var stores = [];
+    var categories = [];
 
     if (response.data !== undefined && !response.data.paymentList.empty) {
       payments = response.data.paymentList.content;
@@ -169,28 +169,48 @@ const Statistics = () => {
             });
           }
         }
-        // 스토어별 통계
 
+        // 매장별 금액 통계
         var isContained2 = false;
         const item2 = payments[i].store;
-        for (let k = 0; k < storesList.length; k++) {
-          if (storesList[k].storeName == item2.storeName) {
-            storesList[k].amount += 1;
-            // storesList[k].priceSum += item.amount * item.price;
+        for (let k = 0; k < stores.length; k++) {
+          if (stores[k].name == item2.storeName) {
+            stores[k].amount += 1;
+            stores[k].priceSum += payments[i].total;
             isContained2 = true;
             break;
           }
         }
         if (!isContained2) {
-          storesList.push({
-            storeName: item2.storeName,
+          stores.push({
+            name: item2.storeName,
             amount: 1,
-            priceSum: 'sibal',
+            priceSum: payments[i].total,
             legendFontColor: '#050505',
             legendFontSize: 16,
           });
         }
-        // storesList = payments[i].store.storeName;
+
+        // 카테고리별 금액 통계
+        var isContained3 = false;
+        // const item3 = payments[i].store;
+        for (let k = 0; k < categories.length; k++) {
+          if (categories[k].name == item2.category.categoryName) {
+            categories[k].amount += 1;
+            categories[k].priceSum += payments[i].total;
+            isContained3 = true;
+            break;
+          }
+        }
+        if (!isContained3) {
+          categories.push({
+            name: item2.category.categoryName,
+            amount: 1,
+            priceSum: payments[i].total,
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
+        }
       }
 
       for (let index = 0; index < copiedItemList.length; index++) {
@@ -200,18 +220,25 @@ const Statistics = () => {
             ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
           ).toString(16);
       }
-      for (let index = 0; index < storesList.length; index++) {
-        storesList[index].color =
+      for (let index = 0; index < stores.length; index++) {
+        stores[index].color =
+          '#' +
+          Math.round(((index + 1) * 0xffffff) / (stores.length + 2)).toString(
+            16
+          );
+      }
+      for (let index = 0; index < categories.length; index++) {
+        categories[index].color =
           '#' +
           Math.round(
-            ((index + 1) * 0xffffff) / (storesList.length + 2)
+            ((index + 1) * 0xffffff) / (categories.length + 2)
           ).toString(16);
       }
     }
-    // console.log(copiedItemList);
-    console.log(sort(storesList, 'amount', 'priceSum'));
-    // setStoreList(storesList);
+    // console.log(categories);
+    setStoreList(sort(stores, 'priceSum', 'amount'));
     setitemList(sort(copiedItemList, 'amount', 'priceSum'));
+    setCategoryList(sort(categories, 'priceSum', 'amount'));
     settotal(totalSum);
 
     setIsLoading(false);
@@ -258,19 +285,7 @@ const Statistics = () => {
           <View style={styles.pieChart}>
             <PieChart
               style={{ marginTop: '10%' }}
-              data={itemList}
-              width={pieWidth}
-              height={pieHeight}
-              chartConfig={chartConfig}
-              accessor={'amount'}
-              backgroundColor={'transparent'}
-              center={[10, 0]}
-              absolute
-            />
-            <Text style={styles.basisText}>[판매 수량 기준]</Text>
-            <PieChart
-              style={{ marginTop: '10%' }}
-              data={itemList}
+              data={categoryList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
@@ -279,7 +294,19 @@ const Statistics = () => {
               center={[10, 0]}
               absolute
             />
-            <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
+            <Text style={styles.basisText}>[카테고리 기준]</Text>
+            <PieChart
+              style={{ marginTop: '10%' }}
+              data={storeList}
+              width={pieWidth}
+              height={pieHeight}
+              chartConfig={chartConfig}
+              accessor={'priceSum'}
+              backgroundColor={'transparent'}
+              center={[10, 0]}
+              absolute
+            />
+            <Text style={styles.basisText}>[지출량 기준]</Text>
           </View>
           <View style={styles.totalView}>
             <Text style={styles.totalText}>
