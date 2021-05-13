@@ -140,6 +140,11 @@ public class UserController {
     HttpStatus status = HttpStatus.ACCEPTED;
 
     try {
+      int itemsTotal = 0;
+      for (PaymentitemDto paymentitem: paymentitems) {
+    	  itemsTotal += paymentitem.getPrice() * paymentitem.getAmount();
+      }
+      if(itemsTotal == total) {
       UserDto user = userService.findUserInfo(userId);
       StoreDto store = storeService.findStoreInfo(storeId);
       String storeGugunCode = store.getGugunCode();
@@ -170,6 +175,10 @@ public class UserController {
       } else {
         resultMap.put("message", "사용 불가 요일");
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+      } else {
+    	resultMap.put("message", "결제 내역 총합과 상품 목록 총합 불일치");
+    	return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);    	  
       }
     } catch (RuntimeException e) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
