@@ -32,6 +32,7 @@ public class PaymentDto {
 
   private String transactionId;
   private int testCode;
+  private boolean isVerified;
 
   @Builder
   public PaymentDto(int paymentId, int userId, int storeId, int total, LocalDateTime date,
