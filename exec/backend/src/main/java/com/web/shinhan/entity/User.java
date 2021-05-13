@@ -39,6 +39,8 @@ public class User {
   private LocalDateTime accessTime;
   private LocalDateTime limitTime;
 
+  private int testCode = 0;
+
   @OneToOne
   @JoinColumn(name = "sidoCode", insertable = false, updatable = false)
   private Sido sido;
@@ -52,7 +54,7 @@ public class User {
       String department,
       String position, String contact, String days, String sidoCode, String gugunCode, int balance,
       int cardLimit,
-      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
+      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun, int testCode) {
     this.userId = userId;
     this.employeeNum = employeeNum;
     this.email = email;
@@ -71,6 +73,8 @@ public class User {
     this.limitTime = limitTime;
     this.sido = sido;
     this.gugun = gugun;
+
+    this.testCode = testCode;
   }
 
 }

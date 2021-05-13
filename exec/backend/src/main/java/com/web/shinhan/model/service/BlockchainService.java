@@ -1,17 +1,14 @@
 package com.web.shinhan.model.service;
 
 import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.TransactionDto;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.nio.charset.Charset;
+import reactor.core.publisher.Mono;
 
 @Service
 public class BlockchainService {
@@ -28,22 +25,48 @@ public class BlockchainService {
         .build();
   }
 
-  public BlockUserDto gerUser(String userId) {
-    BlockUserDto rs = webClient.get()
+  public Mono<BlockUserDto> getUser(String userId) {
+    return webClient.get()
         .uri("/user/{userId}", userId)
         .retrieve()
-        .bodyToMono(BlockUserDto.class)
-        .block();
-    return rs;
+        .bodyToMono(BlockUserDto.class);
   }
 
-  public BlockUserDto createUser(BlockUserDto user) {
-    BlockUserDto rs = webClient.post()
+  public Mono<BlockUserDto> createUser(BlockUserDto user) {
+    return webClient.post()
         .uri("/user")
         .bodyValue(user)
         .retrieve()
-        .bodyToMono(BlockUserDto.class)
-        .block();
-    return rs;
+        .bodyToMono(BlockUserDto.class);
+  }
+
+  public Mono<BlockUserDto> deleteUser(String userId) {
+    return webClient.delete()
+        .uri("/user/{userId}", userId)
+        .retrieve()
+        .bodyToMono(BlockUserDto.class);
+  }
+
+  public Mono<BlockUserDto> setBalance(BlockUserDto user) {
+    return webClient.put()
+        .uri("/balance")
+        .bodyValue(user)
+        .retrieve()
+        .bodyToMono(BlockUserDto.class);
+  }
+
+  public Mono<TransactionDto> createTransaction(TransactionDto tx) {
+    return webClient.post()
+        .uri("/transfer")
+        .bodyValue(tx)
+        .retrieve()
+        .bodyToMono(TransactionDto.class);
+  }
+
+  public Mono<TransactionDto> getTransaction(String txId) {
+    return webClient.get()
+        .uri("/transaction/{txId}", txId)
+        .retrieve()
+        .bodyToMono(TransactionDto.class);
   }
 }

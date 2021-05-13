@@ -39,12 +39,15 @@ public class UserDto {
   private Sido sido;
   private Gugun gugun;
 
+  private int testCode;
+
   @Builder
   public UserDto(int userId, int employeeNum, String email, String userName, String password,
       String department,
       String position, String contact, String days, String sidoCode, String gugunCode, int balance,
       int cardLimit,
-      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun) {
+      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun,
+      int testCode) {
     this.userId = userId;
     this.employeeNum = employeeNum;
     this.email = email;
@@ -63,6 +66,7 @@ public class UserDto {
     this.limitTime = limitTime;
     this.sido = sido;
     this.gugun = gugun;
+    this.testCode = testCode;
   }
 
   public User toEntity() {
@@ -71,7 +75,7 @@ public class UserDto {
         .department(department).position(position).contact(contact).days(days).sidoCode(sidoCode)
         .gugunCode(gugunCode).balance(balance).cardLimit(cardLimit).active(active)
         .accessTime(accessTime)
-        .limitTime(limitTime).sido(sido).gugun(gugun).build();
+        .limitTime(limitTime).sido(sido).gugun(gugun).testCode(testCode).build();
   }
 
   public static UserDto of(User user) {
@@ -81,7 +85,8 @@ public class UserDto {
         .position(user.getPosition()).contact(user.getContact()).days(user.getDays())
         .sidoCode(user.getSidoCode()).gugunCode(user.getGugunCode()).balance(user.getBalance())
         .cardLimit(user.getCardLimit()).active(user.getActive()).accessTime(user.getAccessTime())
-        .limitTime(user.getLimitTime()).sido(user.getSido()).gugun(user.getGugun()).build();
+        .limitTime(user.getLimitTime()).sido(user.getSido()).gugun(user.getGugun())
+        .testCode(user.getTestCode()).build();
   }
 
 }
