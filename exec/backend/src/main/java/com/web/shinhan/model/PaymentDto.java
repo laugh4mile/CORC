@@ -30,10 +30,13 @@ public class PaymentDto {
   private User user;
   private Store store;
 
+  private String transactionId;
+  private int testCode;
+
   @Builder
   public PaymentDto(int paymentId, int userId, int storeId, int total, LocalDateTime date,
       int status,
-      List<Paymentitem> paymentitem, User user, Store store) {
+      List<Paymentitem> paymentitem, User user, Store store, String transactionId, int testCode) {
     this.paymentId = paymentId;
     this.userId = userId;
     this.storeId = storeId;
@@ -43,19 +46,24 @@ public class PaymentDto {
     this.paymentitem = paymentitem;
     this.user = user;
     this.store = store;
+    this.transactionId = transactionId;
+    this.testCode = testCode;
   }
 
   public Payment toEntity() {
     return Payment.builder().paymentId(paymentId).userId(userId).storeId(storeId).total(total)
         .date(date)
-        .status(status).paymentitem(paymentitem).user(user).store(store).build();
+        .status(status).paymentitem(paymentitem).user(user).store(store)
+        .transactionId(transactionId)
+        .testCode(testCode).build();
   }
 
   public static PaymentDto of(Payment payment) {
     return PaymentDto.builder().paymentId(payment.getPaymentId()).userId(payment.getUserId())
         .storeId(payment.getStoreId()).total(payment.getTotal()).date(payment.getDate())
         .status(payment.getStatus()).paymentitem(payment.getPaymentitem()).user(payment.getUser())
-        .store(payment.getStore()).build();
+        .store(payment.getStore()).transactionId(payment.getTransactionId())
+        .testCode(payment.getTestCode()).build();
   }
 
 }

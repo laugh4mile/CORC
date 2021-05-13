@@ -1,7 +1,7 @@
 import { useEffect, useState, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import classes from './StoreItem.module.css';
+import classes from './Item.module.css';
 
 const StoreItem = (props) => {
   const history = useHistory();
@@ -27,7 +27,7 @@ const StoreItem = (props) => {
   return (
     <tbody>
       <tr className={classes.tr}>
-        <td>
+        <td className={`${classes.td} ${classes.checkbox}`}>
           <input
             type="checkbox"
             value={props.storeId}
@@ -39,16 +39,22 @@ const StoreItem = (props) => {
             checked={props.checkItems.includes(props.storeId) ? true : false}
           />
         </td>
-        <td className={classes.link} onClick={trClickHandler}>
+        <td
+          className={`${classes.td} ${classes.link}`}
+          onClick={trClickHandler}
+        >
           {props.crNum}
         </td>
-        <td>{props.storeName}</td>
-        <td>{props.categoryCode}</td>
-        <td>
+        <td className={`${classes.td}`}>{props.storeName}</td>
+        <td className={`${classes.td}`}>{props.categoryCode}</td>
+        <td className={`${classes.td}`}>
           {props.sido.sidoName} {props.gugun.gugunName}
         </td>
-        <td>{formatMoney(props.total)}</td>
-        {/* <td>{isAccepted(props.accepted)}</td> */}
+        <td
+          className={`${classes.td} ${classes['text-sm']} ${classes['align-right']}`}
+        >
+          {formatMoney(props.total)}
+        </td>
       </tr>
     </tbody>
   );

@@ -49,7 +49,7 @@ public class PaymentService {
     		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
     		paymentDto.setStatus(2);
     		paymentRepository.save(paymentDto.toEntity());
-    	} else if(py.getStatus() == 2){
+    	} else if(py.getStatus() == 2 || py.getStatus() == 0){
     		continue;
     	} else {
     		return false;
@@ -219,9 +219,10 @@ public class PaymentService {
     paymentRepository.save(paymentDto.toEntity());
   }
 
-  public int findLastPayment() {
+  public PaymentDto findLastPayment() {
     Payment payment = paymentRepository.findTop1ByOrderByPaymentIdDesc();
-    return payment.getPaymentId();
+    PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
+    return dto;
   }
 
   public PaymentDto findPayment(int paymentId) {
@@ -263,4 +264,20 @@ public class PaymentService {
 		Page<Payment> payments = paymentRepository.findAllByStoreCustom(storeId, pageable, startDateIn, endDateIn);
 		return payments.map(PaymentDto::of);
 	}
+
+	public boolean setTransaction(PaymentDto payment){
+    try {
+      PaymentDto p = findPayment(payment.getPaymentId());
+      p.setTestCode(1);
+      p.setTransactionId(payment.getTransactionId());
+      Payment pe = p.toEntity();
+      paymentRepository.save(pe);
+
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+
+      return false;
+    }
+  }
 }

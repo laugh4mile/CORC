@@ -1,5 +1,8 @@
 package com.web.shinhan.controller;
 
+import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.TransactionDto;
+import com.web.shinhan.model.service.BlockchainService;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,6 +38,7 @@ import com.web.shinhan.model.service.UserService;
 import com.web.shinhan.repository.PaymentRepository;
 
 import io.swagger.annotations.ApiOperation;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/user")
@@ -54,6 +58,9 @@ public class UserController {
 
   @Autowired
   PaymentitemService paymentitemService;
+
+  @Autowired
+  BlockchainService blockchainService;
 
   @ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment")
@@ -140,6 +147,11 @@ public class UserController {
     HttpStatus status = HttpStatus.ACCEPTED;
 
     try {
+      int itemsTotal = 0;
+      for (PaymentitemDto paymentitem: paymentitems) {
+    	  itemsTotal += paymentitem.getPrice() * paymentitem.getAmount();
+      }
+      if(itemsTotal == total) {
       UserDto user = userService.findUserInfo(userId);
       StoreDto store = storeService.findStoreInfo(storeId);
       String storeGugunCode = store.getGugunCode();
@@ -155,11 +167,29 @@ public class UserController {
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
           } else {
             paymentService.pay(userId, storeId, total);
-            int paymentId = paymentService.findLastPayment();
+            PaymentDto payment = paymentService.findLastPayment();
+            int paymentId = payment.getPaymentId();
             for (int i = 0; i < paymentitems.size(); i++) {
               paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
                   paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
             }
+
+            logger.info("payment: " + payment.toString());
+            // 블록체인 트렌젝션 생성
+            TransactionDto tx = TransactionDto.builder()
+                .from(user.getEmail())
+                .to(store.getEmail())
+                .value(total)
+                .build();
+            Mono<TransactionDto> t = blockchainService.createTransaction(tx);
+            t.subscribe(response -> {
+              // 생성된 경우 상태 변경
+              payment.setTransactionId(response.getTxId());
+              payment.setTestCode(1);
+              paymentService.setTransaction(payment);
+              logger.info("payment: " + payment.toString());
+            });
+
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;
           }
@@ -170,6 +200,10 @@ public class UserController {
       } else {
         resultMap.put("message", "사용 불가 요일");
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+      } else {
+    	resultMap.put("message", "결제 내역 총합과 상품 목록 총합 불일치");
+    	return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);    	  
       }
     } catch (RuntimeException e) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;

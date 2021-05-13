@@ -4,42 +4,16 @@ import React, { useEffect, useState } from 'react';
 
 import Card from '../../components/UI/Card/Card';
 import StoreItem from './StoreItem';
-import classes from './StoreList.module.css';
+import classes from './List.module.css';
 import { storeApplication, confirmPayment } from '../../lib/api-store';
 import useHttp from '../../hooks/use-http';
-
-const sortStores = (stores, ascending) => {
-  return stores.sort((storeA, storeB) => {
-    if (ascending) {
-      return storeA.id - storeB.id;
-    } else {
-      return storeB.id - storeA.id;
-    }
-  });
-};
 
 const StoreList = (props) => {
   const { sendRequest, status } = useHttp(confirmPayment);
 
   const [checkItems, setCheckItems] = useState([]);
 
-  // const refreshPage = () => {
-  //   window.location.reload(false);
-  // };
-  // useEffect(() => {
-  //   sendRequest(pageInfo);
-  // }, [sendRequest, pageInfo]);
-  // useEffect(() => {
-  //   sendRequest();
-  //   // if (status === 'completed') {
-  //   //   // 임시 prompt
-  //   //   alert('유저 등록 완료');
-  //   // }
-  // }, []);
-
   const addUserHandler = (storeIds) => {
-    console.log('storeIds', storeIds);
-    console.log('typeof storeIds', typeof storeIds);
     sendRequest(storeIds);
   };
 
@@ -69,6 +43,7 @@ const StoreList = (props) => {
 
   const submitHandler = (event) => {
     // event.preventDefault();
+    console.log('checkItems', checkItems);
     addUserHandler(checkItems);
   };
 
@@ -87,8 +62,8 @@ const StoreList = (props) => {
         <Card type="nofit">
           <table>
             <thead>
-              <tr>
-                <th>
+              <tr className={classes.tr}>
+                <th className={classes.checkbox}>
                   <input
                     type="checkbox"
                     name="status"

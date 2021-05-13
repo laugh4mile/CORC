@@ -36,6 +36,7 @@ import com.web.shinhan.model.service.StoreService;
 import com.web.shinhan.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/admin")
@@ -184,17 +185,6 @@ public class AdminController {
       userService.registUser(user);
       flag = true;
       status = HttpStatus.ACCEPTED;
-
-      // call chian api
-      // GetUser Test
-      // BlockUserDto testUser = blockchainService.gerUser("TestUser");
-      // logger.info(testUser.toString());
-
-      // PostUser
-      BlockUserDto blockUser = BlockUserDto.builder().userId(user.getEmail()).type("User")
-          .balance(0).build();
-      // SetBalance
-      // ...
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -462,6 +452,16 @@ public class AdminController {
       storeService.registStore(store);
       flag = true;
       status = HttpStatus.ACCEPTED;
+
+//      // 블록체인 가맹점 생성
+//      BlockUserDto blockUser = BlockUserDto.builder().userId(store.getEmail()).type("Store")
+//          .balance(0).build();
+//      Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
+//      u.subscribe(response -> {
+//        // 생성된 경우 상태 변경
+//        store.setTestCode(1);
+//        storeService.registStore(store);
+//      });
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -478,6 +478,8 @@ public class AdminController {
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
 
+    System.out.println(newDto.toString());
+    
     // 가맹점 정보 조회
     String email = newDto.getEmail();
     // 가맹점 소개 수정

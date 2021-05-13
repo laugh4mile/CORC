@@ -31,6 +31,9 @@ public class Payment {
   private int status;
   private LocalDateTime date;
 
+  private String transactionId;
+  private int testCode;
+
   @JsonManagedReference
   @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Paymentitem> paymentitem = new ArrayList<>();
@@ -45,7 +48,7 @@ public class Payment {
 
   @Builder
   public Payment(int paymentId, int userId, int storeId, int total, int status, LocalDateTime date,
-      List<Paymentitem> paymentitem, User user, Store store) {
+      List<Paymentitem> paymentitem, User user, Store store, String transactionId, int testCode) {
     this.paymentId = paymentId;
     this.userId = userId;
     this.storeId = storeId;
@@ -55,6 +58,8 @@ public class Payment {
     this.paymentitem = paymentitem;
     this.user = user;
     this.store = store;
+    this.transactionId = transactionId;
+    this.testCode = testCode;
   }
 
 //	@JsonManagedReference

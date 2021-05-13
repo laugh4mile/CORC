@@ -6,17 +6,7 @@ import Card from '../../components/UI/Card/Card';
 import RequestedStoreItem from './RequestedStoreItem';
 import { storeApplication } from '../../lib/api-store';
 import useHttp from '../../hooks/use-http';
-import classes from './StoreList.module.css';
-
-const sortStores = (stores, ascending) => {
-  return stores.sort((storeA, storeB) => {
-    if (ascending) {
-      return storeA.id - storeB.id;
-    } else {
-      return storeB.id - storeA.id;
-    }
-  });
-};
+import classes from './List.module.css';
 
 const RequestedStoreList = (props) => {
   const { sendRequest, status } = useHttp(storeApplication);
@@ -86,8 +76,8 @@ const RequestedStoreList = (props) => {
         <Card type="nofit">
           <table>
             <thead>
-              <tr>
-                <th>
+              <tr className={classes.tr}>
+                <th className={classes.checkbox}>
                   <input
                     type="checkbox"
                     name="status"

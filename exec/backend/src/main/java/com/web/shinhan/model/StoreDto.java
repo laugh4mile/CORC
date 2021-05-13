@@ -36,12 +36,16 @@ public class StoreDto {
   private Sido sido;
   private Gugun gugun;
 
+  private int testCode;
+
+  private boolean isVerified;
+
   @Builder
   public StoreDto(int storeId, String crNum, String categoryCode, String email, String password,
       String storeName,
       String contact, String bankName, int account, String sidoCode, String gugunCode,
       LocalDateTime requestDate,
-      int accepted, Integer total, Category category, Sido sido, Gugun gugun) {
+      int accepted, Integer total, Category category, Sido sido, Gugun gugun, int testCode) {
     this.storeId = storeId;
     this.crNum = crNum;
     this.categoryCode = categoryCode;
@@ -59,6 +63,7 @@ public class StoreDto {
     this.category = category;
     this.sido = sido;
     this.gugun = gugun;
+    this.testCode = testCode;
   }
 
   public Store toEntity() {
@@ -80,6 +85,7 @@ public class StoreDto {
         .category(category)
         .sido(sido)
         .gugun(gugun)
+        .testCode(testCode)
         .build();
   }
 
@@ -102,6 +108,7 @@ public class StoreDto {
         .category(store.getCategory())
         .sido(store.getSido())
         .gugun(store.getGugun())
+        .testCode(store.getTestCode())
         .build();
   }
 

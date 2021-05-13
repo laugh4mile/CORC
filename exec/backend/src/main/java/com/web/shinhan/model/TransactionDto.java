@@ -13,17 +13,11 @@ public class TransactionDto {
   private String txId;
   private String from;
   private String to;
-  private String value;
-
-  public TransactionDto(String txId, String from, String to, String value) {
-    this.txId = txId;
-    this.from = from;
-    this.to = to;
-    this.value = value;
-  }
+  private Integer value;
 
   @Builder
-  public TransactionDto(String from, String to, String value) {
+  public TransactionDto(String txId, String from, String to, Integer value) {
+    this.txId = txId;
     this.from = from;
     this.to = to;
     this.value = value;
