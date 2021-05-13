@@ -5,7 +5,7 @@ import UserList from "../../components/User/UserList";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import useHttp from "../../hooks/use-http";
 import { getUsers } from "../../lib/api-user";
-import Page from "../../components/Pagenation";
+import Page from "../../components/Pagenation/Page";
 
 import classes from "./list.module.css";
 

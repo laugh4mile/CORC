@@ -4,7 +4,7 @@ import PaymentList from "../../components/User/PaymentList";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import useHttp from "../../hooks/use-http";
 import { getAllPayment } from "../../lib/api-user";
-import Page from "../../components/Pagenation";
+import Page from "../../components/Pagenation/Page";
 
 import classes from "./list.module.css";
 
