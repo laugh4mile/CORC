@@ -61,7 +61,9 @@ public class StoreService {
     storeDto.setPassword(encodePassword);
     storeDto.setRequestDate(LocalDateTime.now());
     storeDto.setAccepted(1);
-    storeRepository.save(storeDto.toEntity());
+    Store storeEntity = storeDto.toEntity();
+    storeRepository.save(storeEntity);
+    storeDto.setStoreId(storeEntity.getStoreId());
   }
 
   public boolean modifyStoreInfo(String email, StoreDto newDto) {

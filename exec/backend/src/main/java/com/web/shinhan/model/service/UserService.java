@@ -56,7 +56,9 @@ public class UserService {
     userDto.setPassword(encodePassword);
     userDto.setBalance(userDto.getCardLimit());
     userDto.setActive(1);
-    userRepository.save(userDto.toEntity());
+    User userEntity = userDto.toEntity();
+    userRepository.save(userEntity);
+    userDto.setUserId(userEntity.getUserId());
   }
 
   public boolean emailCheck(String email) {
