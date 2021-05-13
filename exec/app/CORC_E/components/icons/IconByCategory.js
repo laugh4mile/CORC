@@ -6,6 +6,11 @@ export const GetIcon = (categoryCode) => {
       iconInfo.iconName = 'fruit-cherries';
       iconInfo.family = 'MaterialCommunityIcons';
       break;
+    case '10502':
+      // 아이스크림 및 기타 식용 빙과류 제조업
+      iconInfo.iconName = 'icecream';
+      iconInfo.family = 'MaterialIcons';
+      break;
     case '47121':
       // 슈퍼마켓
       iconInfo.iconName = 'store';

@@ -15,6 +15,7 @@ const UserListPage = () => {
     getUsers,
     true
   );
+
   const [pageInfo, setPageInfo] = useState({ page: 0, size: 3 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {

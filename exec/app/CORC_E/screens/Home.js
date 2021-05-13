@@ -29,19 +29,29 @@ const Home = (props) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  var first = true;
   const match = (date) => {
     const year = date.substring(0, 4);
     const month = +date.substring(5, 7);
     const day = +date.substring(8, 10);
-    if (year == newDate.getFullYear()) {
-      if (month == newDate.getMonth() + 1) {
-        if (day == newDate.getDate()) {
-          // console.log('패스');
-          return true;
+    if (first) {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            first = false;
+            return false;
+          }
+        }
+      }
+    } else {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            return true;
+          }
         }
       }
     }
-    // console.log('좋게 좋게 가자 제발 ');
     newDate = new Date(year, month - 1, day);
     return false;
   };
@@ -57,7 +67,7 @@ const Home = (props) => {
         SERVER_URL + 'user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      console.log('paymentList ===> : ', response2.data);
+      // console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);
@@ -154,8 +164,8 @@ const Home = (props) => {
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment, index) => (
-              <View>
-                {match(payment.date) && (
+              <View key={payment.paymentId}>
+                {!match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 13, color: '#414251' }}>
@@ -173,7 +183,6 @@ const Home = (props) => {
                   </View>
                 )}
                 <Payment
-                  key={index}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}

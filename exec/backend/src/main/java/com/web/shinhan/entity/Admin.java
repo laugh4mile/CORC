@@ -14,23 +14,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "admin")
 public class Admin {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int adminId;
 
-	private String email;
-	private String password;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int adminId;
 
-	@Builder
-	public Admin(int adminId, String email, String password) {
-		this.adminId = adminId;
-		this.email = email;
-		this.password = password;
-	}
+  private String email;
+  private String password;
 
-	@Override
-	public String toString() {
-		return "Admin [adminId=" + adminId + ", email=" + email + ", password=" + password + "]";
-	}
+  @Builder
+  public Admin(int adminId, String email, String password) {
+    this.adminId = adminId;
+    this.email = email;
+    this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return "Admin [adminId=" + adminId + ", email=" + email + ", password=" + password + "]";
+  }
 
 }

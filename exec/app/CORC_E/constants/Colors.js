@@ -5,6 +5,6 @@ export default {
   },
   cancel: {
     backgroundColor: '#CCE3F2',
-    fontColor: '#7986FF',
+    fontColor: '#0478C5',
   },
 };

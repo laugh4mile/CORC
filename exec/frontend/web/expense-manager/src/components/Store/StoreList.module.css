@@ -1,0 +1,17 @@
+tr {
+  display: flex;
+  padding: 0.5rem 0;
+}
+
+tr th {
+  width: 100%;
+  text-align: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}

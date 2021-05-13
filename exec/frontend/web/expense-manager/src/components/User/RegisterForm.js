@@ -119,6 +119,7 @@ const RegisterForm = (props) => {
     };
 
     console.log(userData);
+    console.log("props", props);
     props.onAddUser(userData);
   };
 

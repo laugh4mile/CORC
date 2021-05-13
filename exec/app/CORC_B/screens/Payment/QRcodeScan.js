@@ -29,9 +29,8 @@ export default function BarcodeScan(props) {
   };
 
   const handleBarCodeScanned = ({ type, data }) => {
-    let jsonData;
-
-    if (isJson(jsonData)) {
+    if (isJson(data)) {
+      let jsonData = JSON.parse(data);
       const numExp = /^\d+$/;
 
       let productName = jsonData.productName;
@@ -90,12 +89,12 @@ export default function BarcodeScan(props) {
         >
           Cancel
         </Text>
+        {scanned && (
+          <Text onPress={() => setScanned(false)} style={styles.cancel}>
+            Tap This to Scan Again
+          </Text>
+        )}
       </BarCodeScanner>
-      {scanned && (
-        <Text onPress={() => setScanned(false)} style={styles.cancel}>
-          Tap This to Scan Again
-        </Text>
-      )}
     </View>
   );
 }

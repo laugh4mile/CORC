@@ -38,48 +38,38 @@ import com.web.shinhan.repository.SidoRepository;
 @Service
 public class AreaService {
 
-	@Autowired
-	PasswordEncoder passwordEncoder;
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private SidoRepository sidocodeRepository;
+  @Autowired
+  private SidoRepository sidocodeRepository;
 
-	@Autowired
-	private GugunRepository guguncodeRepository;
+  @Autowired
+  private GugunRepository guguncodeRepository;
 
-	private final SidoMapper sidoMapper = Mappers.getMapper(SidoMapper.class);
+  private final SidoMapper sidoMapper = Mappers.getMapper(SidoMapper.class);
 
-	private final GugunMapper gugunMapper = Mappers.getMapper(GugunMapper.class);
+  private final GugunMapper gugunMapper = Mappers.getMapper(GugunMapper.class);
 
-	@Transactional
-	public List<SidoDto> findSidoAll() {
-		List<Sido> sidoEN = sidocodeRepository.findAll();
-		List<SidoDto> sidoDto = new ArrayList<>();
-		for (Sido sido : sidoEN) {
-			sidoDto.add(sidoMapper.INSTANCE.sidocodeToDto(sido));
-		}
-		return sidoDto;
-	}
+  @Transactional
+  public List<SidoDto> findSidoAll() {
+    List<Sido> sidoEN = sidocodeRepository.findAll();
+    List<SidoDto> sidoDto = new ArrayList<>();
+    for (Sido sido : sidoEN) {
+      sidoDto.add(sidoMapper.INSTANCE.sidocodeToDto(sido));
+    }
+    return sidoDto;
+  }
 
-	@Transactional
-	public List<GugunDto> findGugun(String sidoCode) {
-		sidoCode = sidoCode.substring(0, 2);
-		System.out.println(sidoCode);
-		List<Gugun> gugunEN = guguncodeRepository.findAllBySidocode(sidoCode);
-		System.out.println(gugunEN.toString());
-		List<GugunDto> gugunDto = new ArrayList<>();
-		for (Gugun gugun : gugunEN) {
-			gugunDto.add(gugunMapper.INSTANCE.guguncodeToDto(gugun));
-		}
-		return gugunDto;
-	}
-
-//	@Transactional
-//	public Map<String, Object> findItems(int storeId, int paymentId) {
-//		Map<String, Object> resultMap = new HashMap<>();
-//		List<Paymentitem> paymentItem = paymentitemRepository.findByStoreIdandPaymentId(storeId, paymentId);
-//		resultMap.put("paymentItem", paymentItem);
-//		return resultMap;
-//	}
+  @Transactional
+  public List<GugunDto> findGugun(String sidoCode) {
+    sidoCode = sidoCode.substring(0, 2);
+    List<Gugun> gugunEN = guguncodeRepository.findAllBySidocode(sidoCode);
+    List<GugunDto> gugunDto = new ArrayList<>();
+    for (Gugun gugun : gugunEN) {
+      gugunDto.add(gugunMapper.INSTANCE.guguncodeToDto(gugun));
+    }
+    return gugunDto;
+  }
 
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Alert,
   Dimensions,
@@ -7,32 +7,36 @@ import {
   Text,
   TextInput,
   View,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import Modal from "react-native-modal";
-import QRCode from "react-native-qrcode-svg";
-import { useSelector } from "react-redux";
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import QRCode from 'react-native-qrcode-svg';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
-import Colors from "../constants/Colors";
-import Button from "../components/Button";
-import Card from "../components/Card";
-import Input from "../components/Input";
-import BarcodeScan from "./Payment/BarcodeScan";
+import Colors from '../constants/Colors';
+import Button from '../components/Button';
+import Card from '../components/Card';
+import Input from '../components/Input';
+import QRcodeScan from './Payment/QRcodeScan';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const imgSize = width * 0.06;
 const qrSize = width * 0.55;
 
+const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
+
 const Payment = (props) => {
   const userId = useSelector((state) => state.auth.userId);
+  const [storeName, setstoreName] = useState('');
   const [scanOpened, setScanOpened] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isVacateModalVisible, setVacateModalVisible] = useState(false);
   const [items, setItems] = useState([]);
 
-  const [productName, setProductName] = useState("");
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [productName, setProductName] = useState('');
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
   const [total, setTotal] = useState(0);
 
   const [qrVisible, setQRVisible] = useState(false);
@@ -44,6 +48,15 @@ const Payment = (props) => {
   const productNameRef = useRef();
   const priceRef = useRef();
   const quantityRef = useRef();
+
+  useEffect(() => {
+    (async () => {
+      let response = await axios.get(
+        SERVER_URL + '/store/payment?storeId=' + userId
+      );
+      setstoreName(response.data.info.storeName);
+    })();
+  }, []);
 
   useEffect(() => {
     getSum();
@@ -63,7 +76,7 @@ const Payment = (props) => {
 
   const checkProductName = (text) => {
     setisProductNameValid(text.toString().trim().length > 0);
-    setProductName(text);
+    setProductName(text.toString().trim());
   };
   const numExp = /^\d+$/; // number expression
 
@@ -79,21 +92,20 @@ const Payment = (props) => {
 
   const addItem = () => {
     var spExp = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi; // special character
-    // const numExp = /^[0-9]*$/
     // if (productName.toString().trim().length <= 0) {
     if (!isProductNameValid) {
-      return Alert.alert(null, "이름을 확인해주세요.", [
-        { text: "확인", onPress: () => productNameRef.current.focus() },
+      return Alert.alert(null, '이름을 확인해주세요.', [
+        { text: '확인', onPress: () => productNameRef.current.focus() },
       ]);
     }
     if (!isPriceValid) {
-      return Alert.alert(null, "가격을 확인해주세요.", [
-        { text: "확인", onPress: () => priceRef.current.focus() },
+      return Alert.alert(null, '가격을 확인해주세요.', [
+        { text: '확인', onPress: () => priceRef.current.focus() },
       ]);
     }
     if (!isQuantityValid) {
-      return Alert.alert(null, "수량을 확인해주세요.", [
-        { text: "확인", onPress: () => quantityRef.current.focus() },
+      return Alert.alert(null, '수량을 확인해주세요.', [
+        { text: '확인', onPress: () => quantityRef.current.focus() },
       ]);
     }
 
@@ -106,9 +118,9 @@ const Payment = (props) => {
       },
     ]);
 
-    setProductName("");
-    setPrice("");
-    setQuantity("");
+    setProductName('');
+    setPrice('');
+    setQuantity('');
 
     toggleModal();
   };
@@ -121,16 +133,15 @@ const Payment = (props) => {
       {
         productName: productName,
         price: price,
-        amount: "1",
+        amount: '1',
       },
     ]);
-
   };
 
   const cancelAddItem = () => {
-    setProductName("");
-    setPrice("");
-    setQuantity("");
+    setProductName('');
+    setPrice('');
+    setQuantity('');
     toggleModal();
   };
 
@@ -150,7 +161,7 @@ const Payment = (props) => {
 
   const amountHander = (index, data) => {
     if (index > -1) {
-      data = data.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+      data = data.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
       var copied = items;
       copied[index].amount = data;
     }
@@ -160,7 +171,7 @@ const Payment = (props) => {
 
   const createPayment = () => {
     if (!items || items.length <= 0) {
-      return Alert.alert(null, "주문할 내역이 없습니다. 확인해주세요.");
+      return Alert.alert(null, '주문할 내역이 없습니다. 확인해주세요.');
     }
     var spExp = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi; // special character
     var numExp = /^\d+$/; // number expression
@@ -193,6 +204,7 @@ const Payment = (props) => {
     let size = props.size ? props.size : 100;
     let data = {
       storeid: userId,
+      storeName: storeName,
       orderList: items,
       total: total,
     };
@@ -201,21 +213,21 @@ const Payment = (props) => {
   };
 
   const formatMoney = (number) =>
-    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
   return (
     <View style={styles.container}>
       <View
         style={{
-          flexDirection: "row",
-          height: "10%",
-          alignItems: "flex-end",
-          paddingHorizontal: "10%",
+          flexDirection: 'row',
+          height: '10%',
+          alignItems: 'flex-end',
+          paddingHorizontal: '10%',
           marginBottom: 10,
         }}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ fontWeight: "bold", fontSize: imgSize }}>주문서</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>주문서</Text>
         </View>
 
         <FontAwesome.Button
@@ -232,13 +244,13 @@ const Payment = (props) => {
           name="qrcode"
           onPress={() => setScanOpened(true)}
           backgroundColor="white"
-          color={scanOpened ? "#7986FF" : "#a5a5a8"}
+          color={scanOpened ? '#7986FF' : '#a5a5a8'}
           size={imgSize}
           underlayColor="white"
           iconStyle={{ marginRight: 0 }}
         />
         <Modal isVisible={scanOpened}>
-          <BarcodeScan
+          <QRcodeScan
             onCancel={() => setScanOpened(false)}
             onScanned={(name, price) => addScannedItem(name, price)}
           />
@@ -247,20 +259,20 @@ const Payment = (props) => {
       <Card style={styles.list}>
         <View
           style={{
-            flexDirection: "row",
+            flexDirection: 'row',
             marginVertical: 5,
-            alignItems: "center",
+            alignItems: 'center',
             paddingHorizontal: 3,
           }}
         >
-          <View style={{ flex: 3.5, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 17 }}>품명</Text>
+          <View style={{ flex: 3.5, alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>품명</Text>
           </View>
-          <View style={{ flex: 2.5, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 17 }}>가격</Text>
+          <View style={{ flex: 2.5, alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>가격</Text>
           </View>
-          <View style={{ flex: 1.5, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 17 }}>수량</Text>
+          <View style={{ flex: 1.5, alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>수량</Text>
           </View>
           <View style={{}}>
             <FontAwesome.Button
@@ -273,22 +285,22 @@ const Payment = (props) => {
               iconStyle={{}}
             />
             <Modal isVisible={isVacateModalVisible}>
-              <Card style={{ ...styles.modalBox, height: "25%" }}>
+              <Card style={{ ...styles.modalBox, height: '25%' }}>
                 <View
                   style={{
                     flex: 4,
-                    alignItems: "center",
-                    justifyContent: "center",
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 20 }}>
                     정말로 비우시겠습니까?
                   </Text>
                 </View>
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
+                    flexDirection: 'row',
+                    justifyContent: 'center',
                     marginTop: 10,
                   }}
                 >
@@ -314,29 +326,29 @@ const Payment = (props) => {
               <View
                 key={index}
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}
               >
-                <View style={{ flex: 3.5, alignItems: "center" }}>
-                  <Text style={{ fontSize: 15, textAlign: "center" }}>
+                <View style={{ flex: 3.5, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 15, textAlign: 'center' }}>
                     {item.productName}
                   </Text>
                 </View>
-                <View style={{ flex: 2.5, alignItems: "center" }}>
-                  <Text style={{ fontSize: 15, textAlign: "center" }}>
+                <View style={{ flex: 2.5, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 15, textAlign: 'center' }}>
                     {formatMoney(item.price)} 원
                   </Text>
                 </View>
                 <View
                   style={{
                     flex: 1.5,
-                    alignItems: "center",
+                    alignItems: 'center',
                   }}
                 >
                   <TextInput
                     style={{
-                      textAlign: "center",
+                      textAlign: 'center',
                       borderBottomWidth: 1.3,
                       fontSize: 15,
                     }}
@@ -359,8 +371,8 @@ const Payment = (props) => {
               </View>
             ))
           ) : (
-            <View style={{ flex: 1, marginTop: 10, alignItems: "center" }}>
-              <Text style={{ color: "gray" }}>아이템을 추가해주세요.</Text>
+            <View style={{ flex: 1, marginTop: 10, alignItems: 'center' }}>
+              <Text style={{ color: 'gray' }}>아이템을 추가해주세요.</Text>
             </View>
           )}
         </ScrollView>
@@ -371,21 +383,21 @@ const Payment = (props) => {
       <View
         style={{
           flex: 1,
-          paddingHorizontal: "10%",
-          justifyContent: "space-evenly",
+          paddingHorizontal: '10%',
+          justifyContent: 'space-evenly',
           marginBottom: 20,
         }}
       >
         <View>
-          <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
+          <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>
             결제 예정 금액
           </Text>
         </View>
-        <View style={{ alignItems: "flex-end" }}>
-          <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>
             <Text style={{ fontSize: imgSize * 1.2 }}>
               {formatMoney(total)}
-            </Text>{" "}
+            </Text>{' '}
             원
           </Text>
         </View>
@@ -399,54 +411,54 @@ const Payment = (props) => {
           <Card
             style={{
               flex: 1,
-              backgroundColor: "white",
+              backgroundColor: 'white',
               borderRadius: 12,
               borderWidth: 0,
-              marginHorizontal: "0%",
-              paddingHorizontal: "10%",
-              paddingVertical: "5%",
+              marginHorizontal: '0%',
+              paddingHorizontal: '10%',
+              paddingVertical: '5%',
             }}
           >
             <View
               style={{
                 flex: 1.7,
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               {qrVisible && <GenerateQR size={qrSize} />}
             </View>
 
             <View style={{ flex: 1.5 }}>
-              <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
+              <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>
                 주문서
               </Text>
 
               <Card
                 style={{
                   ...styles.list,
-                  marginHorizontal: "0%",
+                  marginHorizontal: '0%',
                   paddingRight: 10,
                 }}
               >
                 <View
                   style={{
-                    flexDirection: "row",
+                    flexDirection: 'row',
                     marginVertical: 7,
                   }}
                 >
-                  <View style={{ flex: 3, alignItems: "center" }}>
-                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                  <View style={{ flex: 3, alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
                       품명
                     </Text>
                   </View>
-                  <View style={{ flex: 2, alignItems: "center" }}>
-                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                  <View style={{ flex: 2, alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
                       가격
                     </Text>
                   </View>
-                  <View style={{ flex: 1, alignItems: "center" }}>
-                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                  <View style={{ flex: 1, alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
                       수량
                     </Text>
                   </View>
@@ -456,21 +468,21 @@ const Payment = (props) => {
                     <View
                       key={index}
                       style={{
-                        flexDirection: "row",
+                        flexDirection: 'row',
                         marginVertical: 3,
                       }}
                     >
-                      <View style={{ flex: 3, alignItems: "center" }}>
-                        <Text style={{ textAlign: "center", fontSize: 14 }}>
+                      <View style={{ flex: 3, alignItems: 'center' }}>
+                        <Text style={{ textAlign: 'center', fontSize: 14 }}>
                           {item.productName}
                         </Text>
                       </View>
-                      <View style={{ flex: 2, alignItems: "center" }}>
+                      <View style={{ flex: 2, alignItems: 'center' }}>
                         <Text style={{ fontSize: 14 }}>
                           {formatMoney(item.price)} 원
                         </Text>
                       </View>
-                      <View style={{ flex: 1, alignItems: "center" }}>
+                      <View style={{ flex: 1, alignItems: 'center' }}>
                         <Text style={{ fontSize: 14 }}>
                           {formatMoney(item.amount)}
                         </Text>
@@ -483,20 +495,20 @@ const Payment = (props) => {
             <View
               style={{
                 flex: 1,
-                justifyContent: "space-evenly",
+                justifyContent: 'space-evenly',
                 paddingTop: 7,
               }}
             >
               <View>
-                <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
+                <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>
                   결제할 금액
                 </Text>
               </View>
-              <View style={{ alignItems: "flex-end", marginBottom: 10 }}>
-                <Text style={{ fontWeight: "bold", fontSize: imgSize }}>
+              <View style={{ alignItems: 'flex-end', marginBottom: 10 }}>
+                <Text style={{ fontWeight: 'bold', fontSize: imgSize }}>
                   <Text style={{ fontSize: imgSize * 1.2 }}>
                     {formatMoney(total)}
-                  </Text>{" "}
+                  </Text>{' '}
                   원
                 </Text>
               </View>
@@ -505,7 +517,7 @@ const Payment = (props) => {
                 onPress={() => {
                   Alert.alert(
                     null,
-                    "서비스 준비중입니다.\n잠시만 기다려 주세요!"
+                    '서비스 준비중입니다.\n잠시만 기다려 주세요!'
                   );
                 }}
                 backgroundColor="#b4b4b4"
@@ -530,7 +542,7 @@ const Payment = (props) => {
       <Modal isVisible={isModalVisible}>
         <Card style={styles.modalBox}>
           <Input
-            style={{ borderColor: isProductNameValid ? "#dddddd" : "red" }}
+            style={{ borderColor: isProductNameValid ? '#dddddd' : 'red' }}
             placeholder="이름"
             onChangeText={(name) => checkProductName(name)}
             returnKeyType="next"
@@ -541,7 +553,7 @@ const Payment = (props) => {
             ref={productNameRef}
           />
           <Input
-            style={{ borderColor: isPriceValid ? "#dddddd" : "red" }}
+            style={{ borderColor: isPriceValid ? '#dddddd' : 'red' }}
             placeholder="가격"
             onChangeText={(price) => checkPrice(price)}
             keyboardType="numeric"
@@ -553,7 +565,7 @@ const Payment = (props) => {
             ref={priceRef}
           />
           <Input
-            style={{ borderColor: isQuantityValid ? "#dddddd" : "red" }}
+            style={{ borderColor: isQuantityValid ? '#dddddd' : 'red' }}
             placeholder="수량"
             onChangeText={(quantity) => checkQuantity(quantity)}
             keyboardType="numeric"
@@ -564,8 +576,8 @@ const Payment = (props) => {
           />
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "center",
+              flexDirection: 'row',
+              justifyContent: 'center',
               marginTop: 10,
             }}
           >
@@ -592,7 +604,7 @@ export default Payment;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   list: {
     marginBottom: 10,
@@ -607,12 +619,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   footerItems: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 5,
   },
   textlink: {
-    textDecorationLine: "underline",
-    textDecorationColor: "#696A6E",
-    color: "#696A6E",
+    textDecorationLine: 'underline',
+    textDecorationColor: '#696A6E',
+    color: '#696A6E',
   },
 });
