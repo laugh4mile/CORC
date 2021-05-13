@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom';
 
-import classes from './StoreItem.module.css';
+import classes from './Item.module.css';
 
 const RequestedStoreItem = (props) => {
   const history = useHistory();
@@ -51,7 +51,7 @@ const RequestedStoreItem = (props) => {
   return (
     <tbody>
       <tr className={classes.tr}>
-        <td>
+        <td className={`${classes.td} ${classes.checkbox}`}>
           <input
             type="checkbox"
             value={props.storeId}
@@ -63,15 +63,22 @@ const RequestedStoreItem = (props) => {
             checked={props.checkItems.includes(props.storeId) ? true : false}
           />
         </td>
-        <td className={classes.link} onClick={trClickHandler}>
+        <td
+          className={`${classes.td} ${classes.link}`}
+          onClick={trClickHandler}
+        >
           {props.crNum}
         </td>
-        <td>{props.storeName}</td>
-        <td>
+        <td className={`${classes.td}`}>{props.storeName}</td>
+        <td className={`${classes.td}`}>
           {props.sido.sidoName} {props.gugun.gugunName}
         </td>
-        <td>{classificationName(props.category.categoryClassification)}</td>
-        <td>{props.requestDate.slice(0, 10)}</td>
+        <td className={`${classes.td}`}>
+          {classificationName(props.category.categoryClassification)}
+        </td>
+        <td className={`${classes.td} ${classes['text-sm']} ${classes.date}`}>
+          {props.requestDate.slice(0, 10)}
+        </td>
       </tr>
     </tbody>
   );

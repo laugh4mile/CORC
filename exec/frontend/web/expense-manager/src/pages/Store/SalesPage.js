@@ -6,7 +6,7 @@ import useHttp from '../../hooks/use-http';
 import { getAllPayment } from '../../lib/api-store';
 import Page from '../../components/Pagenation';
 
-import classes from './SalesPage.module.css';
+import classes from './list.module.css';
 
 const SalesPage = () => {
   const {
@@ -39,7 +39,7 @@ const SalesPage = () => {
 
   if (
     status === 'completed' &&
-    (!loadedPayments || loadedPayments.length === 0)
+    (!loadedPayments.content || loadedPayments.content.length === 0)
   ) {
     return <span>판매 내역이 없습니다.</span>;
   }

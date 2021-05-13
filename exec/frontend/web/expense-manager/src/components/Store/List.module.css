@@ -1,0 +1,15 @@
+.tr {
+    display: flex;
+    padding: 0.5rem 0;
+    color: #2A2A2C;
+}
+
+.tr th {
+    width: 100%;
+    text-align: center;
+    margin: 0 0.25rem;
+}
+
+.tr .checkbox {
+    width: 10rem;
+}

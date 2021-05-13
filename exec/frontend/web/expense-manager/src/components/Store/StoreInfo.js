@@ -21,7 +21,7 @@ const StoreInfo = (props) => {
   const [enteredCategory, setCategory] = useState(props.categoryCode);
   const [enteredAccepted, setAccepted] = useState(props.accepted);
   const [enteredAccount, setAccount] = useState(props.account);
-  const [enteredBank, setBank] = useState(props.bank);
+  const [enteredBank, setBank] = useState(props.bankName);
   const [cities, setCities] = useState([]);
   const [guguns, setGuguns] = useState([]);
 
@@ -84,10 +84,7 @@ const StoreInfo = (props) => {
       bank: enteredBank,
     };
 
-    console.log(storeData);
-    console.log('props', props);
-
-    props.onAddStore(storeData);
+    props.onModifyStore(storeData);
   };
 
   useEffect(() => {
@@ -232,7 +229,7 @@ const StoreInfo = (props) => {
                 id="bank"
                 name="bank"
                 required
-                value={setBank}
+                value={enteredBank}
                 onChange={changeHandler}
                 label="은행명"
                 disabled
