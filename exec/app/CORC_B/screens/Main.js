@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -16,6 +17,30 @@ import PaymentItem from "../components/PaymentItem";
 import PaymentHistoryIcon from "../navigations/icons/PaymentHistoryIcon";
 
 const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+
+const { width } = Dimensions.get("window");
+
+const getCurrentMonth = () => {
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  if (month < 10) {
+    month = "0" + month;
+  }
+  return year + "." + month;
+};
+
+const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+
+const formatMoney = (number) =>
+  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+
+const getMMDD_DT = (date) => {
+  let _date = new Date(date);
+  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
+    dayOfWeek[_date.getDay()]
+  })`;
+};
 
 const Main = (props) => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -44,18 +69,7 @@ const Main = (props) => {
     setIsLoading(false);
   };
 
-  const now = () => {
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    if (month < 10) {
-      month = "0" + month;
-    }
-    return year + "." + month;
-  };
-
   var currentDate = new Date();
-  var dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
   const checkDate = (date) => {
     const year = +date.slice(0, 4);
@@ -72,9 +86,6 @@ const Main = (props) => {
     currentDate = new Date(year, month, day);
     return false;
   };
-
-  const formatMoney = (number) =>
-    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
 
   if (isLoading) {
     return (
@@ -93,7 +104,9 @@ const Main = (props) => {
       </View>
       <Card style={styles.paymentCard}>
         <View style={{ paddingTop: 10, paddingLeft: 15 }}>
-          <Text style={{ color: "gray", fontSize: 13 }}>{now()} 거래 내역</Text>
+          <Text style={{ color: "gray", fontSize: 13 }}>
+            {getCurrentMonth()} 거래 내역
+          </Text>
         </View>
         <View style={styles.paymentTotal}>
           <Text style={{ fontSize: 35 }}>
@@ -131,8 +144,6 @@ const Main = (props) => {
             flex: 1,
             flexDirection: "row",
             alignItems: "center",
-            paddingTop: 3,
-            justifyContent: "center",
             // borderBottomWidth: StyleSheet.hairlineWidth,
             // borderBottomColor: "#737373",
           }}
@@ -148,33 +159,35 @@ const Main = (props) => {
           {paymentList.empty ? (
             <Text>최근 거래 내역이 없습니다.</Text>
           ) : (
-            paymentList.content.slice(0, 3).map((payment) => (
+            paymentList.content.slice(0, 3).map((payment, index) => (
               <View key={payment.paymentId}>
                 {!checkDate(payment.date) && (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: index !== 0 ? "2%" : 0,
+                    }}
+                  >
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 13, color: "#414251" }}>
-                        {new Date(payment.date).getMonth() + 1}
-                        {"월 "}
-                        {new Date(payment.date).getDate()}
-                        {"일 ("}
-                        {dayOfWeek[new Date(payment.date).getDay()]}
-                        {")"}
+                      <Text
+                        style={{ fontSize: width * 0.033, color: "#414251" }}
+                      >
+                        {getMMDD_DT(payment.date)}
                       </Text>
                     </View>
                     <View
                       style={{
                         flex: 3,
                         backgroundColor: "#A09E9E",
-                        height: 0.7,
+                        borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
-                    ></View>
+                    />
                   </View>
                 )}
                 <PaymentItem
-                  key={payment.paymentId}
                   payment={payment}
-                  formatMoney={money => formatMoney(money)}
+                  formatMoney={(money) => formatMoney(money)}
                 />
               </View>
             ))
@@ -250,12 +263,11 @@ const styles = StyleSheet.create({
     marginHorizontal: "0%",
     marginTop: "10%",
     marginBottom: "20%",
-    flex: 4,
+    flex: 5,
   },
   recentList: {
-    flex: 5,
-    // alignItems: "stretch",
+    flex: 6,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingBottom: 3,
   },
 });

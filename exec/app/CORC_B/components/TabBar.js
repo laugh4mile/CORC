@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: "bold",
-    letterSpacing: 3,
+    letterSpacing: 2.5,
   },
 });

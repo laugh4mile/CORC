@@ -10,8 +10,8 @@ import { PieChart } from "react-native-chart-kit";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import Colors from "../../constants/Colors";
 import Card from "../../components/Card";
+import Colors from "../../constants/Colors";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const pieWidth = screenWidth * 0.9;
@@ -271,17 +271,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   loading: {
-    flex: 25,
+    flex: 30,
     justifyContent: "center",
     alignItems: "center",
   },
   header: {
     flex: 1.5,
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginHorizontal: "10%",
     marginTop: "7%",
-    marginBottom: "5%",
+    paddingBottom: "5%",
   },
   headerDateView: {
     flex: 1,
@@ -314,7 +314,6 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     // height: 34,
-    justifyContent: 'center',
   },
   pieChart: {
     flex: 12,
@@ -340,7 +339,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   noContent: {
-    flex: 25,
+    flex: 30,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: "10%",

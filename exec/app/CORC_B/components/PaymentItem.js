@@ -23,7 +23,7 @@ export default Payment;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    marginTop: 6,
+    marginTop: 4,
     paddingHorizontal: 4,
   },
   itemNamePrice: {
