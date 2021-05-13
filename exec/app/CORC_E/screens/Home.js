@@ -38,7 +38,6 @@ const Home = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             first = false;
             return false;
           }
@@ -48,13 +47,11 @@ const Home = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             return true;
           }
         }
       }
     }
-    // console.log('좋게 좋게 가자 제발 ');
     newDate = new Date(year, month - 1, day);
     return false;
   };
@@ -167,7 +164,7 @@ const Home = (props) => {
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment, index) => (
-              <View>
+              <View key={payment.paymentId}>
                 {!match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flex: 1 }}>
@@ -186,7 +183,6 @@ const Home = (props) => {
                   </View>
                 )}
                 <Payment
-                  key={payment.paymentId}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}

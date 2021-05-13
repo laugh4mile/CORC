@@ -29,7 +29,6 @@ const Wallet = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             first = false;
             return false;
           }
@@ -39,7 +38,6 @@ const Wallet = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             return true;
           }
         }
@@ -148,7 +146,7 @@ const Wallet = (props) => {
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment, index) => (
-              <View>
+              <View key={payment.paymentId}>
                 {!match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flex: 1 }}>

@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
   Dimensions,
   ActivityIndicator,
   Text,
-} from "react-native";
-import { PieChart } from "react-native-chart-kit";
-import { Picker } from "@react-native-picker/picker";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import Colors from "../../constants/Colors";
+} from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
+import { Picker } from '@react-native-picker/picker';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import Colors from '../../constants/Colors';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-const pieWidth = screenWidth * 0.9
-const pieHeight = screenHeight * 0.23
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const pieWidth = screenWidth * 0.9;
+const pieHeight = screenHeight * 0.23;
+const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
 
 const chartConfig = {
-  backgroundGradientFrom: "#1E2923",
+  backgroundGradientFrom: '#1E2923',
   backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: "#08130D",
+  backgroundGradientTo: '#08130D',
   backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
   strokeWidth: 2, // optional, default 3
@@ -29,9 +29,9 @@ const chartConfig = {
 };
 
 const chartConfig2 = {
-  backgroundColor: "#e26a00",
-  backgroundGradientFrom: "#fb8c00",
-  backgroundGradientTo: "#ffa726",
+  backgroundColor: '#e26a00',
+  backgroundGradientFrom: '#fb8c00',
+  backgroundGradientTo: '#ffa726',
   decimalPlaces: 2, // optional, defaults to 2dp
   color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -39,9 +39,9 @@ const chartConfig2 = {
     borderRadius: 16,
   },
   propsForDots: {
-    r: "6",
-    strokeWidth: "2",
-    stroke: "#ffa726",
+    r: '6',
+    strokeWidth: '2',
+    stroke: '#ffa726',
   },
 };
 
@@ -74,11 +74,11 @@ const dateStrToNum = (date) => {
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
   if (month < 10) {
-    month = "0" + month;
+    month = '0' + month;
   }
   let day = date.getDate();
   if (day < 10) {
-    day = "0" + day;
+    day = '0' + day;
   }
   return +(year + month + day);
 };
@@ -91,23 +91,23 @@ const formatDate = (date, type) => {
   var year = date.getFullYear();
   var month = date.getMonth() + 1;
   if (month < 10) {
-    month = "0" + month;
+    month = '0' + month;
   }
   var day = date.getDate();
   if (day < 10) {
-    day = "0" + day;
+    day = '0' + day;
   }
-  if (type == "end") {
+  if (type == 'end') {
     return `${year}.${month}.${day} 23:59`;
   }
-  if (type == "start") {
+  if (type == 'start') {
     return `${year}.${month}.${day} 00:00`;
   }
   return `${year}.${month}.${day}`;
 };
 
 const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
 const Statistics = () => {
   const userId = useSelector((state) => state.auth.userId);
@@ -117,9 +117,9 @@ const Statistics = () => {
   const [startDate, setstartDate] = useState(7);
 
   var searchDateList = [
-    { label: "일간", value: 1 },
-    { label: "주간", value: 7 },
-    { label: "월간", value: 30 },
+    { label: '일간', value: 1 },
+    { label: '주간', value: 7 },
+    { label: '월간', value: 30 },
   ];
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const Statistics = () => {
               name: item.productName,
               amount: item.amount,
               priceSum: item.amount * item.price,
-              legendFontColor: "#050505",
+              legendFontColor: '#050505',
               legendFontSize: 16,
             });
           }
@@ -171,13 +171,13 @@ const Statistics = () => {
 
       for (let index = 0; index < copiedItemList.length; index++) {
         copiedItemList[index].color =
-          "#" +
+          '#' +
           Math.round(
             ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
           ).toString(16);
       }
     }
-    setitemList(sort(copiedItemList, "amount", "priceSum"));
+    setitemList(sort(copiedItemList, 'amount', 'priceSum'));
     settotal(totalSum);
 
     setIsLoading(false);
@@ -197,12 +197,12 @@ const Statistics = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerDateView}>
-          <View style={{flexDirection: 'column'}}>
+          <View style={{ flexDirection: 'column' }}>
             <Text style={styles.headerDateText}>
-              {formatDate(dateFrom(startDate), "start")}
+              {formatDate(dateFrom(startDate), 'start')}
             </Text>
             <Text style={styles.headerDateText}>
-              {formatDate(new Date(), "end")}
+              {formatDate(new Date(), 'end')}
             </Text>
           </View>
         </View>
@@ -223,25 +223,25 @@ const Statistics = () => {
         <>
           <View style={styles.pieChart}>
             <PieChart
-              style={{ marginTop: "10%" }}
+              style={{ marginTop: '10%' }}
               data={itemList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
-              accessor={"amount"}
-              backgroundColor={"transparent"}
+              accessor={'amount'}
+              backgroundColor={'transparent'}
               center={[10, 0]}
               absolute
             />
             <Text style={styles.basisText}>[판매 수량 기준]</Text>
             <PieChart
-              style={{ marginTop: "10%" }}
+              style={{ marginTop: '10%' }}
               data={itemList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
-              accessor={"priceSum"}
-              backgroundColor={"transparent"}
+              accessor={'priceSum'}
+              backgroundColor={'transparent'}
               center={[10, 0]}
               absolute
             />
@@ -267,36 +267,36 @@ export default Statistics;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "white",
+    flexDirection: 'column',
+    backgroundColor: 'white',
   },
   loading: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginHorizontal: "5%",
-    marginTop: "7%",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: '5%',
+    marginTop: '7%',
   },
   headerDateView: {
     flex: 1,
-    paddingLeft: '10%'
+    paddingLeft: '10%',
   },
   headerDateText: {
     fontSize: 15,
   },
   pickerView: {
-    justifyContent: "center",
-    backgroundColor: "white",
-    width: "30%",
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    width: '30%',
     borderRadius: 12,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderWidth: 0,
     // ios
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOpacity: 0.21,
     shadowRadius: 10,
     shadowOffset: {
@@ -312,33 +312,33 @@ const styles = StyleSheet.create({
   pickerItem: {},
   pieChart: {
     flex: 8,
-    alignItems: "center",
-    marginBottom: "30%",
+    alignItems: 'center',
+    marginBottom: '30%',
   },
   basisText: {
     fontSize: 14,
-    fontWeight: "900",
+    fontWeight: '900',
   },
   totalView: {
     flex: 1,
-    marginBottom: "3%",
-    marginRight: "7%",
-    alignItems: "flex-end",
+    marginBottom: '3%',
+    marginRight: '7%',
+    alignItems: 'flex-end',
   },
   totalText: {
     fontSize: 30,
   },
   totalMoneyText: {
     fontSize: 35,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   noContent: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noContentText: {
     fontSize: 17,
-    fontWeight: "800",
+    fontWeight: '800',
   },
 });
