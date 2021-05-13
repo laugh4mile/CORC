@@ -1,5 +1,6 @@
 package com.web.shinhan.model.service;
 
+import com.web.shinhan.model.BlockUserDto;
 import java.util.List;
 
 import org.mapstruct.factory.Mappers;
@@ -17,6 +18,7 @@ import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.UserMapper;
 import com.web.shinhan.repository.AdminRepository;
 import com.web.shinhan.repository.UserRepository;
+import reactor.core.publisher.Mono;
 
 @Service
 public class UserService {
@@ -30,23 +32,32 @@ public class UserService {
   @Autowired
   private AdminRepository adminRepository;
 
+  @Autowired
+  private BlockchainService blockchainService;
+
   private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
   @Transactional
   public Page<UserDto> findAllUser(Pageable pageable) {
     Page<User> users = userRepository.findAll(pageable);
-    return users.map(UserDto::of);
+    return users.map(post -> {
+      UserDto user = UserDto.of(post);
+      verifyBlockUser(user);
+      return user;
+    });
   }
 
   public UserDto findUserInfo(int userId) {
     User userInfo = userRepository.findByUserId(userId);
     UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+    verifyBlockUser(userDto);
     return userDto;
   }
 
   public UserDto findUserByEmail(String email) {
     User userInfo = userRepository.findByEmail(email);
     UserDto userDto = mapper.INSTANCE.userToDto(userInfo);
+    verifyBlockUser(userDto);
     return userDto;
   }
 
@@ -59,6 +70,9 @@ public class UserService {
     User userEntity = userDto.toEntity();
     userRepository.save(userEntity);
     userDto.setUserId(userEntity.getUserId());
+
+    // 블록체인 삽입
+    createBlockUser(userDto);
   }
 
   public boolean emailCheck(String email) {
@@ -205,4 +219,42 @@ public class UserService {
     return 0;
   }
 
+  public boolean verifyBlockUser(UserDto user) {
+    try {
+      BlockUserDto blockUser = blockchainService.getUser(user.getEmail()).block();
+      if (user.getEmail().equals(blockUser.getUserId()) &&
+          user.getBalance() == blockUser.getBalance()) {
+        user.setVerified(true);
+      }
+
+      return true;
+    }
+    catch (Exception e) {
+      return false;
+    }
+  }
+
+  public void setBlockUserBalance(UserDto user) {
+    BlockUserDto blockUser = BlockUserDto.builder()
+        .userId(user.getEmail())
+        .balance(user.getBalance())
+        .build();
+    blockchainService.setBalance(blockUser);
+  }
+
+  public void createBlockUser(UserDto user) {
+    BlockUserDto blockUser = BlockUserDto.builder()
+        .userId(user.getEmail())
+        .type("User")
+        .balance(user.getBalance())
+        .build();
+    blockchainService.createUser(blockUser);
+
+    Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
+    u.subscribe(response -> {
+      // 생성된 경우 상태 변경
+      user.setTestCode(1);
+      userRepository.save(user.toEntity());
+    });
+  }
 }

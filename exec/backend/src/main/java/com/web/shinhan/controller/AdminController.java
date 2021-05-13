@@ -185,16 +185,6 @@ public class AdminController {
       userService.registUser(user);
       flag = true;
       status = HttpStatus.ACCEPTED;
-
-      // 블록체인 유저 생성
-      BlockUserDto blockUser = BlockUserDto.builder().userId(user.getEmail()).type("User")
-          .balance(user.getBalance()).build();
-      Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
-      u.subscribe(response -> {
-        // 생성된 경우 상태 변경
-        user.setTestCode(1);
-        userService.registUser(user);
-      });
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -463,15 +453,15 @@ public class AdminController {
       flag = true;
       status = HttpStatus.ACCEPTED;
 
-      // 블록체인 가맹점 생성
-      BlockUserDto blockUser = BlockUserDto.builder().userId(store.getEmail()).type("Store")
-          .balance(0).build();
-      Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
-      u.subscribe(response -> {
-        // 생성된 경우 상태 변경
-        store.setTestCode(1);
-        storeService.registStore(store);
-      });
+//      // 블록체인 가맹점 생성
+//      BlockUserDto blockUser = BlockUserDto.builder().userId(store.getEmail()).type("Store")
+//          .balance(0).build();
+//      Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
+//      u.subscribe(response -> {
+//        // 생성된 경우 상태 변경
+//        store.setTestCode(1);
+//        storeService.registStore(store);
+//      });
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;

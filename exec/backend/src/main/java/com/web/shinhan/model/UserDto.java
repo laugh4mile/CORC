@@ -41,6 +41,8 @@ public class UserDto {
 
   private int testCode;
 
+  private boolean isVerified;
+
   @Builder
   public UserDto(int userId, int employeeNum, String email, String userName, String password,
       String department,

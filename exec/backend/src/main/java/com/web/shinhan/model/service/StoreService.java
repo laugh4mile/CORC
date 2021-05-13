@@ -1,5 +1,7 @@
 package com.web.shinhan.model.service;
 
+import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.UserDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.mapper.StoreMapper;
 import com.web.shinhan.repository.PaymentRepository;
 import com.web.shinhan.repository.StoreRepository;
+import reactor.core.publisher.Mono;
 
 @Service
 public class StoreService {
@@ -29,6 +32,9 @@ public class StoreService {
 
   @Autowired
   private PaymentRepository paymentRepository;
+
+  @Autowired
+  private BlockchainService blockchainService;
 
   private final StoreMapper mapper = Mappers.getMapper(StoreMapper.class);
 
@@ -145,4 +151,42 @@ public class StoreService {
     return count;
   }
 
+  public boolean verifyBlockUser(UserDto user) {
+    try {
+      BlockUserDto blockUser = blockchainService.getUser(user.getEmail()).block();
+      if (user.getEmail().equals(blockUser.getUserId()) &&
+          user.getBalance() == blockUser.getBalance()) {
+        user.setVerified(true);
+      }
+
+      return true;
+    }
+    catch (Exception e) {
+      return false;
+    }
+  }
+
+  public void setBlockUserBalance(StoreDto store, int balance) {
+    BlockUserDto blockUser = BlockUserDto.builder()
+        .userId(store.getEmail())
+        .balance(balance)
+        .build();
+    blockchainService.setBalance(blockUser);
+  }
+
+  public void createBlockUser(StoreDto store) {
+    BlockUserDto blockUser = BlockUserDto.builder()
+        .userId(store.getEmail())
+        .type("Store")
+        .balance(0)
+        .build();
+    blockchainService.createUser(blockUser);
+
+    Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
+    u.subscribe(response -> {
+      // 생성된 경우 상태 변경
+      store.setTestCode(1);
+      storeRepository.save(store.toEntity());
+    });
+  }
 }
