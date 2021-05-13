@@ -26,8 +26,13 @@
 }
 
 .icon {
-    width: 40%;
+    padding-left: 0.5rem;
+    width: 20%;
     cursor: pointer;
+}
+
+.icon path {
+    stroke: #3F3F42;
 }
 
 .link {
@@ -54,8 +59,20 @@
     line-height: 1.25rem;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
 .font-normal {
     font-weight: normal;
+}
+
+.font-bold {
+    font-weight: 600;
 }
 
 .date {
