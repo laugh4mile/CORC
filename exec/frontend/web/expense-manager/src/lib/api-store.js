@@ -59,7 +59,6 @@ export async function storeApplication({ storeStatus, storeIds }) {
 
 export async function confirmPayment(paymentIds) {
   try {
-    console.log('paymentIds', paymentIds);
     const rs = await axios.put(`/admin/payment/confirm`, paymentIds);
     return rs.data;
   } catch (err) {
@@ -69,7 +68,7 @@ export async function confirmPayment(paymentIds) {
 
 export async function modifyStore(storeData) {
   try {
-    const rs = await axios.post(`/admin/store/modify`, storeData);
+    const rs = await axios.put(`/admin/store/modify`, storeData);
     return rs.data;
   } catch (err) {
     throw new Error(err || '가맹점 정보를 수정할 수 없습니다.');

@@ -43,6 +43,7 @@ const StoreList = (props) => {
 
   const submitHandler = (event) => {
     // event.preventDefault();
+    console.log('checkItems', checkItems);
     addUserHandler(checkItems);
   };
 

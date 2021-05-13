@@ -17,6 +17,8 @@ const StoreInfo = (props) => {
   const [enteredArea, setArea] = useState({
     enteredCity: props.sido.sidoName,
     enteredBorough: props.gugun.gugunName,
+    enteredCityCode: props.sido.sidoCode,
+    enteredBoroughCode: props.gugun.gugunCode,
   });
   const [enteredCategory, setCategory] = useState(props.categoryCode);
   const [enteredAccepted, setAccepted] = useState(props.accepted);
@@ -78,11 +80,14 @@ const StoreInfo = (props) => {
       contact: enteredContact,
       sidoCode: enteredArea.enteredCity,
       gugunCode: enteredArea.enteredBorough,
-      category: enteredCategory,
+      categoryCode: enteredCategory,
       accepted: enteredAccepted,
       account: enteredAccount,
-      bank: enteredBank,
+      bankName: enteredBank,
     };
+
+    console.log('storeData', storeData);
+    console.log('props', props);
 
     props.onModifyStore(storeData);
   };
@@ -199,7 +204,9 @@ const StoreInfo = (props) => {
                   value={enteredArea.enteredCity}
                   onChange={changeHandler}
                 >
-                  <option value="">{enteredArea.enteredCity}</option>
+                  <option value={enteredArea.enteredCityCode}>
+                    {enteredArea.enteredCity}
+                  </option>
                   {cities.map((city) => (
                     <option key={city.sidoCode} value={city.sidoCode}>
                       {city.sidoName}
@@ -214,7 +221,9 @@ const StoreInfo = (props) => {
                   value={enteredArea.enteredBorough}
                   onChange={changeHandler}
                 >
-                  <option value="">{enteredArea.enteredBorough}</option>
+                  <option value={enteredArea.enteredBoroughCode}>
+                    {enteredArea.enteredBorough}
+                  </option>
                   {guguns.map((gugun) => (
                     <option key={gugun.gugunCode} value={gugun.gugunCode}>
                       {gugun.gugunName}

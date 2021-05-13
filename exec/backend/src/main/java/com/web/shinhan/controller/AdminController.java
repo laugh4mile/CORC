@@ -478,6 +478,8 @@ public class AdminController {
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
 
+    System.out.println(newDto.toString());
+    
     // 가맹점 정보 조회
     String email = newDto.getEmail();
     // 가맹점 소개 수정

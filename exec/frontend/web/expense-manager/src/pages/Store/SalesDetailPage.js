@@ -69,7 +69,7 @@ const SalesDetailPage = () => {
     // modifyStatus = 'completed';
     if (modifyStatus === 'completed') {
       // 임시 prompt
-      alert('가맹점 수정 완료');
+      // alert('가맹점 수정 완료');
       history.goBack();
     }
   }, [modifyStatus, history]);
