@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import LoginNavigation from './LoginNavigation';
 import BottomTabNavigation from './BottomTabNavigation';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as authActions from '../store/actions/auth';
 

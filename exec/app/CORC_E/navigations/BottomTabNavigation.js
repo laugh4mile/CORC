@@ -4,11 +4,14 @@ import CardIcon from '../components/icons/CardIcon';
 import QRCodeIcon from '../components/icons/QRCodeIcon';
 import SettingsIcon from '../components/icons/SettingsIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from '../screens/Home';
 import Wallet from '../screens/Wallet';
 import QR from '../screens/QRScan';
 import Settings from '../screens/Settings';
+import TabBar from '../components/TabBar';
+import Statistics from '../screens/Statistics';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,8 +30,8 @@ export default function Footer() {
           }}
         />
         <Tab.Screen
-          name="Wallet"
-          component={Wallet}
+          name="TopNavigator"
+          component={TopNavigator}
           options={{
             tabBarLabel: Boolean,
             tabBarIcon: ({ color }) => (
@@ -60,3 +63,25 @@ export default function Footer() {
     </NavigationContainer>
   );
 }
+
+const TopTab = createMaterialTopTabNavigator();
+
+export const TopNavigator = () => {
+  return (
+    <TopTab.Navigator
+      tabBar={(props) => <TabBar {...props} />}
+      initialRouteName="Wallet"
+    >
+      <TopTab.Screen
+        name="Wallet"
+        component={Wallet}
+        options={{ tabBarLabel: '상세 이용 내역' }}
+      />
+      <TopTab.Screen
+        name="Statistics"
+        component={Statistics}
+        options={{ tabBarLabel: '통계' }}
+      />
+    </TopTab.Navigator>
+  );
+};

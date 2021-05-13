@@ -141,7 +141,7 @@ const Wallet = (props) => {
           style={{
             flex: 1,
             marginHorizontal: 20,
-            marginTop: 10,
+            marginVertical: 10,
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
@@ -185,7 +185,7 @@ export default Wallet;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
     paddingHorizontal: '10%',
   },
   contents: {
