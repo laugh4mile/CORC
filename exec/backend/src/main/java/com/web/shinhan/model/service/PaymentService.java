@@ -306,7 +306,6 @@ public class PaymentService {
   }
 
   public void createBlockTransaction(PaymentDto payment) {
-    System.out.println("test1");
     User user = userRepository.findByUserId(payment.getUserId());
     Store store = storeRepository.findByStoreId(payment.getStoreId());
     TransactionDto tx = TransactionDto.builder()
@@ -317,7 +316,6 @@ public class PaymentService {
 
     Mono<TransactionDto> u = blockchainService.createTransaction(tx);
     u.subscribe(response -> {
-      System.out.println("test2");
       // 생성된 경우 상태 변경
       payment.setTransactionId(response.getTxId());
       payment.setTestCode(1);
