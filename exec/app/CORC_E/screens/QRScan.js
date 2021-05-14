@@ -116,11 +116,9 @@ export default function QRScan() {
         </View>
         <View style={styles.bottomView}>
           {scanned && (
-            <Button
-              color="#f194ff"
-              title={'Tap to Scan Again'}
-              onPress={() => setScanned(false)}
-            />
+            <Pressable style={styles.reScan} onPress={() => setScanned(false)}>
+              <Text style={styles.reScanText}>다시 스캔</Text>
+            </Pressable>
           )}
           {scanned && ( // 모달
             <Modal
@@ -384,5 +382,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  reScan: {
+    backgroundColor: Colors.primary.backgroundColor,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  reScanText: {
+    color: Colors.primary.fontColor,
+    fontSize: 16,
   },
 });

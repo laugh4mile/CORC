@@ -3,17 +3,7 @@ import { Fragment } from "react";
 
 import Card from "../../components/UI/Card/Card";
 import PaymentItem from "./PaymentItem";
-import classes from "./PaymentList.module.css";
-
-const sortPayments = (payments, ascending) => {
-  return payments.sort((paymentA, paymentB) => {
-    if (ascending) {
-      return paymentA.id - paymentB.id;
-    } else {
-      return paymentB.id - paymentA.id;
-    }
-  });
-};
+import classes from "./List.module.css";
 
 const PaymentList = (props) => {
   return (
@@ -32,9 +22,11 @@ const PaymentList = (props) => {
               <th style={{ width: "20%" }}>승인 여부</th>
             </tr>
           </thead>
-          {props.payments.map((payment) => (
-            <PaymentItem key={payment.paymentId} {...payment} />
-          ))}
+          <tbody>
+            {props.payments.map((payment) => (
+              <PaymentItem key={payment.paymentId} {...payment} />
+            ))}
+          </tbody>
         </table>
       </Card>
     </Fragment>

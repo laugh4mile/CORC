@@ -1,5 +1,8 @@
 package com.web.shinhan.controller;
 
+import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.TransactionDto;
+import com.web.shinhan.model.service.BlockchainService;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,6 +38,7 @@ import com.web.shinhan.model.service.UserService;
 import com.web.shinhan.repository.PaymentRepository;
 
 import io.swagger.annotations.ApiOperation;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/user")
@@ -54,6 +58,9 @@ public class UserController {
 
   @Autowired
   PaymentitemService paymentitemService;
+
+  @Autowired
+  BlockchainService blockchainService;
 
   @ApiOperation(value = "회원 결제 내역", notes = "회원의 결제 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment")
@@ -84,15 +91,18 @@ public class UserController {
   @ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment/custom")
   public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
-      @RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
+      @RequestParam int startDate, @RequestParam int endDate, @RequestParam(required = false) boolean forStatistics, 
+      Pageable pageable) throws Exception {
     logger.info("findUserPaymentCustom - 호출");
-
     Map<String, Object> resultMap = new HashMap<>();
     Page<PaymentDto> page = null;
     HttpStatus status = HttpStatus.ACCEPTED;
     pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
         Sort.by(Sort.Direction.DESC, "date"));
-
+    if (forStatistics) {
+		pageable = Pageable.unpaged();
+	}
+    
     try {
       resultMap.put("info", userService.findUserInfo(userId));
       page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
@@ -140,6 +150,11 @@ public class UserController {
     HttpStatus status = HttpStatus.ACCEPTED;
 
     try {
+      int itemsTotal = 0;
+      for (PaymentitemDto paymentitem: paymentitems) {
+    	  itemsTotal += paymentitem.getPrice() * paymentitem.getAmount();
+      }
+      if(itemsTotal == total) {
       UserDto user = userService.findUserInfo(userId);
       StoreDto store = storeService.findStoreInfo(storeId);
       String storeGugunCode = store.getGugunCode();
@@ -155,11 +170,13 @@ public class UserController {
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
           } else {
             paymentService.pay(userId, storeId, total);
-            int paymentId = paymentService.findLastPayment();
+            PaymentDto payment = paymentService.findLastPayment();
+            int paymentId = payment.getPaymentId();
             for (int i = 0; i < paymentitems.size(); i++) {
               paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
                   paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
             }
+
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;
           }
@@ -170,6 +187,10 @@ public class UserController {
       } else {
         resultMap.put("message", "사용 불가 요일");
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+      } else {
+    	resultMap.put("message", "결제 내역 총합과 상품 목록 총합 불일치");
+    	return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);    	  
       }
     } catch (RuntimeException e) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;

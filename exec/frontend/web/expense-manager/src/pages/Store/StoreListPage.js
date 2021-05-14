@@ -49,8 +49,6 @@ const StoreListPage = () => {
     );
   }
 
-  console.log("loadedStores", loadedStores);
-
   return (
     <div className="page">
       <span className="title">가맹점 목록</span>

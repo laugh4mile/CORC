@@ -9,15 +9,15 @@ import { storeApplication } from "../../lib/api-store";
 import useHttp from "../../hooks/use-http";
 import classes from "./List.module.css";
 
-const sortStores = (stores, ascending) => {
-  return stores.sort((storeA, storeB) => {
-    if (ascending) {
-      return storeA.id - storeB.id;
-    } else {
-      return storeB.id - storeA.id;
-    }
-  });
-};
+// const sortStores = (stores, ascending) => {
+//   return stores.sort((storeA, storeB) => {
+//     if (ascending) {
+//       return storeA.id - storeB.id;
+//     } else {
+//       return storeB.id - storeA.id;
+//     }
+//   });
+// };
 
 const RequestedStoreList = (props) => {
   const { sendRequest, status } = useHttp(storeApplication);

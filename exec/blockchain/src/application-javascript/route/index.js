@@ -153,7 +153,7 @@ router.delete('/user/:userId', async (req, res) => {
  */
 router.put('/balance', async (req, res) => {
   try {
-    if (typeof req.body['userId'] !== 'string' || req.body['balance'] !== 'number') throw new Error();
+    if (typeof req.body['userId'] !== 'string' || typeof req.body['balance'] !== 'number') throw new Error();
     const userId = req.body.userId;
     const balance = req.body.balance;
 

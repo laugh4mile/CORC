@@ -11,38 +11,12 @@ import Button from "../../components/UI/Button/Button";
 
 import classes from "./List.module.css";
 
-const sortStores = (stores, ascending) => {
-  return stores.sort((storeA, storeB) => {
-    if (ascending) {
-      return storeA.id - storeB.id;
-    } else {
-      return storeB.id - storeA.id;
-    }
-  });
-};
-
 const StoreList = (props) => {
   const { sendRequest, status } = useHttp(confirmPayment);
 
   const [checkItems, setCheckItems] = useState([]);
 
-  // const refreshPage = () => {
-  //   window.location.reload(false);
-  // };
-  // useEffect(() => {
-  //   sendRequest(pageInfo);
-  // }, [sendRequest, pageInfo]);
-  // useEffect(() => {
-  //   sendRequest();
-  //   // if (status === 'completed') {
-  //   //   // 임시 prompt
-  //   //   alert('유저 등록 완료');
-  //   // }
-  // }, []);
-
   const addUserHandler = (storeIds) => {
-    console.log("storeIds", storeIds);
-    console.log("typeof storeIds", typeof storeIds);
     sendRequest(storeIds);
   };
 
@@ -72,6 +46,7 @@ const StoreList = (props) => {
 
   const submitHandler = (event) => {
     // event.preventDefault();
+    console.log("checkItems", checkItems);
     addUserHandler(checkItems);
   };
 

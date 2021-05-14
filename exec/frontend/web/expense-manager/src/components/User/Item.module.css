@@ -1,17 +1,16 @@
 .item {}
 
-
 .tr {
     display: flex;
     align-items: center;
     padding: 0.5rem 0;
-    transition: .2s ease-out;
+    transition: 0.2s ease-out;
     border-radius: 0.5rem;
-    color: #3F3F42;
+    color: #3f3f42;
 }
 
 .tr:hover {
-    background-color: #ECF0FB;
+    background-color: #ecf0fb;
 }
 
 .td {
@@ -38,11 +37,11 @@
 .link {
     cursor: pointer;
     font-weight: 700;
-    transition: .2s ease-out;
+    transition: 0.2s ease-out;
 }
 
 .link:hover {
-    color: #7986FF;
+    color: #7986ff;
 }
 
 .tr .checkbox {
@@ -78,18 +77,18 @@
 }
 
 .date {
-    color: #696A6E;
+    color: #696a6e;
     font-weight: normal;
 }
 
 .deleted {
-    color: #FF6161;
+    color: #ff6161;
 }
 
 .active {
-    color: #44C167;
+    color: #44c167;
 }
 
 .inactive {
-    color: #FFDB5A;
+    color: #ffdb5a;
 }

@@ -42,7 +42,7 @@ const SalesPage = () => {
 
   if (
     status === "completed" &&
-    (!loadedPayments || loadedPayments.length === 0)
+    (!loadedPayments.content || loadedPayments.content.length === 0)
   ) {
     return (
       <div className="page">

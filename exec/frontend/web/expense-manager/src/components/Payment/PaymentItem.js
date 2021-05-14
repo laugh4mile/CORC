@@ -1,9 +1,26 @@
+import { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import classes from "./PaymentItem.module.css";
+import Modal from "../UI/Modal/Modal";
+import Backdrop from "../UI/Backdrop/Backdrop";
+import Receipt from "../UI/Receipt/Receipt";
+import { ReactComponent as ReceiptIcon } from "../../assets/receipt.svg";
+
+import classes from "./Item.module.css";
 
 const PaymentItem = (props) => {
-  console.log("PIPIPIPIPI", props);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const showModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  const paymentContents = (items) => {
+    let resultStr = `${items[0].productName} ✕ ${items[0].amount}`;
+    if (items.length === 1) return resultStr;
+
+    return resultStr + ` 외 ${items.length - 1}건`;
+  };
+
   const history = useHistory();
 
   const isAccepted = (status) => {
@@ -20,6 +37,13 @@ const PaymentItem = (props) => {
 
   const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
+  const activeStyle = (status) => {
+    console.log("status", status);
+    if (status === 0) return classes.deleted;
+    else if (status === 1) return classes.inactive;
+    else return classes.active;
+  };
+
   const trClickHandler = () =>
     history.push({
       pathname: `/store/sales/${props.store.storeId}`,
@@ -31,7 +55,12 @@ const PaymentItem = (props) => {
     });
 
   return (
-    <tbody>
+    <Fragment>
+      <Modal show={modalIsOpen} closed={closeModal}>
+        <span>결제 상세 내역</span>
+        <Receipt {...props} />
+      </Modal>
+      {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
       <tr className={classes.tr}>
         <td style={{ width: "10%" }} className={classes.td}>
           <input type="checkbox" />
@@ -66,7 +95,7 @@ const PaymentItem = (props) => {
           {isAccepted(props.status)}
         </td>
       </tr>
-    </tbody>
+    </Fragment>
   );
 };
 

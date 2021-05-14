@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import RequestedStoreList from "../../components/Store/RequestedStoreList";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";

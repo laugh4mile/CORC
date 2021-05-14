@@ -4,7 +4,13 @@ import StoreSalesItem from "../Payment/PaymentItem";
 import classes from "./List.module.css";
 
 const StoreSales = (props) => {
-  console.log("props", props);
+  if (props.logs.length === 0) {
+    return (
+      <Fragment>
+        <span>해당 가맹점의 판매 내역이 없습니다</span>
+      </Fragment>
+    );
+  }
   return (
     <Fragment>
       <table>
@@ -20,9 +26,11 @@ const StoreSales = (props) => {
             <th style={{ width: "20%" }}>승인 여부</th>
           </tr>
         </thead>
-        {props.logs.map((payment) => (
-          <StoreSalesItem key={payment.paymentId} {...payment} />
-        ))}
+        <tbody>
+          {props.logs.map((payment) => (
+            <StoreSalesItem key={payment.paymentId} {...payment} />
+          ))}
+        </tbody>
       </table>
     </Fragment>
   );

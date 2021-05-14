@@ -6,7 +6,11 @@ import StoreSales from "../../components/Store/StoreSales";
 import Card from "../../components/UI/Card/Card";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import useHttp from "../../hooks/use-http";
-import { getSingleStore, getStorePayment, addStore } from "../../lib/api-store";
+import {
+  getSingleStore,
+  getStorePayment,
+  modifyStore,
+} from "../../lib/api-store";
 import Page from "../../components/Pagenation/Page";
 
 import classes from "./SalesDetailPage.module.css";
@@ -16,7 +20,7 @@ const SalesDetailPage = () => {
   const location = useLocation();
   const history = useHistory();
 
-  const [pageInfo, setPageInfo] = useState({ page: 0, size: 1 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   const storeName = location.state.storeName;
   const storeCrNum = location.state.storeCrNum;
@@ -39,6 +43,10 @@ const SalesDetailPage = () => {
   const infoActiveStyle = () => (infoStyle ? classes.active : "");
   const logActiveStyle = () => (logStyle ? classes.active : "");
 
+  const { sendRequest: sendModifyStore, status: modifyStatus } = useHttp(
+    modifyStore
+  );
+
   const {
     sendRequest: sendSingleStore,
     status: storeStatus,
@@ -57,6 +65,15 @@ const SalesDetailPage = () => {
     sendSingleStore(storeId);
     sendStorePayment(storeId, pageInfo);
   }, [sendSingleStore, sendStorePayment, storeId, pageInfo]);
+
+  useEffect(() => {
+    // modifyStatus = 'completed';
+    if (modifyStatus === "completed") {
+      // 임시 prompt
+      // alert('가맹점 수정 완료');
+      history.goBack();
+    }
+  }, [modifyStatus, history]);
 
   if (paymentStatus === "pending" && storeStatus === "pending") {
     return (
@@ -101,7 +118,7 @@ const SalesDetailPage = () => {
 
   if (
     paymentError === "completed" &&
-    (!loadedPayment || loadedPayment.length === 0)
+    (!loadedPayment.content || loadedPayment.content.length === 0)
   ) {
     return (
       <div className="page">
@@ -110,9 +127,10 @@ const SalesDetailPage = () => {
       </div>
     );
   }
-  // console.log('loadedPayment', typeof loadedPayment.totalElements);
 
-  console.log("loadedPayment", loadedPayment);
+  const addUserHandler = (storeData) => {
+    sendModifyStore(storeData);
+  };
 
   return (
     <section className="page">
@@ -135,9 +153,11 @@ const SalesDetailPage = () => {
         </span>
       </article>
       <Card type={"nofit"}>
-        {infoStyle && <StoreInfo {...loadedStore} />}
+        {infoStyle && (
+          <StoreInfo {...loadedStore} onModifyStore={addUserHandler} />
+        )}
         {logStyle && <StoreSales logs={loadedPayment.content} />}
-        {logStyle && (
+        {logStyle && loadedPayment.content.length !== 0 && (
           <Page
             totalElements={loadedPayment.totalElements}
             blockSize={4}
