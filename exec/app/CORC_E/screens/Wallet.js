@@ -14,7 +14,7 @@ const Wallet = (props) => {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
+  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

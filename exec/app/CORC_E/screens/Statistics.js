@@ -15,7 +15,7 @@ import Colors from '../constants/Colors';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
+const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
