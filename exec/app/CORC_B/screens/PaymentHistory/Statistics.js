@@ -5,17 +5,18 @@ import {
   Dimensions,
   ActivityIndicator,
   Text,
-} from 'react-native';
-import { PieChart } from 'react-native-chart-kit';
-import { Picker } from '@react-native-picker/picker';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import Colors from '../../constants/Colors';
+} from "react-native";
+import { PieChart } from "react-native-chart-kit";
+import { Picker } from "@react-native-picker/picker";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import Card from "../../components/Card";
+import Colors from "../../constants/Colors";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
+const SERVER_URL = "http://192.168.0.14:8765/shinhan";
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -183,21 +184,11 @@ const Statistics = () => {
     setIsLoading(false);
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator
-          size="large"
-          color={Colors.primary.backgroundColor}
-        />
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerDateView}>
-          <View style={{ flexDirection: 'column' }}>
+          <View style={{ flexDirection: "column" }}>
             <Text style={styles.headerDateText}>
               {formatDate(dateFrom(startDate), 'start')}
             </Text>
@@ -219,9 +210,16 @@ const Statistics = () => {
           </Picker>
         </View>
       </View>
-      {itemList.length > 0 ? (
+      {isLoading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            size="large"
+            color={Colors.primary.backgroundColor}
+          />
+        </View>
+      ) : itemList.length > 0 ? (
         <>
-          <View style={styles.pieChart}>
+          <Card style={styles.pieChart}>
             <PieChart
               style={{ marginTop: '10%' }}
               data={itemList}
@@ -234,6 +232,8 @@ const Statistics = () => {
               absolute
             />
             <Text style={styles.basisText}>[판매 수량 기준]</Text>
+          </Card>
+          <Card style={styles.pieChart}>
             <PieChart
               style={{ marginTop: '10%' }}
               data={itemList}
@@ -246,7 +246,7 @@ const Statistics = () => {
               absolute
             />
             <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
-          </View>
+          </Card>
           <View style={styles.totalView}>
             <Text style={styles.totalText}>
               <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text> 원
@@ -271,27 +271,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginHorizontal: '5%',
-    marginTop: '7%',
+    flex: 1.5,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: "10%",
+    marginTop: "7%",
+    paddingBottom: "5%",
   },
   headerDateView: {
     flex: 1,
-    paddingLeft: '10%',
+    // paddingLeft: '10%'
   },
   headerDateText: {
     fontSize: 15,
   },
   pickerView: {
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    width: '30%',
+    justifyContent: "center",
+    backgroundColor: "white",
+    width: "30%",
+    height: 34,
     borderRadius: 12,
     borderColor: '#ddd',
     borderWidth: 0,
@@ -307,23 +310,26 @@ const styles = StyleSheet.create({
     elevation: 15,
   },
   picker: {
-    height: 34,
+    // height: 34,
   },
-  pickerItem: {},
+  pickerItem: {
+    // height: 34,
+  },
   pieChart: {
-    flex: 8,
-    alignItems: 'center',
-    marginBottom: '30%',
+    flex: 12,
+    alignItems: "center",
+    marginBottom: "7%",
+    justifyContent: "flex-start",
   },
   basisText: {
-    fontSize: 14,
-    fontWeight: '900',
+    fontSize: screenHeight * 0.015,
+    fontWeight: "900",
   },
   totalView: {
     flex: 1,
-    marginBottom: '3%',
-    marginRight: '7%',
-    alignItems: 'flex-end',
+    marginBottom: "10%",
+    marginHorizontal: "10%",
+    alignItems: "flex-end",
   },
   totalText: {
     fontSize: 30,
@@ -333,9 +339,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   noContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: "10%",
   },
   noContentText: {
     fontSize: 17,
