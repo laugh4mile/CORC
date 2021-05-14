@@ -123,18 +123,20 @@ public class UserService {
         userDto.setBalance(limit);
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
+        setBlockUserBalance(userDto);
         return true;
       } else if (balance == limit) {
-	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        UserDto userDto = mapper.INSTANCE.userToDto(user);
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
         return true;
       } else {
-    	int oldLimit = user.getCardLimit();
-	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        int oldLimit = user.getCardLimit();
+        UserDto userDto = mapper.INSTANCE.userToDto(user);
         userDto.setBalance(balance + (limit - oldLimit));
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
+        setBlockUserBalance(userDto);
         return true;
       }
     }
@@ -246,14 +248,12 @@ public class UserService {
       }
 
       return true;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return false;
     }
   }
 
   public void setBlockUserBalance(UserDto user) {
-    System.out.println("test3");
     BlockUserDto blockUser = BlockUserDto.builder()
         .userId(user.getEmail())
         .balance(user.getBalance())
@@ -277,15 +277,16 @@ public class UserService {
   }
 
   public boolean resetBalance(int userId) {
-	User user = userRepository.findByUserId(userId);
-	int cardLimit = user.getCardLimit();
-	if (user.getActive() != 0) {
+    User user = userRepository.findByUserId(userId);
+    int cardLimit = user.getCardLimit();
+    if (user.getActive() != 0) {
       UserDto userDto = mapper.INSTANCE.userToDto(user);
       userDto.setBalance(cardLimit);
       userRepository.save(userDto.toEntity());
+      setBlockUserBalance(userDto);
       return true;
     }
-	return false;
+    return false;
   }
 
 
