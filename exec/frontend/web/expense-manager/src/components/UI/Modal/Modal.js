@@ -19,10 +19,10 @@ const Modal = ({ children, ...props }) => {
       classNames={classes["fade-slide"]}
     >
       <div className={classes.Modal}>
-        {children}
         <span onClick={props.closed} className={classes.closeBtn}>
           ✕
         </span>
+        {children}
       </div>
     </CSSTransition>
   );

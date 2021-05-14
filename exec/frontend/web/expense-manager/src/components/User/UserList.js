@@ -25,7 +25,7 @@ const UserList = (props) => {
               <th className={classes.checkbox}>
                 <input type="checkbox" name="status" />
               </th>
-              <th>아이디</th>
+              <th>사번</th>
               <th>이름</th>
               <th>부서</th>
               <th>직급</th>

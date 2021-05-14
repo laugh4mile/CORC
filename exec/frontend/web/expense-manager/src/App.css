@@ -9,17 +9,23 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
 
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
 .spoqa-han-sans {
   font-family: "Spoqa Han Sans Neo", sans-serif;
   font-weight: 500;
+}
+
+.dohyeon {
+  font-family: "BMDOHYEON";
 }
 
 .noto-sans-KR {
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.dohyeon {
-  font-family: "BMDOHYEON";
+.Quicksand {
+  font-family: 'Quicksand', sans-serif;
 }
 
 .bg-primary-100 {
@@ -74,11 +80,11 @@ body {
   background-color: #32499a;
 }
 
-.btn .sub {
+.sub {
   color: #7986FF;
   background-color: #E8F1FF;
 }
 
-.btn .sub:hover {
+.sub:hover {
   background-color: #D3DEFF;
 }
