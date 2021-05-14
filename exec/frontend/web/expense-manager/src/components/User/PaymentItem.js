@@ -48,7 +48,7 @@ const PaymentItem = (props) => {
           className={`${classes.td}`}
         >{`${props.store.sido.sidoName} ${props.store.gugun.gugunName}`}</td>
         <td className={`${classes.td} ${classes["td-flex"]}`}>
-          <span className={classes["text-right"]}>
+          <span className={`${classes["text-right"]} ${classes["text-sm"]}`}>
             {paymentContents(props.paymentitem)}
           </span>
           <ReceiptIcon className={classes.icon} onClick={showModal} />

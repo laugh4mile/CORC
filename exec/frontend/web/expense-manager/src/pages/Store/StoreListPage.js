@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import StoreList from "../../components/Store/StoreList";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
@@ -7,7 +6,7 @@ import useHttp from "../../hooks/use-http";
 import { getStores } from "../../lib/api-store";
 import Page from "../../components/Pagenation/Page";
 
-import classes from "./StoreListPage.module.css";
+import classes from "./ListPage.module.css";
 
 const StoreListPage = () => {
   const { sendRequest, status, data: loadedStores, error } = useHttp(

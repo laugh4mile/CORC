@@ -1,0 +1,29 @@
+.tr {
+    display: flex;
+    padding: 0.5rem 0;
+    color: #2A2A2C;
+}
+
+.tr th {
+    width: 100%;
+    text-align: center;
+    margin: 0 0.25rem;
+}
+
+.tr .checkbox {
+    width: 10rem;
+}
+
+.section {
+    display: flex;
+    width: fit-content;
+    justify-content: end;
+    /* margin-right: 0; */
+    margin-left: auto;
+    padding-left: auto;
+    padding-right: 4rem;
+}
+
+.form {
+    margin: 0;
+}

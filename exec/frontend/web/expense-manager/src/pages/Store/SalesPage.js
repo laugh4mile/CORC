@@ -6,7 +6,7 @@ import useHttp from "../../hooks/use-http";
 import { getAllPayment } from "../../lib/api-store";
 import Page from "../../components/Pagenation/Page";
 
-import classes from "./SalesPage.module.css";
+import classes from "./ListPage.module.css";
 
 const SalesPage = () => {
   const { sendRequest, status, data: loadedPayments, error } = useHttp(

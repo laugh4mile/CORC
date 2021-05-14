@@ -80,11 +80,11 @@ body {
   background-color: #32499a;
 }
 
-.btn .sub {
+.sub {
   color: #7986FF;
   background-color: #E8F1FF;
 }
 
-.btn .sub:hover {
+.sub:hover {
   background-color: #D3DEFF;
 }

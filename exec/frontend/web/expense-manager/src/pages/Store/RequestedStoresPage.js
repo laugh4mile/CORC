@@ -7,7 +7,7 @@ import useHttp from "../../hooks/use-http";
 import { getAllRequestedStores } from "../../lib/api-store";
 import Page from "../../components/Pagenation/Page";
 
-import classes from "./StoreListPage.module.css";
+import classes from "./ListPage.module.css";
 
 const RequestedStoresPage = () => {
   const { sendRequest, status, data: loadedStores, error } = useHttp(
