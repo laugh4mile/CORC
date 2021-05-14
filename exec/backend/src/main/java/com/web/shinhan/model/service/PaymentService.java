@@ -279,9 +279,8 @@ public class PaymentService {
 		int endYear = endDate / 10000;
 		int endMonth = (endDate - endYear * 10000) / 100;
 		int endDay = (endDate - endYear * 10000) % 100;
-		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00);
+		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00,00);
 		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
-		
 		Page<Payment> payments = paymentRepository.findAllByStoreCustom(storeId, pageable, startDateIn, endDateIn);
 		return payments.map(PaymentDto::of);
 	}
