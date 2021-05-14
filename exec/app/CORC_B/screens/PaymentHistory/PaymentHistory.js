@@ -3,12 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  ScrollView,
   ActivityIndicator,
   Dimensions,
   TouchableOpacity,
   Platform,
   Alert,
+  FlatList,
 } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -24,6 +24,7 @@ const SERVER_URL = "http://192.168.0.14:8765/shinhan";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+
 var buttonList = [
   { key: 1, label: "당일", value: 1, selected: false },
   { key: 2, label: "1주일", value: 7, selected: true },
@@ -58,95 +59,83 @@ const dateFrom = (from) => {
   return new Date(new Date().setDate(new Date().getDate() - from + 1));
 };
 
-const formatDate = (date, type) => {
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  if (month < 10) {
-    month = "0" + month;
-  }
-  var day = date.getDate();
-  if (day < 10) {
-    day = "0" + day;
-  }
-  if (type == "end") {
-    return `${year}.${month}.${day} 23:59`;
-  }
-  if (type == "start") {
-    return `${year}.${month}.${day} 00:00`;
-  }
-  return `${year}.${month}.${day}`;
-};
-
 const PaymentHistory = (props) => {
   const userId = useSelector((state) => state.auth.userId);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [paymentList, setPaymentList] = useState([]);
   const [days, setDays] = useState(7);
   const [start, setstart] = useState(dateFrom(30));
   const [end, setend] = useState(new Date());
+  const [final, setFinal] = useState(false);
   const [showStartPicker, setshowStartPicker] = useState(false);
   const [showEndPicker, setshowEndPicker] = useState(false);
+  const [size, setsize] = useState(20);
+  const [page, setpage] = useState(0);
+
+  //   useEffect(() => {
+  //     getData();
+  //   }, []);
 
   useEffect(() => {
-    getData();
+    if (days !== -1) {
+      getData();
+    }
   }, [days]);
 
-  const getData = async (from, to) => {
-    setIsLoading(true);
+  const getData = async () => {
+      const startDate =
+        days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
+      const endDate =
+        days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
 
-    if (days !== -1) {
-      var response = await axios.get(
-        `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${dateStrToNum(
-          dateFrom(days)
-        )}&endDate=${dateStrToNum(new Date())}`
+      console.log(startDate, endDate, page);
+
+      const response = await axios.get(
+        `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
       );
 
-      var payments = [];
+      let payments = response.data.paymentList.content;
 
-      if (response.data !== undefined && !response.data.paymentList.empty) {
-        payments = response.data.paymentList.content;
-      }
+      console.log(response.data);
 
-      setPaymentList(payments);
-
-      setIsLoading(false);
-      return;
-    }
-
-    if (from && to) {
-      if (from > to) {
-        setIsLoading(false);
-        return Alert.alert(null, "조회하고자 하는 날짜를 다시 확인해 주세요!", [
-          { text: "확인" },
-        ]);
-      }
-
-      var response = await axios.get(
-        `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${dateStrToNum(
-          from
-        )}&endDate=${dateStrToNum(to)}`
-      );
-
-      var payments = [];
-
-      if (response.data !== undefined && !response.data.paymentList.empty) {
-        payments = response.data.paymentList.content;
-      }
-
-      setPaymentList(payments);
+      // setPaymentList([...paymentList, ...payments]);
+      setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
+      setpage(page + 1);
 
       setIsLoading(false);
-      return;
-    }
+  };
 
-    setIsLoading(false);
+  const formatDate = (date, type) => {
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    if (month < 10) {
+      month = "0" + month;
+    }
+    var day = date.getDate();
+    if (day < 10) {
+      day = "0" + day;
+    }
+    if (type == "end") {
+      return `${year}.${month}.${day} 23:59`;
+    }
+    if (type == "start") {
+      return `${year}.${month}.${day} 00:00`;
+    }
+    return `${year}.${month}.${day}`;
   };
 
   const lookUpDate = () => {
-    console.log(start, end);
-    if (days === -1) {
-      getData(start, end);
+    setpage(0);
+    setPaymentList([]);
+    if (start > end) {
+      return Alert.alert(null, "조회하고자 하는 날짜를 다시 확인해 주세요!", [
+        { text: "확인" },
+      ]);
     }
+
+    // setFinal(true);
+
+    getData();
   };
 
   var currentDate = new Date();
@@ -169,28 +158,54 @@ const PaymentHistory = (props) => {
 
   const handleButton = (button) => {
     buttonList.map((btn) => (btn.selected = btn.key === button.key));
+    setpage(0);
+    setPaymentList([]);
+    setstart(dateFrom(30));
+    setend(new Date());
+    // setFinal(false);
     setDays(button.value);
   };
 
   const onChangeStart = (event, selectedDate) => {
-    const currentDate = selectedDate || start;
-    setshowStartPicker(Platform.OS === "ios");
-    setstart(currentDate);
+    if (selectedDate !== undefined) {
+      const currentDate = selectedDate || start;
+      setshowStartPicker(Platform.OS === "ios");
+      setstart(currentDate);
+    }
   };
 
   const onChangeEnd = (event, selectedDate) => {
-    const currentDate = selectedDate || end;
-    setshowEndPicker(Platform.OS === "ios");
-    setend(currentDate);
+    if (selectedDate !== undefined) {
+      const currentDate = selectedDate || end;
+      setshowEndPicker(Platform.OS === "ios");
+      setend(currentDate);
+    }
   };
 
-  const showDatePicker = (type) => {
-    if (type === "start") {
-      setshowStartPicker(true);
-    }
-    if (type === "end") {
-      setshowEndPicker(true);
-    }
+  const renderList = ({ item }) => {
+    return (
+      <View>
+        {!checkDate(item.date) && (
+          <View style={styles.dateSeperatorBox}>
+            <View style={styles.dateView}>
+              <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
+            </View>
+            <View style={styles.dateSeperator} />
+          </View>
+        )}
+        <PaymentItem
+          payment={item}
+          formatMoney={(money) => formatMoney(money)}
+        />
+      </View>
+    );
+  };
+
+  const handleRefresh = () => {
+    setIsLoading(true);
+    setpage(0);
+    // setHasMore(true);
+    getData();
   };
 
   return (
@@ -231,7 +246,7 @@ const PaymentHistory = (props) => {
           <View style={styles.searchCondition}>
             <View style={styles.dateInput}>
               <TouchableOpacity
-                onPress={() => showDatePicker("start")}
+                onPress={() => setshowStartPicker(true)}
                 style={styles.datePicker}
                 activeOpacity={0.7}
               >
@@ -248,7 +263,7 @@ const PaymentHistory = (props) => {
                 ~
               </Text>
               <TouchableOpacity
-                onPress={() => showDatePicker("end")}
+                onPress={() => setshowEndPicker(true)}
                 style={styles.datePicker}
                 activeOpacity={0.7}
               >
@@ -264,7 +279,8 @@ const PaymentHistory = (props) => {
                   value={start}
                   mode="date" // default date
                   display="default"
-                  onChange={(event, date) => onChangeStart(event, date)}
+                  onChange={onChangeStart}
+                  maximumDate={new Date()}
                 />
               )}
               {showEndPicker && (
@@ -272,14 +288,15 @@ const PaymentHistory = (props) => {
                   value={end}
                   mode="date" // default date
                   display="default"
-                  onChange={(event, date) => onChangeEnd(event, date)}
+                  onChange={onChangeEnd}
+                  maximumDate={new Date()}
                 />
               )}
             </View>
             <View style={{ flex: 1 }}>
               <Button
                 title="조회하기"
-                onPress={() => lookUpDate()}
+                onPress={lookUpDate}
                 backgroundColor={Colors.primary.backgroundColor}
                 fontColor={Colors.primary.fontColor}
               />
@@ -292,37 +309,16 @@ const PaymentHistory = (props) => {
         <Text style={styles.historyText}>판매 내역</Text>
       </View>
       <Card style={styles.resultCard}>
-        <ScrollView style={styles.resultScroll}>
-          {isLoading ? (
-            <View style={styles.loading}>
-              <ActivityIndicator
-                size="large"
-                color={Colors.primary.backgroundColor}
-              />
-            </View>
-          ) : paymentList.length > 0 ? (
-            paymentList.map((payment) => (
-              <View key={payment.paymentId}>
-                {!checkDate(payment.date) && (
-                  <View style={styles.dateSeperatorBox}>
-                    <View style={styles.dateView}>
-                      <Text style={styles.dateText}>
-                        {getMMDD_DT(payment.date)}
-                      </Text>
-                    </View>
-                    <View style={styles.dateSeperator} />
-                  </View>
-                )}
-                <PaymentItem
-                  payment={payment}
-                  formatMoney={(money) => formatMoney(money)}
-                />
-              </View>
-            ))
-          ) : (
-            <Text>최근 거래 내역이 없습니다.</Text>
-          )}
-        </ScrollView>
+        <FlatList
+          data={paymentList}
+          renderItem={renderList}
+          style={styles.resultScroll}
+          keyExtractor={(item, index) => item.paymentId.toString()}
+          onEndReached={getData}
+          onEndReachedThreshold={1}
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+        />
       </Card>
     </View>
   );
@@ -374,7 +370,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   datePicker: {
-    // flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -384,7 +379,6 @@ const styles = StyleSheet.create({
     borderColor: "#dddddd",
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 12,
-    // paddingHorizontal: 10,
   },
   datePickerText: {
     fontSize: 16,
