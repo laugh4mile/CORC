@@ -31,7 +31,6 @@ const PaymentItem = (props) => {
   return (
     <Fragment>
       <Modal show={modalIsOpen} closed={closeModal}>
-        <span>결제 상세 내역</span>
         <Receipt {...props} />
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
@@ -49,7 +48,9 @@ const PaymentItem = (props) => {
           className={`${classes.td}`}
         >{`${props.store.sido.sidoName} ${props.store.gugun.gugunName}`}</td>
         <td className={`${classes.td} ${classes["td-flex"]}`}>
-          <span>{paymentContents(props.paymentitem)}</span>
+          <span className={`${classes["text-right"]} ${classes["text-sm"]}`}>
+            {paymentContents(props.paymentitem)}
+          </span>
           <ReceiptIcon className={classes.icon} onClick={showModal} />
         </td>
         <td
@@ -60,7 +61,7 @@ const PaymentItem = (props) => {
         </td>
         <td
           style={{ width: "60%" }}
-          className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}
+          className={`${classes.td} ${classes["font-bold"]} ${classes["align-right"]}`}
         >
           {formatMoney(totalPrice())}
         </td>

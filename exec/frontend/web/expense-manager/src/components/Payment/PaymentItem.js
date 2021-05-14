@@ -1,18 +1,48 @@
-import { useHistory } from 'react-router-dom';
+import { Fragment, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import classes from './PaymentItem.module.css';
+import Modal from "../UI/Modal/Modal";
+import Backdrop from "../UI/Backdrop/Backdrop";
+import Receipt from "../UI/Receipt/Receipt";
+import { ReactComponent as ReceiptIcon } from "../../assets/receipt.svg";
+
+import classes from "./Item.module.css";
 
 const PaymentItem = (props) => {
-  console.log('PIPIPIPIPI', props);
-  const history = useHistory();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const isAccepted = (accepted) => {
-    if (accepted === 0) return '거절';
-    else if (accepted === 1) return '대기';
-    else return '승인';
+  const showModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  const paymentContents = (items) => {
+    let resultStr = `${items[0].productName} ✕ ${items[0].amount}`;
+    if (items.length === 1) return resultStr;
+
+    return resultStr + ` 외 ${items.length - 1}건`;
   };
 
-  const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
+  const history = useHistory();
+
+  const isAccepted = (status) => {
+    if (status === 0) return "거절";
+    else if (status === 1) return "대기";
+    else return "승인";
+  };
+
+  const acceptedStyle = (status) => {
+    if (status === 0) return classes.deleted;
+    else if (status === 1) return classes.inactive;
+    else return classes.active;
+  };
+
+  const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
+
+  const activeStyle = (status) => {
+    console.log("status", status);
+    if (status === 0) return classes.deleted;
+    else if (status === 1) return classes.inactive;
+    else return classes.active;
+  };
 
   const trClickHandler = () =>
     history.push({
@@ -25,20 +55,47 @@ const PaymentItem = (props) => {
     });
 
   return (
-    <tbody>
+    <Fragment>
+      <Modal show={modalIsOpen} closed={closeModal}>
+        <span>결제 상세 내역</span>
+        <Receipt {...props} />
+      </Modal>
+      {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
       <tr className={classes.tr}>
-        <td>
+        <td style={{ width: "10%" }} className={classes.td}>
           <input type="checkbox" />
         </td>
-        <td className={classes.link} onClick={trClickHandler}>
+        <td
+          className={`${classes.td} ${classes.link} ${classes["text-left"]}`}
+          onClick={trClickHandler}
+        >
           {props.store.storeName}
         </td>
-        <td>{props.user.userName}</td>
-        <td>{props.date.slice(0, 10)}</td>
-        <td>{formatMoney(props.total)}</td>
-        <td>{isAccepted(props.status)}</td>
+        <td style={{ width: "40%" }} className={classes.td}>
+          {props.user.userName}
+        </td>
+        <td
+          style={{ width: "50%" }}
+          className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}
+        >
+          {formatMoney(props.total)}
+        </td>
+        <td
+          style={{ width: "40%" }}
+          className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}
+        >
+          {props.date.slice(0, 10)}
+        </td>
+        <td
+          style={{ width: "20%" }}
+          className={`${classes.td} ${acceptedStyle(props.status)} ${
+            classes["font-bold"]
+          }`}
+        >
+          {isAccepted(props.status)}
+        </td>
       </tr>
-    </tbody>
+    </Fragment>
   );
 };
 

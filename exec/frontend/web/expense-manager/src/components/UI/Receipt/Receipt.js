@@ -1,23 +1,30 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import classes from "./Receipt.module.css";
 
 const Receipt = ({ ...props }) => {
   const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
   return (
-    <Fragment>
+    <section className={classes.receipt}>
       <span className={classes.storeName}>{props.store.storeName}</span>
       <span className={classes.date}>{props.date.replace("T", " ")}</span>
-      <ul>
-        {props.paymentItem.map((item) => (
+      <ul className={classes.items}>
+        {props.paymentitem.map((item) => (
           <li className={classes.item}>
-            <span>{item.productName}</span>
-            <span>{formatMoney(item.price)}</span>
+            <span className={classes.product}>{item.productName}</span>
+            <span className={classes.price}>{formatMoney(item.price)}</span>
+            <span className={classes.amount}>{item.amount}</span>
+            <span className={classes.sum}>
+              {formatMoney(item.price * item.amount)}
+            </span>
           </li>
         ))}
       </ul>
-      <span className={classes.totalPrice}>{formatMoney(props.total)}</span>
-    </Fragment>
+      <article className={classes.total}>
+        <span className={classes.totalTitle}>결제 금액</span>
+        <span className={classes.totalPrice}>{formatMoney(props.total)}</span>
+      </article>
+    </section>
   );
 };
 

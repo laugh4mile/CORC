@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
+import classes from "./Page.module.css";
 
 const Page = ({ totalElements, blockSize, number, size, onClick }) => {
   const endPage = Math.ceil(totalElements / size);
@@ -16,16 +16,16 @@ const Page = ({ totalElements, blockSize, number, size, onClick }) => {
   }, [number, blockSize, endPage]);
 
   return (
-    <div className="out">
+    <div className={classes.buttons}>
       <button
-        className="in"
+        className={classes.navBtn}
         disabled={number === 0}
         onClick={() => onClick({ size, page: 0 })}
       >
         «
       </button>
       <button
-        className="in"
+        className={classes.navBtn}
         disabled={number === 0}
         onClick={() => onClick({ size, page: number - 1 })}
       >
@@ -33,7 +33,7 @@ const Page = ({ totalElements, blockSize, number, size, onClick }) => {
       </button>
       {page.map((el) => (
         <button
-          className="in"
+          className={classes.pageBtn}
           disabled={number === el - 1}
           key={el}
           onClick={() => onClick({ size, page: el - 1 })}
@@ -42,14 +42,14 @@ const Page = ({ totalElements, blockSize, number, size, onClick }) => {
         </button>
       ))}
       <button
-        className="in"
+        className={classes.navBtn}
         disabled={number === endPage - 1}
         onClick={() => onClick({ size, page: number + 1 })}
       >
         ›
       </button>
       <button
-        className="in"
+        className={classes.navBtn}
         disabled={number === endPage - 1}
         onClick={() => onClick({ size, page: endPage - 1 })}
       >

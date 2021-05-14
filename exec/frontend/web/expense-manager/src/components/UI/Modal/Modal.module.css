@@ -12,36 +12,43 @@
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
-    top: 30%;
-    left: 25%;
-    width: 50%;
+    top: 20%;
+    left: 35%;
+    width: 28rem;
     transition: all 0.3s ease-out;
 }
 
 .closeBtn {
+    margin-left: auto;
+    width: fit-content;
     font-size: 1.5rem;
     color: #3F3F42;
-    justify-self: end;
+    padding: 0.25rem 0.75rem;
+    transition: .3s ease-out;
+}
+
+.closeBtn:hover {
+    background-color: #E1E1E2;
 }
 
 .ModalOpen {
-    animation: openModal 0.4s ease-out forwards;
+    animation: openModal .4s ease-out forwards;
 }
 
 .ModalClosed {
-    animation: closeModal 1s ease-out forwards;
+    animation: closeModal .4s ease-out forwards;
 }
 
 .fade-slide-enter {}
 
 .fade-slide-enter-active {
-    animation: openModal 0.4s ease-out forwards;
+    animation: openModal .4s ease-out forwards;
 }
 
 .fade-slide-exit {}
 
 .fade-slide-exit-active {
-    animation: closeModal 1s ease-out forwards;
+    animation: closeModal .4s ease-out forwards;
 }
 
 @keyframes openModal {

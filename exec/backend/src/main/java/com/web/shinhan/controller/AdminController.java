@@ -304,6 +304,30 @@ public class AdminController {
 
     return new ResponseEntity<Boolean>(flag, status);
   }
+  
+  @ApiOperation(value = "초기화", notes = "선택된 유저의 잔액을 초기화한다.", response = Boolean.class)
+  @PutMapping("/user/reset")
+  public ResponseEntity<Boolean> resetBalance(@RequestBody int[] userIds) {
+    logger.info("resetBalance - 호출 ");
+
+    HttpStatus status = HttpStatus.ACCEPTED;
+    boolean flag = false;
+
+    try {
+      for (int userId : userIds) {
+        flag = userService.resetBalance(userId);
+        if (!flag) {
+          return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+        }
+      }
+      status = HttpStatus.ACCEPTED;
+    } catch (Exception e) {
+      e.printStackTrace();
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+    return new ResponseEntity<Boolean>(flag, status);
+  }
 
   @ApiOperation(value = "결제 내역", notes = "모든 결제 내역을 반환한다.", response = HashMap.class)
   @GetMapping("/payment")
@@ -349,7 +373,7 @@ public class AdminController {
 
     return new ResponseEntity<Boolean>(flag, status);
   }
-
+  
   @ApiOperation(value = "가맹점 목록 조회", notes = "가맹점들의 정보를 반환한다.", response = HashMap.class)
   @GetMapping("/store/list")
   public ResponseEntity<Map<String, Object>> findStoreList(Pageable pageable) throws Exception {
@@ -468,6 +492,8 @@ public class AdminController {
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
 
+    System.out.println(newDto.toString());
+    
     // 가맹점 정보 조회
     String email = newDto.getEmail();
     // 가맹점 소개 수정

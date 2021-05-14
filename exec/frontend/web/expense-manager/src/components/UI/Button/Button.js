@@ -2,8 +2,14 @@ import React from "react";
 
 import classes from "./Button.module.css";
 
-const Button = ({ children, sub }) => (
-  <button className={`${classes.button} ${sub ? classes.sub : " "}`}>
+const Button = ({ children, sub, small, fit, allow, deny }) => (
+  <button
+    className={`${small ? classes["button-small"] : classes.button} ${
+      sub ? classes.sub : " "
+    } ${fit ? classes["margin-fit"] : ""} ${allow ? classes.allow : " "} ${
+      deny ? classes.deny : " "
+    }`}
+  >
     {children}
   </button>
 );

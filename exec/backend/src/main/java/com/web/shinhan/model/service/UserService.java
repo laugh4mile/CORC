@@ -117,10 +117,26 @@ public class UserService {
   public boolean modifyCardLimit(int userId, int limit) {
     User user = userRepository.findByUserId(userId);
     if (user.getActive() != 0) {
-      UserDto userDto = mapper.INSTANCE.userToDto(user);
-      userDto.setCardLimit(limit);
-      userRepository.save(userDto.toEntity());
-      return true;
+      int balance = user.getBalance();
+      if (balance > limit) {
+        UserDto userDto = mapper.INSTANCE.userToDto(user);
+        userDto.setBalance(limit);
+        userDto.setCardLimit(limit);
+        userRepository.save(userDto.toEntity());
+        return true;
+      } else if (balance == limit) {
+	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        userDto.setCardLimit(limit);
+        userRepository.save(userDto.toEntity());
+        return true;
+      } else {
+    	int oldLimit = user.getCardLimit();
+	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        userDto.setBalance(balance + (limit - oldLimit));
+        userDto.setCardLimit(limit);
+        userRepository.save(userDto.toEntity());
+        return true;
+      }
     }
     return false;
   }
@@ -259,4 +275,18 @@ public class UserService {
       userRepository.save(user.toEntity());
     });
   }
+
+  public boolean resetBalance(int userId) {
+	User user = userRepository.findByUserId(userId);
+	int cardLimit = user.getCardLimit();
+	if (user.getActive() != 0) {
+      UserDto userDto = mapper.INSTANCE.userToDto(user);
+      userDto.setBalance(cardLimit);
+      userRepository.save(userDto.toEntity());
+      return true;
+    }
+	return false;
+  }
+
+
 }

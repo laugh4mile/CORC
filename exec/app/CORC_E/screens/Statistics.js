@@ -5,18 +5,17 @@ import {
   Dimensions,
   ActivityIndicator,
   Text,
-} from "react-native";
-import { PieChart } from "react-native-chart-kit";
-import { Picker } from "@react-native-picker/picker";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import Card from "../../components/Card";
-import Colors from "../../constants/Colors";
+} from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
+import { Picker } from '@react-native-picker/picker';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import Colors from '../constants/Colors';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -116,6 +115,8 @@ const Statistics = () => {
   const [itemList, setitemList] = useState([]);
   const [total, settotal] = useState(0);
   const [startDate, setstartDate] = useState(7);
+  const [storeList, setStoreList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   var searchDateList = [
     { label: '일간', value: 1 },
@@ -130,16 +131,16 @@ const Statistics = () => {
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
-      `${SERVER_URL}/store/payment/custom?storeId=${userId}&forStatistics=true&startDate=${dateStrToNum(
+      `${SERVER_URL}user/payment/custom?userId=${userId}&forStatistics=true&startDate=${dateStrToNum(
         dateFrom(startDate)
       )}&endDate=${dateStrToNum(new Date())}`
     );
-
     setitemList([]);
-
     var payments;
     var copiedItemList = [];
     var totalSum = 0;
+    var stores = [];
+    var categories = [];
 
     if (response.data !== undefined && !response.data.paymentList.empty) {
       payments = response.data.paymentList.content;
@@ -168,6 +169,48 @@ const Statistics = () => {
             });
           }
         }
+
+        // 매장별 금액 통계
+        var isContained2 = false;
+        const item2 = payments[i].store;
+        for (let k = 0; k < stores.length; k++) {
+          if (stores[k].name == item2.storeName) {
+            stores[k].amount += 1;
+            stores[k].priceSum += payments[i].total;
+            isContained2 = true;
+            break;
+          }
+        }
+        if (!isContained2) {
+          stores.push({
+            name: item2.storeName,
+            amount: 1,
+            priceSum: payments[i].total,
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
+        }
+
+        // 카테고리별 금액 통계
+        var isContained3 = false;
+        // const item3 = payments[i].store;
+        for (let k = 0; k < categories.length; k++) {
+          if (categories[k].name == item2.category.categoryName) {
+            categories[k].amount += 1;
+            categories[k].priceSum += payments[i].total;
+            isContained3 = true;
+            break;
+          }
+        }
+        if (!isContained3) {
+          categories.push({
+            name: item2.category.categoryName,
+            amount: 1,
+            priceSum: payments[i].total,
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
+        }
       }
 
       for (let index = 0; index < copiedItemList.length; index++) {
@@ -177,18 +220,45 @@ const Statistics = () => {
             ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
           ).toString(16);
       }
+      for (let index = 0; index < stores.length; index++) {
+        stores[index].color =
+          '#' +
+          Math.round(((index + 1) * 0xffffff) / (stores.length + 2)).toString(
+            16
+          );
+      }
+      for (let index = 0; index < categories.length; index++) {
+        categories[index].color =
+          '#' +
+          Math.round(
+            ((index + 1) * 0xffffff) / (categories.length + 2)
+          ).toString(16);
+      }
     }
+    // console.log(categories);
+    setStoreList(sort(stores, 'priceSum', 'amount'));
     setitemList(sort(copiedItemList, 'amount', 'priceSum'));
+    setCategoryList(sort(categories, 'priceSum', 'amount'));
     settotal(totalSum);
 
     setIsLoading(false);
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator
+          size="large"
+          color={Colors.primary.backgroundColor}
+        />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerDateView}>
-          <View style={{ flexDirection: "column" }}>
+          <View style={{ flexDirection: 'column' }}>
             <Text style={styles.headerDateText}>
               {formatDate(dateFrom(startDate), 'start')}
             </Text>
@@ -210,33 +280,12 @@ const Statistics = () => {
           </Picker>
         </View>
       </View>
-      {isLoading ? (
-        <View style={styles.loading}>
-          <ActivityIndicator
-            size="large"
-            color={Colors.primary.backgroundColor}
-          />
-        </View>
-      ) : itemList.length > 0 ? (
+      {itemList.length > 0 ? (
         <>
-          <Card style={styles.pieChart}>
+          <View style={styles.pieChart}>
             <PieChart
               style={{ marginTop: '10%' }}
-              data={itemList}
-              width={pieWidth}
-              height={pieHeight}
-              chartConfig={chartConfig}
-              accessor={'amount'}
-              backgroundColor={'transparent'}
-              center={[10, 0]}
-              absolute
-            />
-            <Text style={styles.basisText}>[판매 수량 기준]</Text>
-          </Card>
-          <Card style={styles.pieChart}>
-            <PieChart
-              style={{ marginTop: '10%' }}
-              data={itemList}
+              data={categoryList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
@@ -245,8 +294,20 @@ const Statistics = () => {
               center={[10, 0]}
               absolute
             />
-            <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
-          </Card>
+            <Text style={styles.basisText}>[카테고리 기준]</Text>
+            <PieChart
+              style={{ marginTop: '10%' }}
+              data={storeList}
+              width={pieWidth}
+              height={pieHeight}
+              chartConfig={chartConfig}
+              accessor={'priceSum'}
+              backgroundColor={'transparent'}
+              center={[10, 0]}
+              absolute
+            />
+            <Text style={styles.basisText}>[지출량 기준]</Text>
+          </View>
           <View style={styles.totalView}>
             <Text style={styles.totalText}>
               <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text> 원
@@ -271,30 +332,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   loading: {
-    flex: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
-    flex: 1.5,
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: "10%",
-    marginTop: "7%",
-    paddingBottom: "5%",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: '5%',
+    marginTop: '7%',
   },
   headerDateView: {
     flex: 1,
-    // paddingLeft: '10%'
+    paddingLeft: '10%',
   },
   headerDateText: {
     fontSize: 15,
   },
   pickerView: {
-    justifyContent: "center",
-    backgroundColor: "white",
-    width: "30%",
-    height: 34,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    width: '30%',
     borderRadius: 12,
     borderColor: '#ddd',
     borderWidth: 0,
@@ -310,26 +368,23 @@ const styles = StyleSheet.create({
     elevation: 15,
   },
   picker: {
-    // height: 34,
+    height: 34,
   },
-  pickerItem: {
-    // height: 34,
-  },
+  pickerItem: {},
   pieChart: {
-    flex: 12,
-    alignItems: "center",
-    marginBottom: "7%",
-    justifyContent: "flex-start",
+    flex: 8,
+    alignItems: 'center',
+    marginBottom: '30%',
   },
   basisText: {
-    fontSize: screenHeight * 0.015,
-    fontWeight: "900",
+    fontSize: 14,
+    fontWeight: '900',
   },
   totalView: {
     flex: 1,
-    marginBottom: "10%",
-    marginHorizontal: "10%",
-    alignItems: "flex-end",
+    marginBottom: '3%',
+    marginRight: '7%',
+    alignItems: 'flex-end',
   },
   totalText: {
     fontSize: 30,
@@ -339,10 +394,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   noContent: {
-    flex: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: "10%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noContentText: {
     fontSize: 17,

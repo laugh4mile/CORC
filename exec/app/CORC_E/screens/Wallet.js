@@ -14,7 +14,7 @@ const Wallet = (props) => {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
+  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -29,7 +29,6 @@ const Wallet = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             first = false;
             return false;
           }
@@ -39,7 +38,6 @@ const Wallet = (props) => {
       if (year == newDate.getFullYear()) {
         if (month == newDate.getMonth() + 1) {
           if (day == newDate.getDate()) {
-            // console.log('패스');
             return true;
           }
         }
@@ -143,12 +141,12 @@ const Wallet = (props) => {
           style={{
             flex: 1,
             marginHorizontal: 20,
-            marginTop: 10,
+            marginVertical: 10,
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             {payment.paymentList.content.map((payment, index) => (
-              <View>
+              <View key={payment.paymentId}>
                 {!match(payment.date) && (
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flex: 1 }}>
@@ -187,7 +185,7 @@ export default Wallet;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
     paddingHorizontal: '10%',
   },
   contents: {

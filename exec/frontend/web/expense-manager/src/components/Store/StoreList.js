@@ -1,45 +1,22 @@
-import { Fragment } from 'react';
-import React, { useEffect, useState } from 'react';
+import { Fragment } from "react";
+import React, { useEffect, useState } from "react";
 // import { useHistory, useLocation } from "react-router-dom";
 
-import Card from '../../components/UI/Card/Card';
-import StoreItem from './StoreItem';
-import classes from './StoreList.module.css';
-import { storeApplication, confirmPayment } from '../../lib/api-store';
-import useHttp from '../../hooks/use-http';
+import { storeApplication, confirmPayment } from "../../lib/api-store";
+import useHttp from "../../hooks/use-http";
 
-const sortStores = (stores, ascending) => {
-  return stores.sort((storeA, storeB) => {
-    if (ascending) {
-      return storeA.id - storeB.id;
-    } else {
-      return storeB.id - storeA.id;
-    }
-  });
-};
+import StoreItem from "./StoreItem";
+import Card from "../../components/UI/Card/Card";
+import Button from "../../components/UI/Button/Button";
+
+import classes from "./List.module.css";
 
 const StoreList = (props) => {
   const { sendRequest, status } = useHttp(confirmPayment);
 
   const [checkItems, setCheckItems] = useState([]);
 
-  // const refreshPage = () => {
-  //   window.location.reload(false);
-  // };
-  // useEffect(() => {
-  //   sendRequest(pageInfo);
-  // }, [sendRequest, pageInfo]);
-  // useEffect(() => {
-  //   sendRequest();
-  //   // if (status === 'completed') {
-  //   //   // 임시 prompt
-  //   //   alert('유저 등록 완료');
-  //   // }
-  // }, []);
-
   const addUserHandler = (storeIds) => {
-    console.log('storeIds', storeIds);
-    console.log('typeof storeIds', typeof storeIds);
     sendRequest(storeIds);
   };
 
@@ -54,7 +31,7 @@ const StoreList = (props) => {
 
   const handleAllCheck = (checked) => {
     if (checked) {
-      console.log('wow');
+      console.log("wow");
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -69,12 +46,13 @@ const StoreList = (props) => {
 
   const submitHandler = (event) => {
     // event.preventDefault();
+    console.log("checkItems", checkItems);
     addUserHandler(checkItems);
   };
 
   return (
     <Fragment>
-      <form onSubmit={submitHandler}>
+      <form className={classes.form} onSubmit={submitHandler}>
         <div className={classes.section}>
           {/* <button className="btn" value="">
             정지
@@ -82,13 +60,15 @@ const StoreList = (props) => {
           <button className="btn" value="">
             삭제
           </button> */}
-          <button className="btn">정산</button>
+          <Button small fit>
+            정산
+          </Button>
         </div>
         <Card type="nofit">
           <table>
             <thead>
-              <tr>
-                <th>
+              <tr className={classes.tr}>
+                <th style={{ width: "10%" }}>
                   <input
                     type="checkbox"
                     name="status"
@@ -98,11 +78,11 @@ const StoreList = (props) => {
                     checked={checkItems.length === props.page ? true : false}
                   />
                 </th>
-                <th>사업자 등록 번호</th>
+                <th style={{ width: "60%" }}>사업자 등록 번호</th>
                 <th>가맹점명</th>
-                <th>업종코드</th>
-                <th>지역</th>
-                <th>미정산 금액</th>
+                <th style={{ width: "40%" }}>업종코드</th>
+                <th style={{ width: "60%" }}>지역</th>
+                <th style={{ width: "60%" }}>미정산 금액</th>
               </tr>
             </thead>
             {props.stores.map((store) => (
