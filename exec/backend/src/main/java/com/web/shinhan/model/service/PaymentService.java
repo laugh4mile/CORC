@@ -1,5 +1,10 @@
 package com.web.shinhan.model.service;
 
+import com.web.shinhan.entity.Store;
+import com.web.shinhan.entity.User;
+import com.web.shinhan.model.TransactionDto;
+import com.web.shinhan.repository.StoreRepository;
+import com.web.shinhan.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.mapper.PaymentMapper;
 import com.web.shinhan.repository.PaymentRepository;
+import reactor.core.publisher.Mono;
 
 @Service
 public class PaymentService {
@@ -26,6 +32,15 @@ public class PaymentService {
 
   @Autowired
   private PaymentRepository paymentRepository;
+
+  @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
+  private StoreRepository storeRepository;
+
+  @Autowired
+  private BlockchainService blockchainService;
 
   private final PaymentMapper mapper = Mappers.getMapper(PaymentMapper.class);
 
@@ -49,7 +64,7 @@ public class PaymentService {
     		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
     		paymentDto.setStatus(2);
     		paymentRepository.save(paymentDto.toEntity());
-    	} else if(py.getStatus() == 2){
+    	} else if(py.getStatus() == 2 || py.getStatus() == 0){
     		continue;
     	} else {
     		return false;
@@ -216,12 +231,19 @@ public class PaymentService {
     paymentDto.setStoreId(storeId);
     paymentDto.setTotal(bill);
     paymentDto.setStatus(1);
-    paymentRepository.save(paymentDto.toEntity());
+    Payment payment = paymentDto.toEntity();
+    paymentRepository.save(payment);
+    paymentDto.setPaymentId(payment.getPaymentId());
+
+    // 블록체인 삽입
+    // ISSUE: transaction이 생성되기 직전에 user의 balance가 수정되어 WorldState 데이터 접근 불가
+    // createBlockTransaction(paymentDto);
   }
 
-  public int findLastPayment() {
+  public PaymentDto findLastPayment() {
     Payment payment = paymentRepository.findTop1ByOrderByPaymentIdDesc();
-    return payment.getPaymentId();
+    PaymentDto dto = mapper.INSTANCE.paymentToDto(payment);
+    return dto;
   }
 
   public PaymentDto findPayment(int paymentId) {
@@ -257,10 +279,43 @@ public class PaymentService {
 		int endYear = endDate / 10000;
 		int endMonth = (endDate - endYear * 10000) / 100;
 		int endDay = (endDate - endYear * 10000) % 100;
-		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00);
+		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00,00);
 		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
-		
 		Page<Payment> payments = paymentRepository.findAllByStoreCustom(storeId, pageable, startDateIn, endDateIn);
 		return payments.map(PaymentDto::of);
 	}
+
+  public boolean verifyBlockTransaction(PaymentDto payment) {
+    try {
+      TransactionDto tx = blockchainService.getTransaction(payment.getTransactionId()).block();
+      if (payment.getUser().getEmail().equals(tx.getFrom()) &&
+      payment.getStore().getEmail().equals(tx.getTo()) &&
+      payment.getTotal() == tx.getValue()) {
+        payment.setVerified(true);
+      }
+
+      return true;
+    }
+    catch (Exception e) {
+      return false;
+    }
+  }
+
+  public void createBlockTransaction(PaymentDto payment) {
+    User user = userRepository.findByUserId(payment.getUserId());
+    Store store = storeRepository.findByStoreId(payment.getStoreId());
+    TransactionDto tx = TransactionDto.builder()
+        .from(user.getEmail())
+        .to(store.getEmail())
+        .value(payment.getTotal())
+        .build();
+
+    Mono<TransactionDto> u = blockchainService.createTransaction(tx);
+    u.subscribe(response -> {
+      // 생성된 경우 상태 변경
+      payment.setTransactionId(response.getTxId());
+      payment.setTestCode(1);
+      paymentRepository.save(payment.toEntity());
+    });
+  }
 }

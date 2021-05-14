@@ -1,28 +1,25 @@
-.item {}
-
-
 .tr {
-    display: flex;
-    padding: 0.5rem 0;
-    transition: .2s ease-out;
-    border-radius: 0.5rem;
+  display: flex;
+  padding: 0.5rem 0;
+  transition: 0.2s ease-out;
+  border-radius: 0.5rem;
 }
 
 .tr:hover {
-    background-color: #ECF0FB;
+  background-color: #ecf0fb;
 }
 
 .tr td {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .link {
-    cursor: pointer;
-    font-weight: 700;
-    transition: .2s ease-out;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease-out;
 }
 
 .link:hover {
-    color: #7986FF;
+  color: #7986ff;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Alert,
   StyleSheet,
@@ -16,7 +16,7 @@ import Card from "../components/Card";
 import PaymentItem from "../components/PaymentItem";
 import PaymentHistoryIcon from "../navigations/icons/PaymentHistoryIcon";
 
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
 
 const { width } = Dimensions.get("window");
 
@@ -56,14 +56,14 @@ const Main = (props) => {
   const getData = async () => {
     setIsLoading(true);
     let response = await axios.get(
-      SERVER_URL + "/store/payment?storeId=" + userId
+      SERVER_URL + '/store/payment?storeId=' + userId
     );
     setStoreInfo(response.data.info);
     setPaymentList(response.data.paymentList);
     // console.log(paymentList.content);
 
     let response2 = await axios.get(
-      SERVER_URL + "/store/payment/total?storeId=" + userId
+      SERVER_URL + '/store/payment/total?storeId=' + userId
     );
     setTransacAmount(response2.data);
     setIsLoading(false);
@@ -114,25 +114,25 @@ const Main = (props) => {
           </Text>
         </View>
         <View style={styles.notConfirmed}>
-          <Text style={{ fontSize: 14, color: "gray" }}>
-            {"미정산금 "}
+          <Text style={{ fontSize: 14, color: 'gray' }}>
+            {'미정산금 '}
             <Text
               style={{
                 color: Colors.primary.backgroundColor,
-                fontWeight: "bold",
+                fontWeight: 'bold',
               }}
             >
               {formatMoney(transacAmount.notConfirmed)}
             </Text>
-            {" 원"}
+            {' 원'}
           </Text>
         </View>
       </Card>
       <Button
         title="정산하기"
         onPress={() => {
-          Alert.alert(null, "서비스 준비 중입니다.\n잠시만 기다려주세요!", [
-            { text: "확인" },
+          Alert.alert(null, '서비스 준비 중입니다.\n잠시만 기다려주세요!', [
+            { text: '확인' },
           ]);
         }}
         backgroundColor={Colors.primary.backgroundColor}
@@ -148,11 +148,11 @@ const Main = (props) => {
             // borderBottomColor: "#737373",
           }}
         >
-          <View style={{ flex: 1, alignItems: "flex-end", paddingLeft: 5 }}>
-            <PaymentHistoryIcon color={"#b7b7b7"} size="80%" />
+          <View style={{ flex: 1, alignItems: 'flex-end', paddingLeft: 5 }}>
+            <PaymentHistoryIcon color={'#b7b7b7'} size="80%" />
           </View>
           <View style={{ flex: 8, paddingLeft: 4 }}>
-            <Text style={{ fontWeight: "bold" }}>최근 판매 내역</Text>
+            <Text style={{ fontWeight: 'bold' }}>최근 판매 내역</Text>
           </View>
         </View>
         <View style={styles.recentList}>
@@ -196,13 +196,13 @@ const Main = (props) => {
         <TouchableOpacity
           style={{
             flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             borderTopWidth: StyleSheet.hairlineWidth,
-            borderTopColor: "#737373",
+            borderTopColor: '#737373',
           }}
           onPress={() => {
-            props.navigation.navigate("PaymentHistory");
+            props.navigation.navigate('PaymentHistory');
           }}
           activeOpacity={1}
         >
@@ -210,7 +210,7 @@ const Main = (props) => {
             style={{
               color: Colors.primary.backgroundColor,
               fontSize: 15,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             상세 내역 보러 가기
@@ -226,19 +226,19 @@ export default Main;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: "10%",
-    backgroundColor: "white",
+    paddingHorizontal: '10%',
+    backgroundColor: 'white',
   },
   loading: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   storeNameView: {
     flex: 2,
-    fontFamily: "bold",
-    justifyContent: "center",
-    alignItems: "center",
+    fontFamily: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   storeNameViewText: {
     fontSize: 30,
@@ -246,16 +246,16 @@ const styles = StyleSheet.create({
   paymentCard: {
     marginHorizontal: 0,
     marginTop: 10,
-    marginBottom: "10%",
+    marginBottom: '10%',
     flex: 2.2,
   },
   paymentTotal: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   notConfirmed: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
     paddingRight: 25,
     paddingBottom: 10,
   },

@@ -21,6 +21,8 @@ export default function QRScan() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [message, setMessage] = useState();
   const [paymentData, setPaymentData] = useState();
 
   //지문
@@ -55,29 +57,22 @@ export default function QRScan() {
     }
   };
   //
-  // var param = new FormData();
   const pay = async () => {
     console.log(paymentData.orderList);
 
-    // console.log(userId);
-    // console.log(paymentData.storeid);
-    // param.append('total', +paymentData.total);
-    // param.append('userId', +userId);
-    // param.append('storeId', +paymentData.storeId);
-    // console.log(param);
+    console.log(userId);
+    console.log(paymentData.storeid);
 
-    // let response = await axios.post(
-    //   `${SERVER_URL}user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
-    //     paymentData.storeid
-    //   }`,
-    //   paymentData.orderList
-
-    //   // json.parse(paymentData.orderList)
-    //   // total: +paymentData.total,
-    //   // userId: +userId,
-    //   // storeId: +paymentData.storeid,
-    // );
-    // console.log('response : ', response);
+    let response = await axios.post(
+      `${SERVER_URL}user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
+        paymentData.storeid
+      }`,
+      paymentData.orderList
+    );
+    console.log('response.data.message : ', response.data.message);
+    setModalVisible(false);
+    setAlertModalVisible(true);
+    setMessage(response.data.message);
   };
 
   useEffect(() => {
@@ -96,14 +91,10 @@ export default function QRScan() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setModalVisible(true);
-    // console.log(JSON.parse(data));
     const temp = JSON.parse(data);
     console.log(temp);
     setPaymentData(temp);
-    // console.log('paymentData : ' + paymentData);
     console.log(temp.orderList);
-    // console.log('몇번 호출되나');
-    // alert(`${data}`);
   };
 
   if (hasPermission === null) {
@@ -125,11 +116,9 @@ export default function QRScan() {
         </View>
         <View style={styles.bottomView}>
           {scanned && (
-            <Button
-              color="#f194ff"
-              title={'Tap to Scan Again'}
-              onPress={() => setScanned(false)}
-            />
+            <Pressable style={styles.reScan} onPress={() => setScanned(false)}>
+              <Text style={styles.reScanText}>다시 스캔</Text>
+            </Pressable>
           )}
           {scanned && ( // 모달
             <Modal
@@ -154,6 +143,7 @@ export default function QRScan() {
                       </Text>
                       {paymentData.orderList.map((item, index) => (
                         <View
+                          key={index}
                           style={{ flexDirection: 'row', marginVertical: 5 }}
                         >
                           <View style={{ flex: 2 }}>
@@ -223,9 +213,30 @@ export default function QRScan() {
                     </View>
                   </View>
                 </View>
-                {/* <View style={{ flex: 1, backgroundColor: '#000' }}>
-                  <Text>??</Text>
-                </View> */}
+              </View>
+            </Modal>
+          )}
+          {!!message && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={alertModalVisible}
+              onRequestClose={() => {
+                setAlertModalVisible(!alertModalVisible);
+              }}
+            >
+              <View style={styles.alertCenteredView}>
+                <View style={styles.alertModalView}>
+                  <Text style={styles.alertModalText}>{message}</Text>
+                  <View style={{ flex: 1, width: '100%' }}>
+                    <Pressable
+                      style={[styles.alertButton, styles.alertButtonClose]}
+                      onPress={() => setAlertModalVisible(!alertModalVisible)}
+                    >
+                      <Text style={styles.alertTextStyle}>닫기</Text>
+                    </Pressable>
+                  </View>
+                </View>
               </View>
             </Modal>
           )}
@@ -322,6 +333,64 @@ const styles = StyleSheet.create({
     color: Colors.cancel.fontColor,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 16,
+  },
+
+  //지문 인식 이후
+  alertCenteredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  alertModalView: {
+    width: '70%',
+    height: '21%',
+    // margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  alertButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    // flex: 1,
+  },
+  alertButtonClose: {
+    backgroundColor: '#2196F3',
+    // flex: 1,
+    // alignItems: 'flex-end',
+    // justifyContent: 'flex-end',
+  },
+  alertTextStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  alertModalText: {
+    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  reScan: {
+    backgroundColor: Colors.primary.backgroundColor,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  reScanText: {
+    color: Colors.primary.fontColor,
     fontSize: 16,
   },
 });

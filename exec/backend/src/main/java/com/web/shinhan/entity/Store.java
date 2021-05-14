@@ -40,6 +40,8 @@ public class Store {
   private int accepted;
   private Integer total;
 
+  private int testCode;
+
   @OneToOne
   @JoinColumn(name = "categoryCode", insertable = false, updatable = false)
   private Category category;
@@ -57,7 +59,7 @@ public class Store {
       String storeName,
       String contact, String bankName, int account, String sidoCode, String gugunCode,
       LocalDateTime requestDate,
-      int accepted, Integer total, Category category, Sido sido, Gugun gugun) {
+      int accepted, Integer total, Category category, Sido sido, Gugun gugun, int testCode) {
     this.storeId = storeId;
     this.crNum = crNum;
     this.categoryCode = categoryCode;
@@ -75,17 +77,19 @@ public class Store {
     this.category = category;
     this.sido = sido;
     this.gugun = gugun;
+    this.testCode = testCode;
   }
 
-@Override
-public String toString() {
-	return "Store [storeId=" + storeId + ", crNum=" + crNum + ", categoryCode=" + categoryCode + ", email=" + email
-			+ ", password=" + password + ", storeName=" + storeName + ", contact=" + contact + ", bankName=" + bankName
-			+ ", account=" + account + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode + ", requestDate="
-			+ requestDate + ", accepted=" + accepted + ", total=" + total + ", category=" + category + ", sido=" + sido
-			+ ", gugun=" + gugun + "]";
-}
-  
-  
-
+  @Override
+  public String toString() {
+    return "Store [storeId=" + storeId + ", crNum=" + crNum + ", categoryCode=" + categoryCode
+        + ", email=" + email
+        + ", password=" + password + ", storeName=" + storeName + ", contact=" + contact
+        + ", bankName=" + bankName
+        + ", account=" + account + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode
+        + ", requestDate="
+        + requestDate + ", accepted=" + accepted + ", total=" + total + ", category=" + category
+        + ", sido=" + sido
+        + ", gugun=" + gugun + ", testCode=" + testCode + "]";
+  }
 }

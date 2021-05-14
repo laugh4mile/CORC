@@ -1,15 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react';
 
-import classes from "./Receipt.module.css";
+import classes from './Receipt.module.css';
 
 const Receipt = ({ ...props }) => {
-  const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
+  const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
   return (
     <Fragment>
       <span className={classes.storeName}>{props.store.storeName}</span>
-      <span className={classes.date}>{props.date.replace("T", " ")}</span>
+      <span className={classes.date}>{props.date.replace('T', ' ')}</span>
       <ul>
-        {props.paymentItem.map((item) => (
+        {props.paymentitem.map((item) => (
           <li className={classes.item}>
             <span>{item.productName}</span>
             <span>{formatMoney(item.price)}</span>

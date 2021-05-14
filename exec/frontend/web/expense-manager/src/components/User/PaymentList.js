@@ -1,9 +1,9 @@
-import { Fragment } from "react";
+import { Fragment } from 'react';
 
-import PaymentItem from "./PaymentItem";
-import Card from "../UI/Card/Card";
+import PaymentItem from './PaymentItem';
+import Card from '../UI/Card/Card';
 
-import classes from "./List.module.css";
+import classes from './List.module.css';
 
 const PaymentList = (props) => {
   return (

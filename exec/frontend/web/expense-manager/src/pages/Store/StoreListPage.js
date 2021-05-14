@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import StoreList from '../../components/Store/StoreList';
 import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
@@ -7,7 +6,7 @@ import useHttp from '../../hooks/use-http';
 import { getStores } from '../../lib/api-store';
 import Page from '../../components/Pagenation';
 
-import classes from './StoreListPage.module.css';
+import classes from './list.module.css';
 
 const StoreListPage = () => {
   const {
@@ -38,11 +37,17 @@ const StoreListPage = () => {
     return <p className="centered focused">{error}</p>;
   }
 
-  if (status === 'completed' && (!loadedStores || loadedStores.length === 0)) {
-    return <span>가맹점이 없습니다.</span>;
+  if (
+    status === 'completed' &&
+    (!loadedStores.content || loadedStores.content.length === 0)
+  ) {
+    return (
+      <div className="page">
+        <span className="title">가맹점이 없습니다</span>
+        <section className={classes.section}></section>
+      </div>
+    );
   }
-
-  console.log('loadedStores', loadedStores);
 
   return (
     <div className="page">
