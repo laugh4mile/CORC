@@ -3,6 +3,7 @@ package com.web.shinhan.model.service;
 import com.web.shinhan.entity.Store;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.TransactionDto;
+import com.web.shinhan.model.UserDto;
 import com.web.shinhan.repository.StoreRepository;
 import com.web.shinhan.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -41,6 +42,9 @@ public class PaymentService {
 
   @Autowired
   private BlockchainService blockchainService;
+
+  @Autowired
+  private UserService userService;
 
   private final PaymentMapper mapper = Mappers.getMapper(PaymentMapper.class);
 
@@ -237,7 +241,7 @@ public class PaymentService {
 
     // 블록체인 삽입
     // ISSUE: transaction이 생성되기 직전에 user의 balance가 수정되어 WorldState 데이터 접근 불가
-    // createBlockTransaction(paymentDto);
+    createBlockTransaction(paymentDto);
   }
 
   public PaymentDto findLastPayment() {
@@ -302,6 +306,7 @@ public class PaymentService {
   }
 
   public void createBlockTransaction(PaymentDto payment) {
+    System.out.println("test1");
     User user = userRepository.findByUserId(payment.getUserId());
     Store store = storeRepository.findByStoreId(payment.getStoreId());
     TransactionDto tx = TransactionDto.builder()
@@ -312,10 +317,14 @@ public class PaymentService {
 
     Mono<TransactionDto> u = blockchainService.createTransaction(tx);
     u.subscribe(response -> {
+      System.out.println("test2");
       // 생성된 경우 상태 변경
       payment.setTransactionId(response.getTxId());
       payment.setTestCode(1);
       paymentRepository.save(payment.toEntity());
+
+      // user write 이후 read 불가능하기 때문에 transaction 생성 이후 user write
+      userService.setBlockUserBalance(UserDto.of(user));
     });
   }
 }

@@ -225,7 +225,7 @@ public class UserService {
     if (afterBalance >= 0) {
       userDto.setBalance(afterBalance);
       userRepository.save(userDto.toEntity());
-      setBlockUserBalance(userDto);
+      // user write 이후 read 불가능하기 때문에 transaction 생성 이후 user write
       return true;
     } else {
       return false;
@@ -253,6 +253,7 @@ public class UserService {
   }
 
   public void setBlockUserBalance(UserDto user) {
+    System.out.println("test3");
     BlockUserDto blockUser = BlockUserDto.builder()
         .userId(user.getEmail())
         .balance(user.getBalance())
