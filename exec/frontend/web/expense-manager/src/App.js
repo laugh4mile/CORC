@@ -1,28 +1,28 @@
-import { useContext } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import AuthContext from "./store/auth-context";
+import { useContext } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import AuthContext from './store/auth-context';
 
-import Layout from "./components/Layout/Layout";
+import Layout from './components/Layout/Layout';
 
-import AuthPage from "./pages/AuthPage";
-import DashBoardPage from "./pages/DashBoardPage";
+import AuthPage from './pages/AuthPage';
+import DashBoardPage from './pages/DashBoard/DashBoardPage';
 // User
-import UserRegisterPage from "./pages/User/UserRegisterPage";
-import UserListPage from "./pages/User/UserListPage";
-import UserDetailPage from "./pages/User/UserDetailPage";
-import PaymentPage from "./pages/User/PaymentPage";
-import PaymentDetailPage from "./pages/User/PaymentDetailPage";
+import UserRegisterPage from './pages/User/UserRegisterPage';
+import UserListPage from './pages/User/UserListPage';
+import UserDetailPage from './pages/User/UserDetailPage';
+import PaymentPage from './pages/User/PaymentPage';
+import PaymentDetailPage from './pages/User/PaymentDetailPage';
 // Store
-import StoreListPage from "./pages/Store/StoreListPage";
-import RequestedStoresPage from "./pages/Store/RequestedStoresPage";
-import SalesPage from "./pages/Store/SalesPage";
-import SalesDetailPage from "./pages/Store/SalesDetailPage";
+import StoreListPage from './pages/Store/StoreListPage';
+import RequestedStoresPage from './pages/Store/RequestedStoresPage';
+import SalesPage from './pages/Store/SalesPage';
+import SalesDetailPage from './pages/Store/SalesDetailPage';
 
-import StatisticsPage from "./pages/StatisticsPage";
-import SettingsPage from "./pages/SettingsPage";
+import StatisticsPage from './pages/StatisticsPage';
+import SettingsPage from './pages/SettingsPage';
 
-import "./App.css";
-import "./index.css";
+import './App.css';
+import './index.css';
 
 const App = () => {
   const authCtx = useContext(AuthContext);
