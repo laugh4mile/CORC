@@ -2,6 +2,8 @@ package com.web.shinhan.model.service;
 
 import com.web.shinhan.entity.Store;
 import com.web.shinhan.entity.User;
+import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.TransactionDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.repository.StoreRepository;
@@ -46,27 +48,40 @@ public class PaymentService {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private PaymentitemService paymentitemService;
+
   private final PaymentMapper mapper = Mappers.getMapper(PaymentMapper.class);
 
   @Transactional
   public Page<PaymentDto> findUserPayment(int userId, Pageable pageable) {
     Page<Payment> payments = paymentRepository.findAllByUserId(userId, pageable);
-    return payments.map(PaymentDto::of);
+    return payments.map(payment -> {
+      PaymentDto tx = PaymentDto.of(payment);
+      verifyBlockTransaction(tx);
+      return tx;
+    });
   }
 
   @Transactional
   public Page<PaymentDto> findAll(Pageable pageable) {
     Page<Payment> payments = paymentRepository.findAll(pageable);
-    return payments.map(PaymentDto::of);
+    return payments.map(payment -> {
+      PaymentDto tx = PaymentDto.of(payment);
+      verifyBlockTransaction(tx);
+      return tx;
+    });
   }
 
   @Transactional
   public boolean confirmPayment(int storeId) {
-    List<Payment> payment = paymentRepository.findByStoreId(storeId);
-    for(Payment py : payment) {
+    List<Payment> payments = paymentRepository.findByStoreId(storeId);
+    int balance = 0;
+    for(Payment py : payments) {
     	if (py.getStatus() == 1) {
     		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
     		paymentDto.setStatus(2);
+    		balance += paymentDto.getTotal();
     		paymentRepository.save(paymentDto.toEntity());
     	} else if(py.getStatus() == 2 || py.getStatus() == 0){
     		continue;
@@ -74,13 +89,23 @@ public class PaymentService {
     		return false;
     	}
     }
+
+    Store store = storeRepository.findByStoreId(storeId);
+    BlockUserDto blockStore = blockchainService.getUser(store.getEmail()).block();
+    blockStore.setBalance(blockStore.getBalance() - balance);
+    blockchainService.setBalance(blockStore).subscribe();
+
     return true;
   }
 
   @Transactional
   public Page<PaymentDto> findStorePayment(int storeId, Pageable pageable) {
     Page<Payment> payments = paymentRepository.findAllByStoreId(storeId, pageable);
-    return payments.map(PaymentDto::of);
+    return payments.map(payment -> {
+      PaymentDto tx = PaymentDto.of(payment);
+      verifyBlockTransaction(tx);
+      return tx;
+    });
   }
 
   public int findStoreTotal() {
@@ -228,7 +253,7 @@ public class PaymentService {
     return payments.map(PaymentDto::of);
   }
 
-  public void pay(int userId, int storeId, int bill) {
+  public void pay(int userId, int storeId, int bill, List<PaymentitemDto> paymentitems) {
     PaymentDto paymentDto = new PaymentDto();
     paymentDto.setDate(LocalDateTime.now());
     paymentDto.setUserId(userId);
@@ -237,11 +262,15 @@ public class PaymentService {
     paymentDto.setStatus(1);
     Payment payment = paymentDto.toEntity();
     paymentRepository.save(payment);
-    paymentDto.setPaymentId(payment.getPaymentId());
+
+    for (int i = 0; i < paymentitems.size(); i++) {
+      paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
+          paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), payment.getPaymentId());
+    }
 
     // 블록체인 삽입
     // ISSUE: transaction이 생성되기 직전에 user의 balance가 수정되어 WorldState 데이터 접근 불가
-    createBlockTransaction(paymentDto);
+    createBlockTransaction(PaymentDto.of(payment));
   }
 
   public PaymentDto findLastPayment() {

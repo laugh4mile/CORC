@@ -169,13 +169,7 @@ public class UserController {
             resultMap.put("message", "잔고 부족");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
           } else {
-            paymentService.pay(userId, storeId, total);
-            PaymentDto payment = paymentService.findLastPayment();
-            int paymentId = payment.getPaymentId();
-            for (int i = 0; i < paymentitems.size(); i++) {
-              paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
-                  paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
-            }
+            paymentService.pay(userId, storeId, total, paymentitems);
 
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;
