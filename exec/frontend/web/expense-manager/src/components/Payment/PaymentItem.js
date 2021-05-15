@@ -61,37 +61,23 @@ const PaymentItem = (props) => {
         <Receipt {...props} />
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
-      <tr className={classes.tr}>
+      <tr className={`${classes.tr}  ${props.verified ? null : classes["verify-fail"]}`}>
         <td style={{ width: "10%" }} className={classes.td}>
           <input type="checkbox" />
         </td>
-        <td
-          className={`${classes.td} ${classes.link} ${classes["text-left"]}`}
-          onClick={trClickHandler}
-        >
+        <td className={`${classes.td} ${classes["text-left"]} ${classes.link}`} onClick={trClickHandler}>
           {props.store.storeName}
         </td>
         <td style={{ width: "40%" }} className={classes.td}>
           {props.user.userName}
         </td>
-        <td
-          style={{ width: "50%" }}
-          className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}
-        >
+        <td style={{ width: "50%" }} className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}>
           {formatMoney(props.total)}
         </td>
-        <td
-          style={{ width: "40%" }}
-          className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}
-        >
+        <td style={{ width: "40%" }} className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}>
           {props.date.slice(0, 10)}
         </td>
-        <td
-          style={{ width: "20%" }}
-          className={`${classes.td} ${acceptedStyle(props.status)} ${
-            classes["font-bold"]
-          }`}
-        >
+        <td style={{ width: "20%" }} className={`${classes.td} ${acceptedStyle(props.status)} ${classes["font-bold"]}`}>
           {isAccepted(props.status)}
         </td>
       </tr>

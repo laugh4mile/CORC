@@ -28,35 +28,20 @@ const UserItem = (props) => {
 
   return (
     <Fragment>
-      <tr className={classes.tr}>
+      <tr className={`${classes.tr} ${props.verified ? null : classes["verify-fail"]}`}>
         <td className={`${classes.td} ${classes.checkbox}`}>
           <input type="checkbox" />
         </td>
-        <td
-          className={`${classes.td} ${classes.link}`}
-          onClick={trClickHandler}
-        >
+        <td className={`${classes.td} ${classes.link}`} onClick={trClickHandler}>
           {props.employeeNum}
         </td>
         <td className={`${classes.td}`}>{props.userName}</td>
         <td className={`${classes.td}`}>{props.department}</td>
         <td className={`${classes.td}`}>{props.position}</td>
-        <td
-          className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}
-        >
-          {formatMoney(props.balance)}
-        </td>
-        <td
-          className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}
-        >
-          {formatMoney(props.cardLimit)}
-        </td>
-        <td className={`${classes.td} ${activeStyle(props.active)}`}>
-          {isActive(props.active)}
-        </td>
-        <td className={`${classes.td} ${classes["text-sm"]} ${classes.date}`}>
-          {props.accessTime.slice(0, 10)}
-        </td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}>{formatMoney(props.balance)}</td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}>{formatMoney(props.cardLimit)}</td>
+        <td className={`${classes.td} ${activeStyle(props.active)}`}>{isActive(props.active)}</td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes.date}`}>{props.accessTime.slice(0, 10)}</td>
       </tr>
     </Fragment>
   );
