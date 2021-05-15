@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import Constants from 'expo-constants';
 import { useSelector } from 'react-redux';
 import Card from '../components/Card';
@@ -14,7 +21,101 @@ const Wallet = (props) => {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
+  const SERVER_URL = 'http://192.168.0.2:8765/shinhan/';
+
+  // 조건 검색
+  var buttonList = [
+    { key: 1, label: '당일', value: 1, selected: false },
+    { key: 2, label: '1주일', value: 7, selected: true },
+    { key: 3, label: '1개월', value: 30, selected: false },
+    { key: 4, label: '조건 검색', value: -1, selected: false },
+  ];
+  const dateFrom = (from) => {
+    return new Date(new Date().setDate(new Date().getDate() - from + 1));
+  };
+  const [paymentList, setPaymentList] = useState();
+  const [days, setDays] = useState(7);
+  const [start, setstart] = useState(dateFrom(30));
+  const [end, setend] = useState(new Date());
+  const [size, setsize] = useState(20);
+  const [page, setpage] = useState(0);
+  const [isSent, setisSent] = useState(false);
+
+  useEffect(() => {
+    if (days !== -1) {
+      getData();
+    }
+  }, [days]);
+
+  useEffect(() => {
+    isSent && getData();
+  }, [isSent]);
+
+  const dateStrToNum = (date) => {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    if (month < 10) {
+      month = '0' + month;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+      day = '0' + day;
+    }
+    return +(year + month + day);
+  };
+
+  const getData = async () => {
+    const startDate =
+      days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
+    const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
+
+    console.log(userId, startDate, endDate, size, page);
+
+    const response = await axios.get(
+      `${SERVER_URL}user/payment/custom?userId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
+    );
+    // console.log(response.data);
+    let payments = response.data.paymentList.content;
+    let last = response.data.paymentList.last;
+
+    setPaymentList([...paymentList, ...payments]);
+    setpage(page + 1);
+
+    setIsLoading(false);
+    setisSent(false);
+  };
+
+  const formatDate = (date, type) => {
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    if (month < 10) {
+      month = '0' + month;
+    }
+    var day = date.getDate();
+    if (day < 10) {
+      day = '0' + day;
+    }
+    if (type == 'end') {
+      return `${year}.${month}.${day} 23:59`;
+    }
+    if (type == 'start') {
+      return `${year}.${month}.${day} 00:00`;
+    }
+    return `${year}.${month}.${day}`;
+  };
+
+  const lookUpDate = () => {
+    setPaymentList([]);
+    setpage(0);
+    if (start > end) {
+      return Alert.alert(null, '조회하고자 하는 날짜를 다시 확인해 주세요!', [
+        { text: '확인' },
+      ]);
+    }
+    setisSent(true);
+  };
+
+  // 조건 검색 끝
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -58,7 +159,7 @@ const Wallet = (props) => {
         SERVER_URL + 'user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      // console.log('paymentList ===> : ', response2.data);
+      console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);
@@ -70,7 +171,7 @@ const Wallet = (props) => {
     <View style={styles.container}>
       <View style={{ flex: 1 }}></View>
       <View style={styles.contents}>
-        <View
+        {/* <View
           style={{
             flex: 1,
             flexDirection: 'row',
@@ -103,12 +204,12 @@ const Wallet = (props) => {
             / {'  '}
             {numberWithCommas(userInfo.info.cardLimit)} 원
           </Text>
-        </View>
-        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        </View> */}
+        {/* <View style={{ flex: 1, justifyContent: 'flex-start' }}>
           <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
             남은 한도 / 총 한도
           </Text>
-        </View>
+        </View> */}
       </View>
 
       <View

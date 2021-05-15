@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Platform,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import { useSelector } from 'react-redux';
 import Card from '../components/Card';
 import axios from 'axios';
 import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
-import MoneyIcon from '../components/icons/MoneyIcon';
-import Colors from '../constants/Colors';
 
-const Home = (props) => {
+const Wallet = (props) => {
   const userId = useSelector((state) => state.auth.userId);
   var newDate = new Date();
   const [isLoading, setIsLoading] = useState(true);
@@ -77,76 +68,67 @@ const Home = (props) => {
   }
   return (
     <View style={styles.container}>
+      <View style={{ flex: 1 }}></View>
       <View style={styles.contents}>
-        <Text style={styles.intro}>
-          안녕하세요, {userInfo.info.userName} 님!
-        </Text>
-      </View>
-      <Card
-        style={{
-          marginTop: 10,
-          flex: 1.6,
-        }}
-      >
-        <View
-          style={{
-            // flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 10,
-            paddingLeft: 20,
-          }}
-        >
-          <MoneyIcon color={'#414251'} size={25} />
-          <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
-            남은 한도 / 총 한도
-          </Text>
-        </View>
-
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            // justifyContent: 'flex-end',
           }}
         >
-          <Text style={{ fontSize: 35, color: '#414251', marginRight: 10 }}>
+          <Text
+            style={{
+              fontSize: 35,
+              color: '#414251',
+              // marginBottom: 10,
+              paddingBottom: 15,
+              fontWeight: 'bold',
+            }}
+          >
             {numberWithCommas(userInfo.info.balance)}
           </Text>
           <Text
             style={{
               fontSize: 24,
+              marginHorizontal: 10,
               color: '#414251',
+              paddingBottom: 10,
             }}
           >
             원
           </Text>
-        </View>
-
-        <View
-          style={{
-            alignItems: 'flex-end',
-            paddingRight: 25,
-            paddingBottom: 10,
-          }}
-        >
           <Text style={{ color: '#414251' }}>
-            / {numberWithCommas(userInfo.info.cardLimit)} 원
+            / {'  '}
+            {numberWithCommas(userInfo.info.cardLimit)} 원
           </Text>
         </View>
-      </Card>
+        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+          <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
+            남은 한도 / 총 한도
+          </Text>
+        </View>
+      </View>
+
       <View
         style={{
-          flex: 0.7,
+          flex: 0.4,
           flexDirection: 'row',
           alignItems: 'flex-end',
           paddingBottom: '3%',
         }}
       >
         <PaymentHistoryIcon color={'#414251'} size="30" />
-        <Text style={{ fontSize: 24, marginLeft: 10, color: '#414251' }}>
-          최근 이용 내역
+        <Text
+          style={{
+            fontSize: 22,
+            marginLeft: 10,
+            color: '#414251',
+            fontWeight: 'bold',
+          }}
+        >
+          이용 내역
         </Text>
       </View>
       <Card
@@ -159,7 +141,7 @@ const Home = (props) => {
           style={{
             flex: 1,
             marginHorizontal: 20,
-            marginTop: 10,
+            marginVertical: 10,
           }}
         >
           <View style={{ flex: 1, alignItems: 'stretch' }}>
@@ -183,6 +165,7 @@ const Home = (props) => {
                   </View>
                 )}
                 <Payment
+                  key={payment.paymentId}
                   date={payment.date}
                   store={payment.store}
                   total={payment.total}
@@ -193,50 +176,22 @@ const Home = (props) => {
             ))}
           </View>
         </ScrollView>
-
-        <TouchableOpacity
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderTopWidth: StyleSheet.hairlineWidth,
-            borderTopColor: '#737373',
-            paddingVertical: 10,
-          }}
-          onPress={() => {
-            props.navigation.navigate('Wallet');
-          }}
-          activeOpacity={0.5}
-        >
-          <Text
-            style={{
-              color: Colors.primary.backgroundColor,
-              fontSize: 15,
-              fontWeight: 'bold',
-            }}
-          >
-            상세 내역 보러 가기
-          </Text>
-        </TouchableOpacity>
       </Card>
     </View>
   );
 };
-export default Home;
+export default Wallet;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
     paddingHorizontal: '10%',
   },
   contents: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '15%',
-  },
-  intro: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    // justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 20,
   },
 });
