@@ -13,9 +13,10 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import Colors from '../constants/Colors';
 import * as LocalAuthentication from 'expo-local-authentication';
 import axios from 'axios';
+import SERVER_URL from '../env';
 
 export default function QRScan() {
-  const SERVER_URL = 'http://192.168.0.2:8765/shinhan/';
+  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
 
   const userId = useSelector((state) => state.auth.userId);
   const [hasPermission, setHasPermission] = useState(null);
@@ -64,7 +65,7 @@ export default function QRScan() {
     console.log(paymentData.storeid);
 
     let response = await axios.post(
-      `${SERVER_URL}user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
+      `${SERVER_URL}/user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
         paymentData.storeid
       }`,
       paymentData.orderList

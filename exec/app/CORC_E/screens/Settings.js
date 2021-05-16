@@ -7,21 +7,21 @@ import axios from 'axios';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
 import Card from '../components/Card';
+import SERVER_URL from '../env';
 
 const Settings = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const userId = useSelector((state) => state.auth.userId);
   const [userInfo, setUserInfo] = useState();
-  const SERVER_URL = 'http://192.168.0.2:8765/shinhan/';
-  console.log('왜이러지');
+  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   useEffect(() => {
     (async () => {
       let response = await axios.get(
-        SERVER_URL + 'admin/user/info?userId=' + userId
+        SERVER_URL + '/admin/user/info?userId=' + userId
       );
       setUserInfo(response.data);
       setIsLoading(false);
