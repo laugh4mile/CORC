@@ -2,9 +2,12 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import Colors from '../constants/Colors'
 
-const Button = ({ title, onPress, backgroundColor, fontColor }) => {
+const Button = (props) => {
+  const {title, onPress, backgroundColor, fontColor, style, ...others} = props
+
   let bColor = backgroundColor ? backgroundColor : Colors.primary.backgroundColor
   let fColor = fontColor ? fontColor : Colors.primary.fontColor
+
   return (
     <TouchableOpacity
       style={[styles.button, {backgroundColor: bColor}]}
@@ -15,6 +18,7 @@ const Button = ({ title, onPress, backgroundColor, fontColor }) => {
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   button: {
     justifyContent: "center",

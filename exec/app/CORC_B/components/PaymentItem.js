@@ -58,7 +58,7 @@ const Payment = (props) => {
                 {payment.store.storeName}
               </Text>
               <Text style={styles.modalDate}>
-                {payment.date.toString().slice(0, 16).replace("T", " ")}
+                {payment.date.toString().slice(0, 16).replace(/T/gi, " ")}
               </Text>
               <ScrollView style={styles.modalScrollView}>
                 {payment.paymentitem.map((item) => (

@@ -101,7 +101,7 @@ const RegistStore = (props) => {
         { text: "확인", onPress: () => storeNameRef.current.focus() },
       ]);
     }
-    if (!categoryCode || categoryCode.toString().trim().length < 5) {
+    if (!categoryCode || categoryCode.toString().trim().length !== 5) {
       return Alert.alert(null, "업종코드를 확인해 주세요.", [
         { text: "확인", onPress: () => categoryCodeRef.current.focus() },
       ]);
@@ -248,7 +248,6 @@ const RegistStore = (props) => {
             ref={storeNameRef}
           />
           <Text style={styles.inputLabel}>업종코드</Text>
-          {/* Picker */}
           <Input
             maxLength={5}
             placeholder="세세분류(5자리 숫자)의 코드를 입력해 주세요."
@@ -396,8 +395,6 @@ const RegistStore = (props) => {
       </View>
       <Text style={styles.reqText}>* 모든 항목은 필수 항목입니다.</Text>
       <View style={styles.footer}>
-        {/* <View style={styles.reqView}> */}
-        {/* </View> */}
         <Button title="신청" onPress={() => applyFor()} />
       </View>
     </View>
