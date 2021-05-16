@@ -1,42 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  StyleSheet,
   View,
   Text,
-  StyleSheet,
-  Platform,
-  ScrollView,
+  Dimensions,
   TouchableOpacity,
+  Platform,
+  Alert,
+  FlatList,
 } from 'react-native';
-import Constants from 'expo-constants';
 import { useSelector } from 'react-redux';
-import Card from '../components/Card';
 import axios from 'axios';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Button from '../components/Button';
+import Card from '../components/Card';
 import Payment from '../components/Payment';
+import Colors from '../constants/Colors';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
 
-const Wallet = (props) => {
+const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
+
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+var buttonList = [
+  { key: 1, label: '당일', value: 1, selected: false },
+  { key: 2, label: '1주일', value: 7, selected: true },
+  { key: 3, label: '1개월', value: 30, selected: false },
+  { key: 4, label: '조건 검색', value: -1, selected: false },
+];
+
+const getMMDD_DT = (date) => {
+  let _date = new Date(date);
+  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
+    dayOfWeek[_date.getDay()]
+  })`;
+};
+
+const formatMoney = (number) =>
+  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
+
+const dateStrToNum = (date) => {
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  let day = date.getDate();
+  if (day < 10) {
+    day = '0' + day;
+  }
+  return +(year + month + day);
+};
+
+const dateFrom = (from) => {
+  return new Date(new Date().setDate(new Date().getDate() - from + 1));
+};
+
+const PaymentHistory = (props) => {
   const userId = useSelector((state) => state.auth.userId);
-  var newDate = new Date();
-  const [isLoading, setIsLoading] = useState(true);
-  const [userInfo, setUserInfo] = useState();
-  const [payment, setPayment] = useState();
-
-  const SERVER_URL = 'http://192.168.0.2:8765/shinhan/';
-
-  // 조건 검색
-  var buttonList = [
-    { key: 1, label: '당일', value: 1, selected: false },
-    { key: 2, label: '1주일', value: 7, selected: true },
-    { key: 3, label: '1개월', value: 30, selected: false },
-    { key: 4, label: '조건 검색', value: -1, selected: false },
-  ];
-  const dateFrom = (from) => {
-    return new Date(new Date().setDate(new Date().getDate() - from + 1));
-  };
-  const [paymentList, setPaymentList] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentList, setPaymentList] = useState([]);
   const [days, setDays] = useState(7);
   const [start, setstart] = useState(dateFrom(30));
   const [end, setend] = useState(new Date());
+  const [showStartPicker, setshowStartPicker] = useState(false);
+  const [showEndPicker, setshowEndPicker] = useState(false);
   const [size, setsize] = useState(20);
   const [page, setpage] = useState(0);
   const [isSent, setisSent] = useState(false);
@@ -51,36 +81,19 @@ const Wallet = (props) => {
     isSent && getData();
   }, [isSent]);
 
-  const dateStrToNum = (date) => {
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    let day = date.getDate();
-    if (day < 10) {
-      day = '0' + day;
-    }
-    return +(year + month + day);
-  };
-
   const getData = async () => {
     const startDate =
       days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
     const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
 
-    console.log(userId, startDate, endDate, size, page);
-
     const response = await axios.get(
-      `${SERVER_URL}user/payment/custom?userId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
+      `${SERVER_URL}/user/payment/custom?userId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
     );
-    // console.log(response.data);
+
     let payments = response.data.paymentList.content;
-    let last = response.data.paymentList.last;
 
     setPaymentList([...paymentList, ...payments]);
     setpage(page + 1);
-
     setIsLoading(false);
     setisSent(false);
   };
@@ -115,184 +128,287 @@ const Wallet = (props) => {
     setisSent(true);
   };
 
-  // 조건 검색 끝
+  var currentDate = new Date();
 
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
+  const checkDate = (date) => {
+    const year = +date.slice(0, 4);
+    const month = +date.slice(5, 7) - 1;
+    const day = +date.slice(8, 10);
 
-  var first = true;
-  const match = (date) => {
-    const year = date.substring(0, 4);
-    const month = +date.substring(5, 7);
-    const day = +date.substring(8, 10);
-    if (first) {
-      if (year == newDate.getFullYear()) {
-        if (month == newDate.getMonth() + 1) {
-          if (day == newDate.getDate()) {
-            first = false;
-            return false;
-          }
-        }
-      }
-    } else {
-      if (year == newDate.getFullYear()) {
-        if (month == newDate.getMonth() + 1) {
-          if (day == newDate.getDate()) {
-            return true;
-          }
+    if (year == currentDate.getFullYear()) {
+      if (month == currentDate.getMonth()) {
+        if (day == currentDate.getDate()) {
+          return true;
         }
       }
     }
-    newDate = new Date(year, month - 1, day);
+    currentDate = new Date(year, month, day);
     return false;
   };
 
-  useEffect(() => {
-    (async () => {
-      let response = await axios.get(
-        SERVER_URL + 'admin/user/info?userId=' + userId
-      );
-      setUserInfo(response.data);
+  const handleButton = (button) => {
+    buttonList.map((btn) => (btn.selected = btn.key === button.key));
+    setpage(0);
+    setPaymentList([]);
+    setstart(dateFrom(30));
+    setend(new Date());
+    setDays(button.value);
+  };
 
-      let response2 = await axios.get(
-        SERVER_URL + 'user/payment?userId=' + userId
-      );
-      setPayment(response2.data);
-      console.log('paymentList ===> : ', response2.data);
-      setIsLoading(false);
-    })();
-  }, []);
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || start;
+    setshowStartPicker(Platform.OS === 'ios');
+    setstart(currentDate);
+  };
 
-  if (isLoading) {
-    return <></>;
-  }
+  const onChangeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate || end;
+    setshowEndPicker(Platform.OS === 'ios');
+    setend(currentDate);
+  };
+
+  const renderList = ({ item }) => {
+    return (
+      <View>
+        {!checkDate(item.date) && (
+          <View style={styles.dateSeperatorBox}>
+            <View style={styles.dateView}>
+              <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
+            </View>
+            <View style={styles.dateSeperator} />
+          </View>
+        )}
+        <Payment
+          date={item.date}
+          store={item.store}
+          total={item.total}
+          categoryCode={item.store.category.categoryCode}
+          paymentitem={item.paymentitem}
+        />
+      </View>
+    );
+  };
+
+  const handleRefresh = () => {
+    setIsLoading(true);
+    setpage(0);
+    getData();
+  };
+
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}></View>
-      <View style={styles.contents}>
-        {/* <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            // justifyContent: 'flex-end',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 35,
-              color: '#414251',
-              // marginBottom: 10,
-              paddingBottom: 15,
-              fontWeight: 'bold',
-            }}
-          >
-            {numberWithCommas(userInfo.info.balance)}
-          </Text>
-          <Text
-            style={{
-              fontSize: 24,
-              marginHorizontal: 10,
-              color: '#414251',
-              paddingBottom: 10,
-            }}
-          >
-            원
-          </Text>
-          <Text style={{ color: '#414251' }}>
-            / {'  '}
-            {numberWithCommas(userInfo.info.cardLimit)} 원
-          </Text>
-        </View> */}
-        {/* <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-          <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
-            남은 한도 / 총 한도
-          </Text>
-        </View> */}
-      </View>
-
       <View
         style={{
-          flex: 0.4,
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-          paddingBottom: '3%',
+          ...styles.searchView,
+          marginBottom: days === -1 ? 120 : 0,
         }}
       >
-        <PaymentHistoryIcon color={'#414251'} size="30" />
-        <Text
-          style={{
-            fontSize: 22,
-            marginLeft: 10,
-            color: '#414251',
-            fontWeight: 'bold',
-          }}
-        >
-          이용 내역
-        </Text>
-      </View>
-      <Card
-        style={{
-          marginBottom: '10%',
-          flex: 3.5,
-        }}
-      >
-        <ScrollView
-          style={{
-            flex: 1,
-            marginHorizontal: 20,
-            marginVertical: 10,
-          }}
-        >
-          <View style={{ flex: 1, alignItems: 'stretch' }}>
-            {payment.paymentList.content.map((payment, index) => (
-              <View key={payment.paymentId}>
-                {!match(payment.date) && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 13, color: '#414251' }}>
-                        {+payment.date.substring(5, 7)}월{' '}
-                        {+payment.date.substring(8, 10)}일
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 3,
-                        borderBottomColor: '#A09E9E',
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                      }}
-                    />
-                  </View>
-                )}
-                <Payment
-                  key={payment.paymentId}
-                  date={payment.date}
-                  store={payment.store}
-                  total={payment.total}
-                  categoryCode={payment.store.category.categoryCode}
-                  paymentitem={payment.paymentitem}
+        <View style={styles.searchButtons}>
+          {buttonList.map((button) => (
+            <TouchableOpacity
+              key={button.key}
+              style={{
+                ...styles.button,
+                backgroundColor: button.selected
+                  ? Colors.primary.backgroundColor
+                  : Colors.cancel.backgroundColor,
+              }}
+              activeOpacity={0.8}
+              onPress={() => handleButton(button)}
+            >
+              <Text
+                style={{
+                  ...styles.buttonText,
+                  color: button.selected
+                    ? Colors.primary.fontColor
+                    : Colors.cancel.fontColor,
+                }}
+              >
+                {button.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        {days === -1 && (
+          <View style={styles.searchCondition}>
+            <View style={styles.dateInput}>
+              <TouchableOpacity
+                onPress={() => setshowStartPicker(true)}
+                style={styles.datePicker}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.datePickerText}>{formatDate(start)}</Text>
+                <Icon
+                  name="calendar"
+                  size={20}
+                  color={Colors.primary.backgroundColor}
                 />
-              </View>
-            ))}
+              </TouchableOpacity>
+              <Text
+                style={{ fontSize: 20, color: Colors.primary.backgroundColor }}
+              >
+                ~
+              </Text>
+              <TouchableOpacity
+                onPress={() => setshowEndPicker(true)}
+                style={styles.datePicker}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.datePickerText}>{formatDate(end)}</Text>
+                <Icon
+                  name="calendar"
+                  size={20}
+                  color={Colors.primary.backgroundColor}
+                />
+              </TouchableOpacity>
+              {showStartPicker && (
+                <DateTimePicker
+                  value={start}
+                  mode="date" // default date
+                  display="default"
+                  onChange={onChangeStart}
+                  maximumDate={new Date()}
+                />
+              )}
+              {showEndPicker && (
+                <DateTimePicker
+                  value={end}
+                  mode="date" // default date
+                  display="default"
+                  onChange={onChangeEnd}
+                  maximumDate={new Date()}
+                />
+              )}
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="조회하기"
+                onPress={lookUpDate}
+                backgroundColor={Colors.primary.backgroundColor}
+                fontColor={Colors.primary.fontColor}
+              />
+            </View>
           </View>
-        </ScrollView>
+        )}
+      </View>
+      <View style={styles.historyLabel}>
+        <PaymentHistoryIcon color={'#b7b7b7'} size="30" />
+        <Text style={styles.historyText}>판매 내역</Text>
+      </View>
+      <Card style={styles.resultCard}>
+        <FlatList
+          data={paymentList}
+          renderItem={renderList}
+          style={styles.resultScroll}
+          keyExtractor={(item, index) => item.paymentId.toString()}
+          onEndReached={getData}
+          onEndReachedThreshold={1}
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+          ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
+          windowSize={size}
+        />
       </Card>
     </View>
   );
 };
-export default Wallet;
+
+export default PaymentHistory;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    flexDirection: 'column',
+    backgroundColor: 'white',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  searchView: {
+    marginTop: '5%',
     paddingHorizontal: '10%',
   },
-  contents: {
+  searchButtons: {
+    flexDirection: 'row',
+  },
+  button: {
     flex: 1,
-    // justifyContent: 'center',
+    marginHorizontal: 2,
+    justifyContent: 'center',
+    height: 43,
+    borderWidth: 0,
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontSize: windowWidth * 0.035,
+    fontWeight: 'bold',
+  },
+  searchCondition: {
+    flex: 2,
+    flexDirection: 'column',
+    marginTop: 10,
+  },
+  dateInput: {
+    flexDirection: 'row',
+    height: 50,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  datePicker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    height: 44,
+    width: '45%',
+    backgroundColor: Colors.cancel.backgroundColor,
+    borderColor: '#dddddd',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 12,
+  },
+  datePickerText: {
+    fontSize: 16,
+  },
+  historyLabel: {
+    flex: 0.1,
+    flexDirection: 'row',
     alignItems: 'flex-end',
-    marginRight: 20,
+    paddingBottom: '3%',
+    paddingHorizontal: '10%',
+  },
+  historyText: {
+    fontSize: 22,
+    marginLeft: 10,
+    color: '#b7b7b7',
+    fontWeight: 'bold',
+  },
+  resultCard: {
+    flex: 1,
+    marginBottom: '10%',
+    marginHorizontal: '10%',
+  },
+  resultScroll: {
+    flex: 1,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  dateSeperatorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateView: {
+    flex: 1,
+  },
+  dateText: {
+    fontSize: windowWidth * 0.033,
+    color: '#414251',
+  },
+  dateSeperator: {
+    flex: 3,
+    borderBottomColor: '#A09E9E',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
