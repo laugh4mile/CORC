@@ -35,40 +35,53 @@ const App = () => {
           {authCtx.isLoggedIn && <DashBoardPage />}
         </Route>
         <Route path="/dashboard" exact>
-          <DashBoardPage />
+          {authCtx.isLoggedIn && <DashBoardPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/user/register" exact>
-          <UserRegisterPage />
+          {authCtx.isLoggedIn && <UserRegisterPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/user/list" exact>
-          <UserListPage />
+          {authCtx.isLoggedIn && <UserListPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/user/list/:employeeNum">
-          <UserDetailPage />
+          {authCtx.isLoggedIn && <UserDetailPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/user/payment">
-          <PaymentPage />
+        <Route path="/user/payment" exact>
+          {authCtx.isLoggedIn && <PaymentPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/user/payment/:employeeNum">
-          <PaymentDetailPage />
+          {authCtx.isLoggedIn && <PaymentDetailPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/store/list">
-          <StoreListPage />
+        <Route path="/store/list" exact>
+          {authCtx.isLoggedIn && <StoreListPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/store/requested">
-          <RequestedStoresPage />
+        <Route path="/store/requested" exact>
+          {authCtx.isLoggedIn && <RequestedStoresPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/store/sales">
-          <SalesPage />
+        <Route path="/store/sales" exact>
+          {authCtx.isLoggedIn && <SalesPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/store/sales/:storeId">
-          <SalesDetailPage />
+        <Route path="/store/sales/:storeId">
+          {authCtx.isLoggedIn && <SalesDetailPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/statistics">
-          <StatisticsPage />
+        <Route path="/statistics" exact>
+          {authCtx.isLoggedIn && <StatisticsPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
-        <Route exact path="/settings" component={SettingsPage} />
-
+        <Route path="/settings" exact>
+          {authCtx.isLoggedIn && <SettingsPage />}
+          {!authCtx.isLoggedIn && <Redirect to="/" />}
+        </Route>
         <Route path="*">
           <Redirect to="/" />
         </Route>
