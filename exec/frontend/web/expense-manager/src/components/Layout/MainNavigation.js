@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
 import classes from "./MainNavigation.module.css";
@@ -17,10 +17,11 @@ import { ReactComponent as SignOutIcon } from "../../assets/signOut.svg";
 
 const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
+  const history = useHistory();
 
   const logoutHandler = () => {
     authCtx.logout();
-    // optional: redirect the user
+    history.replace("/");
   };
 
   return (
