@@ -15,7 +15,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import axios from 'axios';
 
 export default function QRScan() {
-  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
+  const SERVER_URL = 'http://192.168.0.2:8765/shinhan/';
 
   const userId = useSelector((state) => state.auth.userId);
   const [hasPermission, setHasPermission] = useState(null);
