@@ -8,12 +8,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import axios from "axios";
+import { SERVER_URL } from "../env";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import Colors from "../constants/Colors";
 import * as authActions from "../store/actions/auth";
-
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
 
 const { width, height } = Dimensions.get("window");
 
