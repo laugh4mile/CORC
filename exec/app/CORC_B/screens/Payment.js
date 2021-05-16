@@ -453,7 +453,14 @@ const Payment = (props) => {
               <View style={styles.footerItems}>
                 <Text
                   onPress={() => {
-                    setQRVisible(false);
+                    Alert.alert(null, "결제가 취소되었습니다.", [
+                      {
+                        text: "확인",
+                        onPress: () => {
+                          setQRVisible(false);
+                        },
+                      },
+                    ]);
                   }}
                   style={styles.textlink}
                 >
