@@ -2,7 +2,7 @@ import React from 'react';
 import HomeIcon from '../components/icons/HomeIcon';
 import CardIcon from '../components/icons/CardIcon';
 import QRCodeIcon from '../components/icons/QRCodeIcon';
-import SettingsIcon from '../components/icons/SettingsIcon';
+import UserIcon from '../components/icons/UserIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -55,7 +55,7 @@ export default function Footer() {
           options={{
             tabBarLabel: Boolean,
             tabBarIcon: ({ color }) => (
-              <SettingsIcon name="settings" color={color} size={26} />
+              <UserIcon name="settings" color={color} size={26} />
             ),
           }}
         />

@@ -16,8 +16,6 @@ import axios from 'axios';
 import SERVER_URL from '../env';
 
 export default function QRScan() {
-  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
-
   const userId = useSelector((state) => state.auth.userId);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -34,12 +32,10 @@ export default function QRScan() {
   const checkDeviceForHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
     setCompatible(compatible);
-    console.log('compatible : ', compatible);
   };
   const checkForFingerprints = async () => {
     let fingerprints = await LocalAuthentication.isEnrolledAsync();
     setFingerprints(fingerprints);
-    console.log('fingerprints : ', fingerprints);
   };
   const scanFingerprint = async () => {
     if (!compatible) {
@@ -50,7 +46,6 @@ export default function QRScan() {
     let result = await LocalAuthentication.authenticateAsync(
       'Scan your finger.'
     );
-    console.log('Scan Result:', result.success);
 
     setResult(result);
     if (result.success) {
@@ -161,7 +156,6 @@ export default function QRScan() {
                       ))}
                       <View
                         style={{
-                          // flex: 1,
                           borderBottomWidth: StyleSheet.hairlineWidth,
                           marginVertical: 15,
                         }}
@@ -289,8 +283,6 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    // padding: 35,
-    // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -302,7 +294,6 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 20,
-    // textAlign: 'center',
     fontSize: 25,
     fontWeight: 'bold',
   },
@@ -347,7 +338,6 @@ const styles = StyleSheet.create({
   alertModalView: {
     width: '70%',
     height: '21%',
-    // margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
@@ -365,13 +355,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    // flex: 1,
   },
   alertButtonClose: {
     backgroundColor: '#2196F3',
-    // flex: 1,
-    // alignItems: 'flex-end',
-    // justifyContent: 'flex-end',
   },
   alertTextStyle: {
     color: 'white',
