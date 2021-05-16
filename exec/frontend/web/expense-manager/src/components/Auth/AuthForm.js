@@ -63,7 +63,7 @@ const AuthForm = () => {
         </span>
       </div>
       <Card>
-        <form onSubmit={submitHandler}>
+        <form className={classes.form} onSubmit={submitHandler}>
           <Input
             type="email"
             id="email"
