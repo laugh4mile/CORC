@@ -51,8 +51,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
   @Query("select total from payment where date between :startDate and :endDate")
   List<Integer> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
 
-  @Query("select total from payment where storeId = :storeId and status != 0")
-  List<Integer> findTotalByStoreId(int storeId);
+  @Query("select total from payment where storeId = :storeId and status != 0 and date between :startDate and :endDate")
+  List<Integer> findTotalByStoreId(int storeId, LocalDateTime startDate, LocalDateTime endDate);
 
   @Query("select total from payment where storeId = :storeId and status = 1")
   List<Integer> findNotConfirmedByStoreId(int storeId);
