@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,16 +47,11 @@ public class LoginController {
 
   @ApiOperation(value = "웹 로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
   @PostMapping("/web")
-  public ResponseEntity<Map<String, Object>> webLogin(@RequestParam String email,
-      @RequestParam String password) {
+  public ResponseEntity<Map<String, Object>> webLogin(@RequestBody AdminDto admin) {
     logger.info("webLogin - 호출");
 
     HttpStatus status = null;
     Map<String, Object> resultMap = new HashMap<>();
-
-    AdminDto admin = new AdminDto();
-    admin.setEmail(email);
-    admin.setPassword(password);
 
     try {
       boolean loginUser = userService.loginAdmin(admin);
@@ -67,7 +63,7 @@ public class LoginController {
 
         // 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
         resultMap.put("auth-token", token);
-        resultMap.put("admin-email", email);
+        resultMap.put("admin-email", admin.getEmail());
         status = HttpStatus.ACCEPTED;
       } else {
         resultMap.put("message", "로그인 실패");

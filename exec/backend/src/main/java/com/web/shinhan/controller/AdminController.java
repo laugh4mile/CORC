@@ -399,7 +399,7 @@ public class AdminController {
   @GetMapping("/store/list/unassigned")
   public ResponseEntity<Map<String, Object>> findUnassignedStoreList(Pageable pageable)
       throws Exception {
-    logger.info("findStoreList - 호출");
+    logger.info("findUnassignedStoreList - 호출");
 
     Map<String, Object> resultMap = new HashMap<>();
     HttpStatus status = HttpStatus.OK;

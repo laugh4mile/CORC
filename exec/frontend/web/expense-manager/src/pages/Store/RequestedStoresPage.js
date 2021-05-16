@@ -36,7 +36,7 @@ const RequestedStoresPage = () => {
   if (error) {
     return <p className="centered focused">{error}</p>;
   }
-  console.log('loadedStores', loadedStores);
+
   if (
     status === 'completed' &&
     (!loadedStores.content || loadedStores.content.length === 0)

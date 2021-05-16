@@ -28,3 +28,15 @@
   margin-top: 12rem;
   letter-spacing: 0.05em;
 }
+
+.active {
+  /* background-color: #7986ff; */
+  background-color: #ffffff;
+  color: #696a6e;
+  z-index: 40;
+}
+
+.active:hover {
+  color: #696a6e;
+  background-color: #ffffff;
+}

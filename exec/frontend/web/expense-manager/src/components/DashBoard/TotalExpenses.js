@@ -1,24 +1,28 @@
 import { Fragment } from 'react';
 import { useEffect, useState } from 'react';
+import useHttp from '../../hooks/use-http';
+import LoadingSpinner from '../UI/LoadingSpinner/LoadingSpinner';
 
+import { useHistory } from 'react-router-dom';
 import React from 'react';
 import PropTypes from '../../utils/propTypes';
 import { Card, CardText, CardTitle, Progress } from 'reactstrap';
 import Typography from '../Typography';
 import classes from './Item.module.css';
 
-const Expenses = (props) => {
+const TotalExpenses = (props) => {
   const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
+  // const value = () => new { props.info.used };
   let value =
-    ((props.info.used - props.info.notConfirmed) / props.info.used) * 100;
-  // let value =
-  // ((props.info.used - props.info.notConfirmed) / props.info.used) * 100;
-  //
-
+    ((props.info.assignedTotal - props.info.used) / props.info.assignedTotal) *
+    100;
   // assignedTotal: 배정된 총 금액 (모든 cardLimit)
   // notConfirmed: 정산 예정 금액
   // used: 사용된 금액
 
+  console.log('propsCC', props.color);
+
+  // const value (used) => new props.info.used;
   return (
     <Card body>
       <div className="d-flex justify-content-between">
@@ -41,13 +45,13 @@ const Expenses = (props) => {
         </Typography>
       </CardText>
       <CardTitle className={`text-${props.color}`}>
-        {formatMoney(props.info.notConfirmed)}
+        {formatMoney(props.info.assignedTotal)}
       </CardTitle>
     </Card>
   );
 };
 
-Expenses.propTypes = {
+TotalExpenses.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
   number: PropTypes.oneOfType([
@@ -61,4 +65,4 @@ Expenses.propTypes = {
   }),
 };
 
-export default Expenses;
+export default TotalExpenses;

@@ -99,7 +99,7 @@ public class BoardController {
 
     try {
       List<PaymentDto> paymentList = paymentService.findAllByStatus();
-      resultMap.put("payment", paymentList);
+      resultMap.put("category", paymentList);
       status = HttpStatus.ACCEPTED;
     } catch (RuntimeException e) {
       resultMap.put("message", e.getMessage());
