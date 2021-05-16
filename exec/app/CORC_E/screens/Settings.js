@@ -1,83 +1,109 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import Button from '../components/Button';
+import axios from 'axios';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
-import { PieChart, LineChart } from 'react-native-chart-kit';
-import { Picker } from '@react-native-picker/picker';
+import Card from '../components/Card';
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const chartConfig = {
-    backgroundGradientFrom: '#1E2923',
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: '#08130D',
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false, // optional
-  };
-  const itemList = [
-    {
-      amount: 5,
-      color: '#400000',
-      legendFontColor: '#050505',
-      legendFontSize: 16,
-      priceSum: 'sibal',
-      storeName: '스타벅스',
-    },
-    {
-      amount: 1,
-      color: '#800000',
-      legendFontColor: '#050505',
-      legendFontSize: 16,
-      priceSum: 'sibal',
-      storeName: '형제슈퍼',
-    },
-  ];
-  console.log(itemList);
-  const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2, // optional
-      },
-    ],
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const userId = useSelector((state) => state.auth.userId);
+  const [userInfo, setUserInfo] = useState();
+  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
+  console.log('왜이러지');
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  useEffect(() => {
+    (async () => {
+      let response = await axios.get(
+        SERVER_URL + 'admin/user/info?userId=' + userId
+      );
+      // console.log(response.data);
+      // console.log(response.data.info.userName);
+      setUserInfo(response.data);
+      setIsLoading(false);
+    })();
+  }, []);
+
+  if (isLoading) {
+    return <></>;
+  }
   return (
     <View style={styles.container}>
-      <Button
-        title="Logout"
-        backgroundColor={Colors.cancel.backgroundColor}
-        fontColor={Colors.cancel.fontColor}
-        onPress={() => {
-          dispatch(authActions.logout());
+      <View style={styles.contents}>
+        <Text style={styles.title}>내 정보</Text>
+      </View>
+
+      <Card
+        style={{
+          marginBottom: '10%',
+          marginTop: '10%',
+          flex: 3,
+          justifyContent: 'center',
         }}
-      />
-      <LineChart
-        data={data}
-        width={200}
-        height={220}
-        chartConfig={chartConfig}
-        bezier
-      />
-      <PieChart
-        style={{ marginTop: '10%' }}
-        data={itemList}
-        width={200}
-        height={200}
-        chartConfig={chartConfig}
-        accessor={'amount'}
-        backgroundColor={'transparent'}
-        center={[10, 0]}
-        absolute
-      />
-      <Text style={styles.basisText}>[판매 수량 기준]</Text>
+      >
+        <ScrollView style={styles.scroll}>
+          <View style={styles.rows}>
+            <View style={styles.leftRow}>
+              <Text style={styles.indexColumn}>이름</Text>
+            </View>
+            <View style={styles.rightRow}>
+              <Text style={styles.contentColumn}>{userInfo.info.userName}</Text>
+            </View>
+          </View>
+          <View style={styles.rows}>
+            <View style={styles.leftRow}>
+              <Text style={styles.indexColumn}>사번</Text>
+            </View>
+            <View style={styles.rightRow}>
+              <Text style={styles.contentColumn}>
+                {userInfo.info.employeeNum}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rows}>
+            <View style={styles.leftRow}>
+              <Text style={styles.indexColumn}>email</Text>
+            </View>
+            <View style={styles.rightRow}>
+              <Text style={styles.contentColumn}>{userInfo.info.email}</Text>
+            </View>
+          </View>
+          <View style={styles.rows}>
+            <View style={styles.leftRow}>
+              <Text style={styles.indexColumn}>직급</Text>
+            </View>
+            <View style={styles.rightRow}>
+              <Text style={styles.contentColumn}>{userInfo.info.position}</Text>
+            </View>
+          </View>
+          <View style={styles.rows}>
+            <View style={styles.leftRow}>
+              <Text style={styles.indexColumn}>한도</Text>
+            </View>
+            <View style={styles.rightRow}>
+              <Text style={styles.contentColumn}>
+                {numberWithCommas(userInfo.info.cardLimit)}
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </Card>
+      <View style={styles.logoutButton}>
+        <Button
+          title="Logout"
+          backgroundColor={Colors.cancel.backgroundColor}
+          fontColor={Colors.cancel.fontColor}
+          onPress={() => {
+            dispatch(authActions.logout());
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -87,9 +113,54 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    height: 100,
-    justifyContent: 'center',
     paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    paddingHorizontal: '10%',
+  },
+  contents: {
+    // flex: 0.5,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    marginTop: '30%',
+    // backgroundColor: 'grey',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    // alignItems: 'flex-end',
+    // justifyContent: 'flex-end',
+  },
+  logoutButton: {
+    marginBottom: '20%',
+    // flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: 'red',
+  },
+  scroll: {
+    marginVertical: 10,
+  },
+  rows: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    // paddingVertical: 20,
+    marginVertical: 20,
+  },
+  leftRow: {
+    flex: 2,
+  },
+  rightRow: {
+    flex: 3,
+  },
+  indexColumn: {
+    marginLeft: 20,
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#3F3F42',
+  },
+  contentColumn: {
+    fontSize: 18,
+    color: '#3F3F42',
   },
 });

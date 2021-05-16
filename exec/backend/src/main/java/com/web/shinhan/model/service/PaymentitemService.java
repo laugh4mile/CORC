@@ -51,6 +51,7 @@ public class PaymentitemService {
     paymentitem.setProductName(productName);
     paymentitem.setPrice(price);
     paymentitem.setAmount(amount);
+    System.out.println(paymentitem);
     paymentitemRepository.save(paymentitem.toEntity());
 //		return 
 //		int paymentitemId = paymentitemRepository.findPaymentitemIdBy
