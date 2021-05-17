@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   FlatList,
+  DeviceEventEmitter,
 } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -66,6 +67,12 @@ const PaymentHistory = (props) => {
   const [size, setsize] = useState(20);
   const [page, setpage] = useState(0);
   const [isSent, setisSent] = useState(false);
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener("detailFromMain", () => {
+      handleButton(buttonList[1]); // initialize to one week selected button
+    });
+  }, []);
 
   useEffect(() => {
     if (days !== -1) {
@@ -178,9 +185,7 @@ const PaymentHistory = (props) => {
             <View style={styles.dateSeperator} />
           </View>
         )}
-        <PaymentItem
-          payment={item}
-        />
+        <PaymentItem payment={item} />
       </View>
     );
   };
@@ -291,20 +296,20 @@ const PaymentHistory = (props) => {
         <PaymentHistoryIcon color={"#b7b7b7"} size="30" />
         <Text style={styles.historyText}>판매 내역</Text>
       </View>
-      {/* <Card style={styles.resultCard}> */}
-      <FlatList
-        data={paymentList}
-        renderItem={renderList}
-        style={styles.resultScroll}
-        keyExtractor={(item, index) => item.paymentId.toString()}
-        onEndReached={getData}
-        onEndReachedThreshold={1}
-        refreshing={isLoading}
-        onRefresh={handleRefresh}
-        ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
-        windowSize={size}
-      />
-      {/* </Card> */}
+      <Card style={styles.resultCard}>
+        <FlatList
+          data={paymentList}
+          renderItem={renderList}
+          style={styles.resultScroll}
+          keyExtractor={(item, index) => item.paymentId.toString()}
+          onEndReached={getData}
+          onEndReachedThreshold={1}
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+          ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
+          windowSize={size}
+        />
+      </Card>
     </View>
   );
 };
@@ -390,23 +395,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: "5%",
     paddingTop: "3%",
-    marginBottom: "10%",
-
-    marginHorizontal: "10%",
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 15,
-    borderColor: 0,
-    // ios
-    shadowColor: "#000000",
-    shadowOpacity: 0.21,
-    shadowRadius: 10,
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    // android
-    elevation: 15,
   },
   dateSeperatorBox: {
     flexDirection: "row",
