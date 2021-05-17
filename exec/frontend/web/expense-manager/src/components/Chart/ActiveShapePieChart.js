@@ -1,12 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  PieChart,
-  Pie,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+import { PieChart, Pie, Sector, Cell } from "recharts";
 
 import "./Chart.css";
 import classes from "./Chart.module.css";
