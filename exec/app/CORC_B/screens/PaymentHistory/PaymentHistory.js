@@ -72,10 +72,6 @@ const PaymentHistory = (props) => {
   useEffect(() => {
     DeviceEventEmitter.addListener("detailFromMain", () => {
       handleButton(buttonList[1]); // initialize to one week selected button
-      if (days === buttonList[1].value) {
-        getData();
-        return;
-      }
     });
   }, []);
 
@@ -199,7 +195,7 @@ const PaymentHistory = (props) => {
       //       <View style={styles.dateSeparator} />
       //     </View>
       //   )}
-        <HistoryItem payment={item} />
+      <HistoryItem payment={item} />
       // </View>
     );
   };
