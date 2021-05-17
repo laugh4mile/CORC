@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  DeviceEventEmitter,
 } from "react-native";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Colors from "../constants/Colors";
 import Card from "../components/Card";
@@ -48,9 +50,11 @@ const Main = (props) => {
   const [paymentList, setPaymentList] = React.useState({});
   const [transacAmount, setTransacAmount] = React.useState({});
 
-  React.useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const getData = async () => {
     setIsLoading(true);
@@ -165,7 +169,8 @@ const Main = (props) => {
         <TouchableOpacity
           style={styles.goDetail}
           onPress={() => {
-            props.navigation.navigate("PaymentHistory");
+            DeviceEventEmitter.emit("detailFromMain");
+            props.navigation.navigate("History", { screen: "PaymentHistory" });
           }}
           activeOpacity={1}
         >
