@@ -1,5 +1,6 @@
 package com.web.shinhan.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,11 @@ public class BoardController {
     try {
       for (int i = 1; i <= 12; i++) {
         int payment = paymentService.expenseByMonth(i, year);
-        resultMap.put(i, payment);
+        int confirmed = paymentService.confirmedByMonth(i, year);
+        List<Integer> temp = new ArrayList<>();
+        temp.add(payment);
+        temp.add(confirmed);
+        resultMap.put(i, temp);
       }
       status = HttpStatus.ACCEPTED;
     } catch (RuntimeException e) {

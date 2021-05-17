@@ -289,7 +289,8 @@ const DashBoardPage = () => {
   for (let i = 1; i <= 12; i++) {
     monthData.push({
       name: i,
-      사용한금액: loadedByMonth[i],
+      '사용된 금액': loadedByMonth[i][0],
+      '정산된 금액': loadedByMonth[i][1],
     });
   }
 
@@ -465,10 +466,11 @@ const DashBoardPage = () => {
               <Legend />
               <Line
                 type="monotone"
-                dataKey="사용한금액"
+                dataKey="사용된 금액"
                 stroke="#8884d8"
                 activeDot={{ r: 8 }}
               />
+              <Line type="monotone" dataKey="정산된 금액" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>
         </section>
