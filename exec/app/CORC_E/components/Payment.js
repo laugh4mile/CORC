@@ -32,7 +32,6 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
   const month = date.substring(5, 7);
   const day = date.substring(8, 10);
   const time = date.substring(11, 16);
-  // console.log('paymentitem : ', paymentitem);
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -56,8 +55,6 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
             <ScrollView
               style={{
                 flex: 1,
-                // marginHorizontal: 20,
-                // marginTop: 10,
               }}
             >
               <Text style={styles.modalText}>{store.storeName}</Text>
@@ -173,18 +170,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: 22,
     backgroundColor: 'rgba(0,0,0,0.50)',
   },
   modalView: {
-    // flex: 1,
     width: '85%',
     height: '70%',
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

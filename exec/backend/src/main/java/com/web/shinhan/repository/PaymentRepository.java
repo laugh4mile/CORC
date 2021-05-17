@@ -34,25 +34,30 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
   @Query("select p from payment p where department = :department")
   Page<Payment> findAllByDepartment(String department, Pageable pageable);
 
-  @Query("select p from payment p where status = 1")
+  @Query("select p from payment p where status != 0")
   List<Payment> findAllByStatus();
 
-  @Query("select total from payment where status != 0")
+  @Query(value = "select p.total from payment p join store s using(storeId) where p.status != 0 and s.accepted = 2", nativeQuery = true)
+//  @Query("select total from payment where status != 0")
   List<Integer> calcTotalExpense();
 
   Payment findByPaymentId(int userId);
 
-  @Query("select total from payment where status = 1")
+  @Query(value = "select p.total from payment p join store s using(storeId) where p.status = 1 and s.accepted = 2", nativeQuery = true)
+//  @Query("select total from payment where status = 1")
   List<Integer> findTotalByStatus();
 
   @Query("select storeId, sum(total) as total from payment group by storeId")
   List<Integer[]> findTotalByStatusandStoreId();
 
-  @Query("select total from payment where date between :startDate and :endDate")
+  @Query("select total from payment where date between :startDate and :endDate and status != 0")
   List<Integer> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
 
-  @Query("select total from payment where storeId = :storeId and status != 0")
-  List<Integer> findTotalByStoreId(int storeId);
+  @Query("select total from payment where date between :startDate and :endDate and status = 2")
+  List<Integer> confirmedByMonth(LocalDateTime startDate, LocalDateTime endDate);
+
+  @Query("select total from payment where storeId = :storeId and status != 0 and date between :startDate and :endDate")
+  List<Integer> findTotalByStoreId(int storeId, LocalDateTime startDate, LocalDateTime endDate);
 
   @Query("select total from payment where storeId = :storeId and status = 1")
   List<Integer> findNotConfirmedByStoreId(int storeId);

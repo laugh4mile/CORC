@@ -9,7 +9,10 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons as Icon,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -48,9 +51,12 @@ const RegistStore = (props) => {
   const accountRef = useRef();
   const contactRef = useRef();
 
-  const emailReg = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+  const emailReg =
+    /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const [isEmailVaild, setisEmailVaild] = useState(false);
-  const [checkEmailColor, setcheckEmailColor] = useState("#a5a5a8");
+  const [isEmailUsable, setisEmailUsable] = useState(false);
+
+  const [isCrNumValid, setisCrNumVaild] = useState(false);
 
   useEffect(() => {
     getSido();
@@ -59,6 +65,26 @@ const RegistStore = (props) => {
   useEffect(() => {
     getGugun();
   }, [sidoCode]);
+
+  useEffect(() => {
+    setisCrNumVaild(true);
+    if (!checkCrNumValid(crNum)) {
+      setisCrNumVaild(false);
+    }
+  }, [crNum]);
+
+  useEffect(() => {
+    setisEmailVaild(true);
+
+    if (!checkEmailValid(email)) {
+      setisEmailVaild(false);
+    }
+
+    // when email usable by double-check, if email changed, set usable false
+    if (isEmailUsable) {
+      setisEmailUsable(false);
+    }
+  }, [email]);
 
   useEffect(() => {
     let mounted = true;
@@ -96,49 +122,56 @@ const RegistStore = (props) => {
         { text: "확인", onPress: () => crNumRef.current.focus() },
       ]);
     }
+    if (!isCrNumValid) {
+      return Alert.alert(
+        null,
+        "사업자 등록번호가 유효하지 않습니다.\n확인해 주세요.",
+        [{ text: "확인", onPress: () => crNumRef.current.focus() }]
+      );
+    }
     if (!storeName) {
       return Alert.alert(null, "가맹점명을 입력해 주세요.", [
         { text: "확인", onPress: () => storeNameRef.current.focus() },
       ]);
     }
-    if (!categoryCode || categoryCode.toString().trim().length < 5) {
+    if (!categoryCode || categoryCode.toString().trim().length !== 5) {
       return Alert.alert(null, "업종코드를 확인해 주세요.", [
         { text: "확인", onPress: () => categoryCodeRef.current.focus() },
       ]);
     }
     if (!sidoCode || sidoCode === "선택") {
-      return Alert.alert(null, "시/도를 선택해 주세요!", [{ text: "확인" }]);
+      return Alert.alert(null, "시/도를 선택해 주세요.", [{ text: "확인" }]);
     }
     if (!gugunCode || gugunCode === "선택") {
-      return Alert.alert(null, "구/군을 선택해 주세요!", [{ text: "확인" }]);
+      return Alert.alert(null, "구/군을 선택해 주세요.", [{ text: "확인" }]);
     }
     if (!email) {
-      return Alert.alert(null, "이메일을 입력해 주세요!", [
+      return Alert.alert(null, "이메일을 입력해 주세요.", [
         { text: "확인", onPress: () => emailRef.current.focus() },
       ]);
     }
-    if (!isEmailVaild) {
-      return Alert.alert(null, "이메일 중복 확인을 해 주세요!", [
+    if (!isEmailUsable) {
+      return Alert.alert(null, "이메일 중복여부를 확인해 주세요.", [
         { text: "확인" },
       ]);
     }
     if (!password) {
-      return Alert.alert(null, "비밀번호를 입력해 주세요!", [
+      return Alert.alert(null, "비밀번호를 입력해 주세요.", [
         { text: "확인", onPress: () => passwordRef.current.focus() },
       ]);
     }
     if (!bankName) {
-      return Alert.alert(null, "은행명을 입력해 주세요!", [
+      return Alert.alert(null, "은행명을 입력해 주세요.", [
         { text: "확인", onPress: () => bankNameRef.current.focus() },
       ]);
     }
     if (!account) {
-      return Alert.alert(null, "계좌번호를 입력해 주세요!", [
+      return Alert.alert(null, "계좌번호를 입력해 주세요.", [
         { text: "확인", onPress: () => accountRef.current.focus() },
       ]);
     }
     if (!contact) {
-      return Alert.alert(null, "연락처를 입력해 주세요!", [
+      return Alert.alert(null, "연락처를 입력해 주세요.", [
         { text: "확인", onPress: () => contactRef.current.focus() },
       ]);
     }
@@ -160,7 +193,7 @@ const RegistStore = (props) => {
     seterror(null);
     try {
       await dispatch(action);
-      return Alert.alert(null, message, [
+      return Alert.alert(null, "신청이 완료되었습니다.", [
         { text: "확인", onPress: () => props.navigation.goBack() },
       ]);
     } catch (e) {
@@ -168,51 +201,106 @@ const RegistStore = (props) => {
     }
   };
 
-  const checkEmail = async () => {
+  const checkEmailValid = (email) => {
     if (!email) {
-      setisEmailVaild(false)
-      setcheckEmailColor("red");
-      return Alert.alert(null, "이메일을 입력해 주세요!", [
-        { text: "확인", onPress: () => emailRef.current.focus() },
-      ]);
+      return false;
     }
     if (!emailReg.test(email)) {
-      setisEmailVaild(false)
-      setcheckEmailColor("red");
-      return Alert.alert(null, "이메일 형식에 맞춰주세요!", [
+      return false;
+    }
+    return true;
+  };
+
+  // email input handler
+  const emailHandler = (text) => {
+    setEmail(text);
+  };
+
+  // email double check button handler
+  const emailDoubleCheckHandler = async () => {
+    if (!isEmailVaild) {
+      return Alert.alert(null, "이메일을 확인해 주세요.", [
         { text: "확인", onPress: () => emailRef.current.focus() },
       ]);
     }
 
-    let action = authActions.checkEmail(email);
+    let action = authActions.checkEmail(email.trim());
     let existed = await dispatch(action);
-    // console.log(typeof existed);
-    changeEmail(existed)
+
+    if (existed) {
+      return Alert.alert(null, "이미 사용중인 이메일입니다.", [
+        {
+          text: "확인",
+          onPress: () => {
+            setisEmailUsable(false);
+            emailRef.current.focus();
+          },
+        },
+      ]);
+    }
+
+    Alert.alert(null, "사용 가능한 이메일입니다.", [
+      {
+        text: "취소",
+        onPress: () => {
+          setisEmailUsable(false);
+          emailRef.current.focus();
+        },
+      },
+      {
+        text: "사용",
+        onPress: () => {
+          setisEmailUsable(true);
+          passwordRef.current.focus();
+        },
+      },
+    ]);
   };
 
-  const changeEmail = (bool) => {
-    setisEmailVaild(!bool);
-    setcheckEmailColor(bool ? "red" : "green")
-  }
+  // crnum input handler
+  const crNumHandler = (crNum) => {
+    setCrNum(crNum);
+  };
+
+  // return crnum is valid
+  const checkCrNumValid = (crNum) => {
+    if (crNum === "" || crNum.toString().length !== 12) {
+      return false;
+    }
+    if ((crNum = (crNum + "").match(/\d{1}/g)).length != 10) {
+      return false;
+    }
+
+    var sum = 0,
+      key = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+
+    for (var i = 0; i < 9; i++) {
+      sum += key[i] * Number(crNum[i]);
+    }
+
+    return (
+      10 - ((sum + Math.floor((key[8] * Number(crNum[8])) / 10)) % 10) ==
+      Number(crNum[9])
+    );
+  };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}> */}
-      {/* <View style={styles.headerView}>
-          <Text style={styles.headerText}>가맹점 신청</Text>
-        </View> */}
-      {/* </View> */}
       <View style={styles.form}>
         <ScrollView style={{ flex: 6 }}>
           <Text style={styles.inputLabel}>사업자 등록번호</Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Input
-              style={{ flex: 1 }}
+              style={
+                !crNum
+                  ? { flex: 1 }
+                  : isCrNumValid
+                  ? { flex: 1 }
+                  : { flex: 1, borderColor: "red" }
+              }
               maxLength={12}
-              placeholder="사업자 등록번호"
-              onChangeText={(text) => {
-                setCrNum(text);
-              }}
+              placeholder="123-45-67891"
+              onChangeText={(text) => crNumHandler(text)}
               returnKeyType="next"
               onSubmitEditing={() => {
                 storeNameRef.current.focus();
@@ -220,26 +308,12 @@ const RegistStore = (props) => {
               blurOnSubmit={false}
               ref={crNumRef}
             />
-            <FontAwesome.Button
-              name="search"
-              onPress={() => {
-                Alert.alert(null, "검색버튼", [{ text: "확인" }]);
-              }}
-              backgroundColor="white"
-              color="#a5a5a8"
-              size={imgSize}
-              underlayColor="white"
-              iconStyle={{ marginRight: 0 }}
-              activeOpacity={0.6}
-            />
           </View>
           <Text style={styles.inputLabel}>가맹점명</Text>
           <Input
             maxLength={45}
             placeholder="가맹점명"
-            onChangeText={(text) => {
-              setStoreName(text);
-            }}
+            onChangeText={(text) => setStoreName(text)}
             returnKeyType="next"
             onSubmitEditing={() => {
               categoryCodeRef.current.focus();
@@ -248,13 +322,12 @@ const RegistStore = (props) => {
             ref={storeNameRef}
           />
           <Text style={styles.inputLabel}>업종코드</Text>
-          {/* Picker */}
           <Input
             maxLength={5}
-            placeholder="세세분류(5자리 숫자)의 코드를 입력해 주세요."
-            onChangeText={(text) => {
-              setCategoryCode(text);
-            }}
+            placeholder={
+              "표준산업분류(5자리 숫자, 세세분류) 코드를\n입력해 주세요."
+            }
+            onChangeText={(text) => setCategoryCode(text)}
             returnKeyType="next"
             onSubmitEditing={() => {
               emailRef.current.focus();
@@ -263,8 +336,10 @@ const RegistStore = (props) => {
             ref={categoryCodeRef}
           />
           <Text style={styles.inputLabel}>주소지</Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={styles.pickerView}>
+          <View
+            style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }}
+          >
+            <View style={{ ...styles.pickerView, marginRight: 5 }}>
               <Picker
                 selectedValue={sidoCode}
                 onValueChange={(value, index) => setsidoCode(value)}
@@ -308,32 +383,48 @@ const RegistStore = (props) => {
           <Text style={styles.inputLabel}>이메일</Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Input
-              style={{ flex: 1 }}
+              style={
+                !email
+                  ? { flex: 1 }
+                  : isEmailVaild
+                  ? { flex: 1 }
+                  : { flex: 1, borderColor: "red" }
+              }
               maxLength={45}
-              placeholder="이메일"
+              placeholder="example@example.com"
               keyboardType="email-address"
-              onChangeText={(text) => {
-                setEmail(text);
-                if (isEmailVaild) changeEmail(true);
-              }}
+              onChangeText={(text) => emailHandler(text)}
               returnKeyType="next"
               onSubmitEditing={() => {
-                checkEmail();
                 passwordRef.current.focus();
               }}
               blurOnSubmit={false}
               ref={emailRef}
-            />
-            <FontAwesome.Button
-              name="check"
-              onPress={() => checkEmail()}
+            >
+              {isEmailUsable && <Icon name={"check"} color={"green"} size={imgSize}/>}
+            </Input>
+            {/* <FontAwesome.Button
+              name="search"
+              onPress={() => {
+                emailDoubleCheckHandler();
+              }}
               backgroundColor="white"
-              color={checkEmailColor}
+              color="#a5a5a8"
               size={imgSize}
               underlayColor="white"
               iconStyle={{ marginRight: 0 }}
               activeOpacity={0.6}
-            />
+            /> */}
+            <View>
+              <Button
+                title="중복확인"
+                onPress={() => {
+                  emailDoubleCheckHandler();
+                }}
+                style={{ paddingHorizontal: 10, marginLeft: 5 }}
+                fontStyle={{ fontSize: 13 }}
+              />
+            </View>
           </View>
           <Text style={styles.inputLabel}>비밀번호</Text>
           <Input
@@ -341,9 +432,7 @@ const RegistStore = (props) => {
             placeholder="비밀번호"
             returnKeyType="next"
             type="password"
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
+            onChangeText={(text) => setPassword(text)}
             returnKeyType="next"
             onSubmitEditing={() => {
               bankNameRef.current.focus();
@@ -355,9 +444,7 @@ const RegistStore = (props) => {
           <Input
             maxLength={45}
             placeholder="은행명"
-            onChangeText={(text) => {
-              setbankName(text);
-            }}
+            onChangeText={(text) => setbankName(text)}
             returnKeyType="next"
             onSubmitEditing={() => {
               accountRef.current.focus();
@@ -369,9 +456,7 @@ const RegistStore = (props) => {
           <Input
             keyboardType="numeric"
             placeholder="계좌번호"
-            onChangeText={(text) => {
-              setaccount(text);
-            }}
+            onChangeText={(text) => setaccount(text)}
             returnKeyType="next"
             onSubmitEditing={() => {
               contactRef.current.focus();
@@ -396,8 +481,6 @@ const RegistStore = (props) => {
       </View>
       <Text style={styles.reqText}>* 모든 항목은 필수 항목입니다.</Text>
       <View style={styles.footer}>
-        {/* <View style={styles.reqView}> */}
-        {/* </View> */}
         <Button title="신청" onPress={() => applyFor()} />
       </View>
     </View>

@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   FlatList,
+  DeviceEventEmitter,
 } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -18,8 +19,7 @@ import Card from "../../components/Card";
 import PaymentItem from "../../components/PaymentItem";
 import Colors from "../../constants/Colors";
 import PaymentHistoryIcon from "../../navigations/icons/PaymentHistoryIcon";
-
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+import { SERVER_URL } from "../../env";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
@@ -37,9 +37,6 @@ const getMMDD_DT = (date) => {
     dayOfWeek[_date.getDay()]
   })`;
 };
-
-const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
 
 const dateStrToNum = (date) => {
   let year = date.getFullYear();
@@ -65,16 +62,17 @@ const PaymentHistory = (props) => {
   const [days, setDays] = useState(7);
   const [start, setstart] = useState(dateFrom(30));
   const [end, setend] = useState(new Date());
-  const [final, setFinal] = useState(false);
   const [showStartPicker, setshowStartPicker] = useState(false);
   const [showEndPicker, setshowEndPicker] = useState(false);
   const [size, setsize] = useState(20);
   const [page, setpage] = useState(0);
   const [isSent, setisSent] = useState(false);
 
-  //   useEffect(() => {
-  //     getData();
-  //   }, []);
+  useEffect(() => {
+    DeviceEventEmitter.addListener("detailFromMain", () => {
+      handleButton(buttonList[1]); // initialize to one week selected button
+    });
+  }, []);
 
   useEffect(() => {
     if (days !== -1) {
@@ -98,11 +96,9 @@ const PaymentHistory = (props) => {
     );
 
     let payments = response.data.paymentList.content;
-    let last = response.data.paymentList.last;
 
-    // setPaymentList([...payments]);
-    setPaymentList([...paymentList, ...payments]);
-    // setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
+    // setPaymentList([...paymentList, ...payments]);
+    setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
     setpage(page + 1);
 
     setIsLoading(false);
@@ -163,24 +159,19 @@ const PaymentHistory = (props) => {
     setPaymentList([]);
     setstart(dateFrom(30));
     setend(new Date());
-    // setFinal(false);
     setDays(button.value);
   };
 
   const onChangeStart = (event, selectedDate) => {
-    // if (selectedDate !== undefined) {
     const currentDate = selectedDate || start;
     setshowStartPicker(Platform.OS === "ios");
     setstart(currentDate);
-    // }
   };
 
   const onChangeEnd = (event, selectedDate) => {
-    // if (selectedDate !== undefined) {
     const currentDate = selectedDate || end;
     setshowEndPicker(Platform.OS === "ios");
     setend(currentDate);
-    // }
   };
 
   const renderList = ({ item }) => {
@@ -194,10 +185,7 @@ const PaymentHistory = (props) => {
             <View style={styles.dateSeperator} />
           </View>
         )}
-        <PaymentItem
-          payment={item}
-          formatMoney={(money) => formatMoney(money)}
-        />
+        <PaymentItem payment={item} />
       </View>
     );
   };
@@ -308,20 +296,20 @@ const PaymentHistory = (props) => {
         <PaymentHistoryIcon color={"#b7b7b7"} size="30" />
         <Text style={styles.historyText}>판매 내역</Text>
       </View>
-      {/* <Card style={styles.resultCard}> */}
-      <FlatList
-        data={paymentList}
-        renderItem={renderList}
-        style={styles.resultScroll}
-        keyExtractor={(item, index) => item.paymentId.toString()}
-        onEndReached={getData}
-        onEndReachedThreshold={1}
-        refreshing={isLoading}
-        onRefresh={handleRefresh}
-        ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
-        windowSize={size}
-      />
-      {/* </Card> */}
+      <Card style={styles.resultCard}>
+        <FlatList
+          data={paymentList}
+          renderItem={renderList}
+          style={styles.resultScroll}
+          keyExtractor={(item, index) => item.paymentId.toString()}
+          onEndReached={getData}
+          onEndReachedThreshold={1}
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+          ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
+          windowSize={size}
+        />
+      </Card>
     </View>
   );
 };
@@ -407,23 +395,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: "5%",
     paddingTop: "3%",
-    marginBottom: "10%",
-
-    marginHorizontal: "10%",
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 15,
-    borderColor: 0,
-    // ios
-    shadowColor: "#000000",
-    shadowOpacity: 0.21,
-    shadowRadius: 10,
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    // android
-    elevation: 15,
   },
   dateSeperatorBox: {
     flexDirection: "row",
@@ -438,7 +409,7 @@ const styles = StyleSheet.create({
     color: "#414251",
   },
   dateSeperator: {
-    flex: 3,
+    flex: 2.5,
     borderBottomColor: "#A09E9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },

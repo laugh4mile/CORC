@@ -11,11 +11,11 @@ import { Picker } from '@react-native-picker/picker';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Colors from '../constants/Colors';
+import SERVER_URL from '../env';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -131,7 +131,7 @@ const Statistics = () => {
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
-      `${SERVER_URL}user/payment/custom?userId=${userId}&forStatistics=true&startDate=${dateStrToNum(
+      `${SERVER_URL}/user/payment/custom?userId=${userId}&forStatistics=true&startDate=${dateStrToNum(
         dateFrom(startDate)
       )}&endDate=${dateStrToNum(new Date())}`
     );
@@ -235,7 +235,6 @@ const Statistics = () => {
           ).toString(16);
       }
     }
-    // console.log(categories);
     setStoreList(sort(stores, 'priceSum', 'amount'));
     setitemList(sort(copiedItemList, 'amount', 'priceSum'));
     setCategoryList(sort(categories, 'priceSum', 'amount'));

@@ -1,12 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import SERVER_URL from '../../env';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
-// export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
-const SERVER_URL = 'http://192.168.219.101:8765/shinhan';
 
 export const setDidTryAL = () => {
   return { type: SET_DID_TRY_AL };
@@ -14,7 +13,6 @@ export const setDidTryAL = () => {
 
 export const authenticate = (userId, token, expiryTime) => {
   return (dispatch) => {
-    // dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
   };
 };
@@ -63,19 +61,8 @@ export const login = (email, password) => {
     }
     let token = response.data['auth-token'];
     let userid = response.data['user-userid'];
-    // let email = response.data['user-email'];
-    dispatch(
-      authenticate(
-        userid,
-        token,
-        // parseInt(resData.expiresIn) * 1000
-        3600
-      )
-    );
-    const expirationDate = new Date(
-      // new Date().getTime() + parseInt(resData.expiresIn) * 1000
-      new Date().getTime() + 360 * 1000
-    );
+    dispatch(authenticate(userid, token, 3600));
+    const expirationDate = new Date(new Date().getTime() + 360 * 1000);
     saveDataToStorage(token, userid, expirationDate);
   };
 };
@@ -84,14 +71,7 @@ export const autologin = (data) => {
   return (dispatch) => {
     let token = data['token'];
     let userid = data['userId'];
-    dispatch(
-      authenticate(
-        userid,
-        token,
-        // parseInt(resData.expiresIn) * 1000
-        3600
-      )
-    );
+    dispatch(authenticate(userid, token, 3600));
   };
 };
 

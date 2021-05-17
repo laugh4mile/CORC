@@ -7,24 +7,21 @@ import axios from 'axios';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
 import Card from '../components/Card';
+import SERVER_URL from '../env';
 
 const Settings = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const userId = useSelector((state) => state.auth.userId);
   const [userInfo, setUserInfo] = useState();
-  const SERVER_URL = 'http://192.168.219.101:8765/shinhan/';
-  console.log('왜이러지');
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   useEffect(() => {
     (async () => {
       let response = await axios.get(
-        SERVER_URL + 'admin/user/info?userId=' + userId
+        SERVER_URL + '/admin/user/info?userId=' + userId
       );
-      // console.log(response.data);
-      // console.log(response.data.info.userName);
       setUserInfo(response.data);
       setIsLoading(false);
     })();
@@ -117,24 +114,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: '10%',
   },
   contents: {
-    // flex: 0.5,
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
     marginTop: '30%',
-    // backgroundColor: 'grey',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    // alignItems: 'flex-end',
-    // justifyContent: 'flex-end',
   },
   logoutButton: {
     marginBottom: '20%',
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // backgroundColor: 'red',
   },
   scroll: {
     marginVertical: 10,
@@ -144,7 +133,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
-    // paddingVertical: 20,
     marginVertical: 20,
   },
   leftRow: {
