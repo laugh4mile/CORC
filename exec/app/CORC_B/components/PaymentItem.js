@@ -13,8 +13,12 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 const closeBtnSize = width * 0.08;
 
-const Payment = (props) => {
-  const { payment, formatMoney } = props;
+const formatMoney = (number) =>
+  number !== null && +number >= 0
+    ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    : null;
+
+const Payment = ({ payment }) => {
   const [isModalVisible, setmodalVisible] = React.useState(false);
 
   const toggleModal = () => {
@@ -58,13 +62,13 @@ const Payment = (props) => {
                 {payment.store.storeName}
               </Text>
               <Text style={styles.modalDate}>
-                {payment.date.toString().slice(0, 16).replace("T", " ")}
+                {payment.date.toString().slice(0, 16).replace(/T/gi, " ")}
               </Text>
               <ScrollView style={styles.modalScrollView}>
                 {payment.paymentitem.map((item) => (
                   <View
                     key={item.paymentItemId.toString()}
-                    style={{...styles.modalTextBothSides, flex: 1}}
+                    style={{ ...styles.modalTextBothSides, flex: 1 }}
                   >
                     <Text style={styles.modalScrollItemFont}>
                       {item.productName} x {item.amount}
@@ -75,9 +79,7 @@ const Payment = (props) => {
                   </View>
                 ))}
               </ScrollView>
-              <View
-                style={styles.modalTextBothSides}
-              >
+              <View style={styles.modalTextBothSides}>
                 <Text style={styles.modalMoneyFont}>Total</Text>
                 <Text style={styles.modalMoneyFont}>
                   ￦ {formatMoney(payment.total)}

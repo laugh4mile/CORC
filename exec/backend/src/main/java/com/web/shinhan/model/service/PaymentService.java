@@ -8,6 +8,8 @@ import com.web.shinhan.model.TransactionDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.repository.StoreRepository;
 import com.web.shinhan.repository.UserRepository;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +187,11 @@ public class PaymentService {
 
   public int findTotal(int storeId) {
     int total = 0;
-    List<Integer> totalUsed = paymentRepository.findTotalByStoreId(storeId);
+    LocalDate now = LocalDate.now();
+    LocalDateTime startDate = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
+    LocalDateTime endDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.lengthOfMonth(), 23, 59, 59);
+    System.out.println(startDate + ", " + endDate);
+    List<Integer> totalUsed = paymentRepository.findTotalByStoreId(storeId, startDate, endDate);
     for (int nc : totalUsed) {
       total += nc;
     }

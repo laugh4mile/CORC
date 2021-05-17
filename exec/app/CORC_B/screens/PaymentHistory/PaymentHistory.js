@@ -18,8 +18,7 @@ import Card from "../../components/Card";
 import PaymentItem from "../../components/PaymentItem";
 import Colors from "../../constants/Colors";
 import PaymentHistoryIcon from "../../navigations/icons/PaymentHistoryIcon";
-
-const SERVER_URL = "http://192.168.0.14:8765/shinhan";
+import { SERVER_URL } from "../../env";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
@@ -37,9 +36,6 @@ const getMMDD_DT = (date) => {
     dayOfWeek[_date.getDay()]
   })`;
 };
-
-const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
 
 const dateStrToNum = (date) => {
   let year = date.getFullYear();
@@ -65,16 +61,11 @@ const PaymentHistory = (props) => {
   const [days, setDays] = useState(7);
   const [start, setstart] = useState(dateFrom(30));
   const [end, setend] = useState(new Date());
-  const [final, setFinal] = useState(false);
   const [showStartPicker, setshowStartPicker] = useState(false);
   const [showEndPicker, setshowEndPicker] = useState(false);
   const [size, setsize] = useState(20);
   const [page, setpage] = useState(0);
   const [isSent, setisSent] = useState(false);
-
-  //   useEffect(() => {
-  //     getData();
-  //   }, []);
 
   useEffect(() => {
     if (days !== -1) {
@@ -98,11 +89,9 @@ const PaymentHistory = (props) => {
     );
 
     let payments = response.data.paymentList.content;
-    let last = response.data.paymentList.last;
 
-    // setPaymentList([...payments]);
-    setPaymentList([...paymentList, ...payments]);
-    // setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
+    // setPaymentList([...paymentList, ...payments]);
+    setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
     setpage(page + 1);
 
     setIsLoading(false);
@@ -163,24 +152,19 @@ const PaymentHistory = (props) => {
     setPaymentList([]);
     setstart(dateFrom(30));
     setend(new Date());
-    // setFinal(false);
     setDays(button.value);
   };
 
   const onChangeStart = (event, selectedDate) => {
-    // if (selectedDate !== undefined) {
     const currentDate = selectedDate || start;
     setshowStartPicker(Platform.OS === "ios");
     setstart(currentDate);
-    // }
   };
 
   const onChangeEnd = (event, selectedDate) => {
-    // if (selectedDate !== undefined) {
     const currentDate = selectedDate || end;
     setshowEndPicker(Platform.OS === "ios");
     setend(currentDate);
-    // }
   };
 
   const renderList = ({ item }) => {
@@ -196,7 +180,6 @@ const PaymentHistory = (props) => {
         )}
         <PaymentItem
           payment={item}
-          formatMoney={(money) => formatMoney(money)}
         />
       </View>
     );
@@ -438,7 +421,7 @@ const styles = StyleSheet.create({
     color: "#414251",
   },
   dateSeperator: {
-    flex: 3,
+    flex: 2.5,
     borderBottomColor: "#A09E9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },

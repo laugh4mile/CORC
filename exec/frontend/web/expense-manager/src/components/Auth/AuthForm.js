@@ -8,6 +8,8 @@ import Button from "../UI/Button/Button";
 import Card from "../UI/Card/Card";
 import Input from "../UI/Input/Input";
 
+import { login } from "../../lib/api-auth";
+
 const AuthForm = () => {
   const history = useHistory();
   //   const emailInputRef = useRef();
@@ -30,47 +32,26 @@ const AuthForm = () => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    // const enteredEmail = emailInputRef.current.value;
-    // const enteredPassword = passwordInputRef.current.value;
-
-    // optional: Add validation
-
     setIsLoading(true);
 
-    fetch(
-      `${process.env.REACT_APP_SERVER_URL}/web?email=${email}&password=${password}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        setIsLoading(false);
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-            // if (data && data.error && data.error.message) {
-            //   errorMessage = data.error.message;
-            // }
-
-            throw new Error(errorMessage);
-          });
-        }
-      })
+    login(email, password)
       .then((data) => {
-        const expirationTime = new Date(
-          new Date().getTime() + +data.expiresIn * 1000
-        );
-        authCtx.login(data.idToken, expirationTime.toISOString());
-        history.replace("/");
+        // console.log("data", data);
+        console.log("token", !!data["auth-token"]);
+        setIsLoading(false);
+        if (!!!data["auth-token"]) {
+          alert("로그인 실패");
+          return;
+        }
+        authCtx.login(data["auth-token"]);
+        console.log(authCtx.isLoggedIn);
+        // history.replace("/");
       })
       .catch((err) => {
-        alert(err.message);
+        console.log(err);
+        alert("로그인 실패");
       });
+    setIsLoading(false);
   };
 
   return (
@@ -82,24 +63,24 @@ const AuthForm = () => {
         </span>
       </div>
       <Card>
-        <form onSubmit={submitHandler}>
+        <form className={classes.form} onSubmit={submitHandler}>
           <Input
             type="email"
             id="email"
-            required
             // ref={emailInputRef}
             value={email}
             onChange={emailChangeHandler}
             label="아이디"
+            required
           />
           <Input
             type="password"
             id="password"
-            required
             // ref={passwordInputRef}
             value={password}
             onChange={passwordChangeHandler}
             label="비밀번호"
+            required
           />
           <div className={classes.actions}>
             {!isLoading && <Button>로그인</Button>}
