@@ -1,15 +1,15 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import LoadingSpinner from '../components/UI/LoadingSpinner/LoadingSpinner';
+import React from "react";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../components/UI/LoadingSpinner/LoadingSpinner";
 // import axios from 'axios';
 
-import useHttp from '../hooks/use-http';
-import ActiveShapePieChart from '../components/Chart/ActiveShapePieChart';
+import ActiveShapePieChart from "../components/Chart/ActiveShapePieChart";
+import useHttp from "../hooks/use-http";
 
-import { expenseForStatistics } from '../lib/api-dashboard';
-import classes from './DashBoardPage.module.css';
+import { expenseForStatistics } from "../lib/api-dashboard";
+import classes from "./DashBoardPage.module.css";
 
-const axios = require('axios').default;
+const axios = require("axios").default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
 const DashBoardPage = () => {
@@ -30,7 +30,7 @@ const DashBoardPage = () => {
     sendStatistics();
   }, [sendStatistics]);
 
-  console.log('loadedStatistics', loadedStatistics);
+  console.log("loadedStatistics", loadedStatistics);
 
   const sort = (array, keyName, subName) => {
     let copied = JSON.parse(JSON.stringify(array));
@@ -63,7 +63,7 @@ const DashBoardPage = () => {
 
   const makeChart = async () => {
     setIsLoading(true);
-    var response = await axios.get('/board/expenses/statistics');
+    var response = await axios.get("/board/expenses/statistics");
     setitemList([]);
     var payments;
     var copiedItemList = [];
@@ -111,14 +111,14 @@ const DashBoardPage = () => {
       }
     }
 
-    setUserList(users, 'value');
-    setCategoryList(categories, 'value');
+    setUserList(users, "value");
+    setCategoryList(categories, "value");
     settotal(totalSum);
 
     setIsLoading(false);
   };
 
-  if (statusStatistics === 'pending') {
+  if (statusStatistics === "pending") {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
@@ -146,8 +146,8 @@ const DashBoardPage = () => {
     <div className="page">
       <span className="title">대쉬보드</span>
       <div className={classes.container}>
-        <section className={classes['section-center']}></section>
-        <section className={classes['section-right']}>
+        <section className={classes["section-center"]}></section>
+        <section className={classes["section-right"]}>
           <article className={classes.card}>
             <span className={classes.title}>소비 품목 현황</span>
             <ActiveShapePieChart data={categoryList} />

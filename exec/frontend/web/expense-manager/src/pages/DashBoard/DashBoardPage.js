@@ -1,47 +1,29 @@
-import React from 'react';
-import { useEffect, useState, PureComponent } from 'react';
-import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
-import { Row, Col, Card, CardHeader, CardBody, Container } from 'reactstrap';
-import useHttp from '../../hooks/use-http';
-import { getColor } from '../../utils/colors';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import React from "react";
+import { useEffect, useState, PureComponent } from "react";
+import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
+import { Row, Col, Card, CardHeader, CardBody, Container } from "reactstrap";
+import useHttp from "../../hooks/use-http";
+import { getColor } from "../../utils/colors";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-import ActiveShapePieChart from '../../components/Chart/ActiveShapePieChart';
-import PaymentList from '../../components/DashBoard/PaymentList';
-import RequestedStoreList from '../../components/DashBoard/RequestedStoreList';
-import Expenses from '../../components/DashBoard/Expenses';
-import TotalExpenses from '../../components/DashBoard/TotalExpenses';
-import { getAllRequestedStores } from '../../lib/api-store';
-import {
-  expenses,
-  recentPayment,
-  expenseByMonth,
-  expenseForStatistics,
-} from '../../lib/api-dashboard';
+import ActiveShapePieChart from "../../components/Chart/ActiveShapePieChart";
+import PaymentList from "../../components/DashBoard/PaymentList";
+import RequestedStoreList from "../../components/DashBoard/RequestedStoreList";
+import Expenses from "../../components/DashBoard/Expenses";
+import TotalExpenses from "../../components/DashBoard/TotalExpenses";
+import VerifiedDataChart from "../../components/DashBoard/VerifiedDataChart";
+import { getAllRequestedStores } from "../../lib/api-store";
+import { expenses, recentPayment, expenseByMonth, expenseForStatistics } from "../../lib/api-dashboard";
 
-import CCard from '../../components/UI/DBCard/Card';
-import classes from './list.module.css';
+import CCard from "../../components/UI/DBCard/Card";
+import classes from "./list.module.css";
 
-const axios = require('axios').default;
+const axios = require("axios").default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 // import Page from '../../components/Pagenation';
 
 const DashBoardPage = () => {
-  const {
-    sendRequest: sendExpenses,
-    status: statusExpenses,
-    data: getInfo,
-    error: errorExpenses,
-  } = useHttp(expenses, true);
+  const { sendRequest: sendExpenses, status: statusExpenses, data: getInfo, error: errorExpenses } = useHttp(expenses, true);
 
   const {
     sendRequest: sendRequested,
@@ -50,19 +32,9 @@ const DashBoardPage = () => {
     error: errorRequested,
   } = useHttp(getAllRequestedStores, true);
 
-  const {
-    sendRequest: sendPayment,
-    status: statusPayment,
-    data: loadedPayment,
-    error: errorPayment,
-  } = useHttp(recentPayment, true);
+  const { sendRequest: sendPayment, status: statusPayment, data: loadedPayment, error: errorPayment } = useHttp(recentPayment, true);
 
-  const {
-    sendRequest: sendByMonth,
-    status: statusByMonth,
-    data: loadedByMonth,
-    error: errorByMonth,
-  } = useHttp(expenseByMonth, true);
+  const { sendRequest: sendByMonth, status: statusByMonth, data: loadedByMonth, error: errorByMonth } = useHttp(expenseByMonth, true);
 
   const {
     sendRequest: sendStatistics,
@@ -89,15 +61,7 @@ const DashBoardPage = () => {
     sendRequested(pageInfo);
     sendByMonth(year);
     sendStatistics();
-  }, [
-    sendExpenses,
-    sendPayment,
-    sendRequested,
-    sendByMonth,
-    sendStatistics,
-    year,
-    pageInfo,
-  ]);
+  }, [sendExpenses, sendPayment, sendRequested, sendByMonth, sendStatistics, year, pageInfo]);
 
   useEffect(() => {
     makeChart();
@@ -105,7 +69,7 @@ const DashBoardPage = () => {
 
   const makeChart = async () => {
     setIsLoading(true);
-    var response = await axios.get('/board/expenses/statistics');
+    var response = await axios.get("/board/expenses/statistics");
     setitemList([]);
     var payments;
     var copiedItemList = [];
@@ -176,11 +140,11 @@ const DashBoardPage = () => {
   // ];
 
   if (
-    statusExpenses === 'pending' &&
-    statusRequested === 'pending' &&
-    statusPayment === 'pending' &&
-    statusByMonth === 'pending' &&
-    statusStatistics === 'pending'
+    statusExpenses === "pending" &&
+    statusRequested === "pending" &&
+    statusPayment === "pending" &&
+    statusByMonth === "pending" &&
+    statusStatistics === "pending"
   ) {
     return (
       <div className="page">
@@ -225,9 +189,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          가맹점 신청 목록을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>가맹점 신청 목록을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -236,9 +198,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          최근 결제 내역을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>최근 결제 내역을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -247,9 +207,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          월간 소비량을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>월간 소비량을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -263,38 +221,25 @@ const DashBoardPage = () => {
     );
   }
 
-  console.log('getInfo', getInfo);
-  console.log('loadedStores', loadedStores);
-  console.log('loadedPayment', loadedPayment);
-  console.log('loadedByMonth', loadedByMonth);
-  console.log('loadedStatistics', loadedStatistics);
+  console.log("getInfo", getInfo);
+  console.log("loadedStores", loadedStores);
+  console.log("loadedPayment", loadedPayment);
+  console.log("loadedByMonth", loadedByMonth);
+  console.log("loadedStatistics", loadedStatistics);
 
-  const MONTHS = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-  ];
+  const MONTHS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
   const monthData = [];
 
   for (let i = 1; i <= 12; i++) {
     monthData.push({
       name: i,
-      '사용된 금액': loadedByMonth[i][0],
-      '정산된 금액': loadedByMonth[i][1],
+      "사용된 금액": loadedByMonth[i][0],
+      "정산된 금액": loadedByMonth[i][1],
     });
   }
 
-  console.log('monthData', monthData);
+  console.log("monthData", monthData);
 
   // if (loadedByMonth !== undefined && !loadedByMonth.empty) {
   //   var months = loadedByMonth;
@@ -328,9 +273,9 @@ const DashBoardPage = () => {
       labels: MONTHS,
       datasets: [
         {
-          label: '총 소비',
-          backgroundColor: getColor('primary'),
-          borderColor: getColor('primary'),
+          label: "총 소비",
+          backgroundColor: getColor("primary"),
+          borderColor: getColor("primary"),
           borderWidth: 1,
           data: monthData,
           ...moreData,
@@ -399,7 +344,7 @@ const DashBoardPage = () => {
             </Col>
           </CCard>
         </Row> */}
-        <section className={classes['section-left']}>
+        <section className={classes["section-left"]}>
           <article className={classes.card}>
             <Expenses info={getInfo} title="정산 예정 금액" color="primary" />
           </article>
@@ -413,7 +358,7 @@ const DashBoardPage = () => {
             <PaymentList payments={loadedPayment.content} />
           </article>
         </section>
-        <section className={classes['section-center']}>
+        <section className={classes["section-center"]}>
           {/* <Row>
             <Col xl={6} lg={12} md={12}>
               <Card>
@@ -464,17 +409,12 @@ const DashBoardPage = () => {
               <YAxis label="원" />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="사용된 금액"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
+              <Line type="monotone" dataKey="사용된 금액" stroke="#8884d8" activeDot={{ r: 8 }} />
               <Line type="monotone" dataKey="정산된 금액" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>
         </section>
-        <section className={classes['section-right']}>
+        <section className={classes["section-right"]}>
           <article className={classes.card}>
             <span className={classes.title}>소비 품목 현황</span>
             <ActiveShapePieChart data={categoryList} />
@@ -482,6 +422,10 @@ const DashBoardPage = () => {
           <article className={classes.card}>
             <span className={classes.title}>부서별 소비 현황</span>
             <ActiveShapePieChart data={userList} />
+          </article>
+          <article className={classes.card}>
+            <span className={classes.title}>데이터 검증 현황</span>
+            <VerifiedDataChart />
           </article>
         </section>
       </div>
