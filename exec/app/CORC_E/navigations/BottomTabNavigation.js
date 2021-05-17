@@ -27,6 +27,7 @@ export default function Footer() {
             tabBarIcon: ({ color }) => (
               <HomeIcon name="home" color={color} size={26} />
             ),
+            unmountOnBlur: Platform.OS === 'ios' ? false : true,
           }}
         />
         <Tab.Screen
@@ -37,6 +38,7 @@ export default function Footer() {
             tabBarIcon: ({ color }) => (
               <CardIcon name="card" color={color} size={26} />
             ),
+            unmountOnBlur: Platform.OS === 'ios' ? false : true,
           }}
         />
         <Tab.Screen
