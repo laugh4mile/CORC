@@ -18,8 +18,7 @@ import Card from '../components/Card';
 import Payment from '../components/Payment';
 import Colors from '../constants/Colors';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
-
-const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
+import SERVER_URL from '../env';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
@@ -30,16 +29,6 @@ var buttonList = [
   { key: 3, label: '1개월', value: 30, selected: false },
   { key: 4, label: '조건 검색', value: -1, selected: false },
 ];
-
-const getMMDD_DT = (date) => {
-  let _date = new Date(date);
-  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
-    dayOfWeek[_date.getDay()]
-  })`;
-};
-
-const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
 const dateStrToNum = (date) => {
   let year = date.getFullYear();
