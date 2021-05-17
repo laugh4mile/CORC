@@ -62,6 +62,13 @@ public class Payment {
     this.testCode = testCode;
   }
 
+@Override
+public String toString() {
+	return "Payment [paymentId=" + paymentId + ", userId=" + userId + ", storeId=" + storeId + ", total=" + total
+			+ ", status=" + status + ", date=" + date + ", transactionId=" + transactionId + ", testCode=" + testCode
+			+ ", paymentitem=" + paymentitem + ", user=" + user + ", store=" + store + "]";
+}
+
 //	@JsonManagedReference
 //	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
 //	private List<Store> store = new ArrayList<>();
@@ -72,5 +79,7 @@ public class Payment {
 ////	(cascade = { CascadeType.ALL })
 ////	@JoinColumn(name = "paymentId", insertable = false, updatable = false)
 //	private Store store;
+  
+  
 
 }

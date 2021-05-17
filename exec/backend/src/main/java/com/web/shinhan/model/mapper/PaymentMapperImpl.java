@@ -23,6 +23,8 @@ public class PaymentMapperImpl implements PaymentMapper {
     paymentDto.paymentitem(payment.getPaymentitem());
     paymentDto.user(payment.getUser());
     paymentDto.store(payment.getStore());
+    paymentDto.testCode(payment.getTestCode());
+    paymentDto.transactionId(payment.getTransactionId());
 
     return paymentDto.build();
   }

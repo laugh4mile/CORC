@@ -4,6 +4,7 @@ import com.web.shinhan.entity.Store;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.BlockUserDto;
 import com.web.shinhan.model.PaymentitemDto;
+import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.TransactionDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.repository.StoreRepository;
@@ -87,17 +88,19 @@ public class PaymentService {
     		paymentRepository.save(paymentDto.toEntity());
     	} else if(py.getStatus() == 2 || py.getStatus() == 0){
     		continue;
-    	} else {
-    		return false;
     	}
     }
+    
+    try {
+    	Store store = storeRepository.findByStoreId(storeId);
+    	BlockUserDto blockStore = blockchainService.getUser(store.getEmail()).block();
+    	blockStore.setBalance(blockStore.getBalance() - balance);
+    	blockchainService.setBalance(blockStore).subscribe();
+    	return true;
+    }catch(Exception e){
+    	return false;
+    }
 
-    Store store = storeRepository.findByStoreId(storeId);
-    BlockUserDto blockStore = blockchainService.getUser(store.getEmail()).block();
-    blockStore.setBalance(blockStore.getBalance() - balance);
-    blockchainService.setBalance(blockStore).subscribe();
-
-    return true;
   }
 
   @Transactional
@@ -396,5 +399,19 @@ public class PaymentService {
       // user write 이후 read 불가능하기 때문에 transaction 생성 이후 user write
       userService.setBlockUserBalance(UserDto.of(user));
     });
+  }
+
+  public void allowPayment(int paymentId) {
+	Payment payemnt = paymentRepository.findByPaymentId(paymentId);
+	  PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
+      paymentDto.setStatus(2);
+      paymentRepository.save(paymentDto.toEntity());
+  }
+
+  public void denyPayment(int paymentId) {
+	Payment payemnt = paymentRepository.findByPaymentId(paymentId);
+	  PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
+      paymentDto.setStatus(0);
+      paymentRepository.save(paymentDto.toEntity());
   }
 }
