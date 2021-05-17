@@ -16,7 +16,6 @@ import SERVER_URL from '../env';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
-// const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -236,7 +235,6 @@ const Statistics = () => {
           ).toString(16);
       }
     }
-    // console.log(categories);
     setStoreList(sort(stores, 'priceSum', 'amount'));
     setitemList(sort(copiedItemList, 'amount', 'priceSum'));
     setCategoryList(sort(categories, 'priceSum', 'amount'));

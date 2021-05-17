@@ -14,7 +14,6 @@ const Settings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const userId = useSelector((state) => state.auth.userId);
   const [userInfo, setUserInfo] = useState();
-  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
