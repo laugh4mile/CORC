@@ -1,12 +1,21 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, PureComponent } from 'react';
 import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
 import { Row, Col, Card, CardHeader, CardBody, Container } from 'reactstrap';
-import { Line, Pie, Doughnut, Bar, Radar, Polar } from 'react-chartjs-2';
 import useHttp from '../../hooks/use-http';
 import { getColor } from '../../utils/colors';
-import { randomNum } from '../../utils/demos';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
+import ActiveShapePieChart from '../../components/Chart/ActiveShapePieChart';
 import PaymentList from '../../components/DashBoard/PaymentList';
 import RequestedStoreList from '../../components/DashBoard/RequestedStoreList';
 import Expenses from '../../components/DashBoard/Expenses';
@@ -21,7 +30,10 @@ import {
 
 import CCard from '../../components/UI/DBCard/Card';
 import classes from './list.module.css';
-import Page from '../../components/Pagenation';
+
+const axios = require('axios').default;
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
+// import Page from '../../components/Pagenation';
 
 const DashBoardPage = () => {
   const {
@@ -61,6 +73,13 @@ const DashBoardPage = () => {
 
   const [pageInfo, setPageInfo] = useState({ page: 0, size: 5 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [itemList, setitemList] = useState([]);
+  const [total, settotal] = useState(0);
+  const [userList, setUserList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [monthList, setMonthList] = useState([]);
+
   let newDate = new Date();
   let year = newDate.getFullYear();
 
@@ -79,6 +98,82 @@ const DashBoardPage = () => {
     year,
     pageInfo,
   ]);
+
+  useEffect(() => {
+    makeChart();
+  }, []);
+
+  const makeChart = async () => {
+    setIsLoading(true);
+    var response = await axios.get('/board/expenses/statistics');
+    setitemList([]);
+    var payments;
+    var copiedItemList = [];
+    var totalSum = 0;
+    var users = [];
+    var categories = [];
+
+    if (response.data !== undefined && !response.data.category.empty) {
+      payments = response.data.category;
+
+      for (let i = 0; i < payments.length; i++) {
+        // 매장별 금액 통계
+        var isContained2 = false;
+        const item2 = payments[i].user;
+        for (let k = 0; k < users.length; k++) {
+          if (users[k].name == item2.department) {
+            users[k].value += payments[i].total;
+            isContained2 = true;
+            break;
+          }
+        }
+        if (!isContained2) {
+          users.push({
+            name: item2.department,
+            value: payments[i].total,
+          });
+        }
+
+        // 카테고리별 금액 통계
+        var isContained3 = false;
+        const item3 = payments[i].store;
+        for (let k = 0; k < categories.length; k++) {
+          if (categories[k].name == item3.category.categoryName) {
+            categories[k].value += payments[i].total;
+            isContained3 = true;
+            break;
+          }
+        }
+        if (!isContained3) {
+          categories.push({
+            name: item3.category.categoryName,
+            value: payments[i].total,
+          });
+        }
+      }
+    }
+
+    setUserList(users);
+    setCategoryList(categories);
+    settotal(totalSum);
+
+    setIsLoading(false);
+  };
+
+  // const MONTHS = [
+  //   'January',
+  //   'February',
+  //   'March',
+  //   'April',
+  //   'May',
+  //   'June',
+  //   'July',
+  //   'August',
+  //   'September',
+  //   'October',
+  //   'November',
+  //   'December',
+  // ];
 
   if (
     statusExpenses === 'pending' &&
@@ -174,21 +269,6 @@ const DashBoardPage = () => {
   console.log('loadedByMonth', loadedByMonth);
   console.log('loadedStatistics', loadedStatistics);
 
-  // const MONTHS = [
-  //   'January',
-  //   'February',
-  //   'March',
-  //   'April',
-  //   'May',
-  //   'June',
-  //   'July',
-  //   'August',
-  //   'September',
-  //   'October',
-  //   'November',
-  //   'December',
-  // ];
-
   const MONTHS = [
     '1',
     '2',
@@ -207,10 +287,40 @@ const DashBoardPage = () => {
   const monthData = [];
 
   for (let i = 1; i <= 12; i++) {
-    monthData.push(loadedByMonth[i]);
+    monthData.push({
+      name: i,
+      사용한금액: loadedByMonth[i],
+    });
   }
 
   console.log('monthData', monthData);
+
+  // if (loadedByMonth !== undefined && !loadedByMonth.empty) {
+  //   var months = loadedByMonth;
+
+  //   for (let i = 0; i < months.length; i++) {}
+  // }
+
+  // const data = [
+  //   {
+  //     name: MONTHS,
+  //     사용한금액: monthData,
+  //   },
+  // ];
+
+  // const data = [
+  //   {
+  //     name: 'Page A',
+  //     사용한금액: 4000,
+  //     정산예정금액: 2400,
+  //     amt: 2400,
+  //   },
+  // ];
+  // categories.push({
+  //   name: item3.category.categoryName,
+  //   value: payments[i].total,
+  // });
+  // setCategoryList(categories, 'value');
 
   const genLineData = (moreData = {}) => {
     return {
@@ -228,71 +338,22 @@ const DashBoardPage = () => {
     };
   };
 
-  const genPieData1 = () => {
-    return {
-      datasets: [
-        {
-          data: [
-            randomNum(),
-            randomNum(),
-            randomNum(),
-            randomNum(),
-            randomNum(),
-          ],
-          backgroundColor: [
-            getColor('primary'),
-            getColor('secondary'),
-            getColor('success'),
-            getColor('info'),
-            getColor('danger'),
-          ],
-          label: 'Dataset 1',
-        },
-      ],
-      labels: ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5'],
-    };
-  };
-
-  const genPieData2 = () => {
-    return {
-      datasets: [
-        {
-          data: [
-            randomNum(),
-            randomNum(),
-            randomNum(),
-            randomNum(),
-            randomNum(),
-          ],
-          backgroundColor: [
-            getColor('primary'),
-            getColor('secondary'),
-            getColor('success'),
-            getColor('info'),
-            getColor('danger'),
-          ],
-          label: 'Dataset 1',
-        },
-      ],
-      labels: ['', '', '', '', ''],
-    };
-  };
-
   return (
     <div className="page">
-      <section className="classes.section">
-        <Row>
+      <span className="title">대쉬보드</span>
+      <div className={classes.container}>
+        {/* <Row>
           <Col lg={4} md={6} sm={6} xs={12} className="mb-3">
             <Expenses info={getInfo} title="정산 예정 금액" color="primary" />
           </Col>
           <Col lg={4} md={6} sm={6} xs={12} className="mb-3">
             {/* lg={10} md={6} sm={6} xs={12} className="mb-4" */}
-            {/* lg={4} md={6} sm={6} xs={12} className="mb-3" */}
-            {/* mb-3 col-12 col-sm-6 col-md-6 col-lg-4 */}
-            <TotalExpenses info={getInfo} title="사용된 금액" color="primary" />
+        {/* lg={4} md={6} sm={6} xs={12} className="mb-3" */}
+        {/* mb-3 col-12 col-sm-6 col-md-6 col-lg-4 */}
+        {/* <TotalExpenses info={getInfo} title="사용된 금액" color="primary" />
           </Col>
-        </Row>
-        <Row>
+        </Row> */}
+        {/* <Row>
           <Col xl={6} lg={12} md={12}>
             <Card>
               <CardHeader>월간 소비량</CardHeader>
@@ -324,24 +385,8 @@ const DashBoardPage = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col xl={3} lg={6} md={6}>
-            <Card>
-              <CardHeader>부서별 소비 현황</CardHeader>
-              <CardBody>
-                <Pie data={genPieData1()} />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xl={3} lg={12} md={12}>
-            <Card>
-              <CardHeader>소비 품목 현황</CardHeader>
-              <CardBody>
-                <Pie data={genPieData2()} />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
+        </Row> */}
+        {/* <Row>
           <CCard type="nofit">
             <Col>
               <RequestedStoreList stores={loadedStores.content} />
@@ -352,8 +397,92 @@ const DashBoardPage = () => {
               <PaymentList payments={loadedPayment.content} />
             </Col>
           </CCard>
-        </Row>
-      </section>
+        </Row> */}
+        <section className={classes['section-left']}>
+          <article className={classes.card}>
+            <Expenses info={getInfo} title="정산 예정 금액" color="primary" />
+          </article>
+          <article className={classes.card}>
+            <TotalExpenses info={getInfo} title="사용된 금액" color="primary" />
+          </article>
+          <article className={classes.card}>
+            <RequestedStoreList stores={loadedStores.content} />
+          </article>
+          <article className={classes.card}>
+            <PaymentList payments={loadedPayment.content} />
+          </article>
+        </section>
+        <section className={classes['section-center']}>
+          {/* <Row>
+            <Col xl={6} lg={12} md={12}>
+              <Card>
+                <CardHeader>월간 소비량</CardHeader>
+                <CardBody>
+                  <Line
+                    data={genLineData()}
+                    options={{
+                      scales: {
+                        xAxes: [
+                          {
+                            scaleLabel: {
+                              display: true,
+                              labelString: '월',
+                            },
+                          },
+                        ],
+                        yAxes: [
+                          {
+                            stacked: true,
+                            scaleLabel: {
+                              display: true,
+                              labelString: '원',
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  />
+                </CardBody>
+              </Card>
+            </Col>
+          </Row> */}
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              width={500}
+              height={300}
+              data={monthData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" label="월" />
+              <YAxis label="원" />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="사용한금액"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </section>
+        <section className={classes['section-right']}>
+          <article className={classes.card}>
+            <span className={classes.title}>소비 품목 현황</span>
+            <ActiveShapePieChart data={categoryList} />
+          </article>
+          <article className={classes.card}>
+            <span className={classes.title}>부서별 소비 현황</span>
+            <ActiveShapePieChart data={userList} />
+          </article>
+        </section>
+      </div>
     </div>
   );
 };

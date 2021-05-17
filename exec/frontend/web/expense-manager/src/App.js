@@ -6,6 +6,7 @@ import Layout from './components/Layout/Layout';
 
 import AuthPage from './pages/AuthPage';
 import DashBoardPage from './pages/DashBoard/DashBoardPage';
+// import DashBoardPage from './pages/DashBoardPage';
 // User
 import UserRegisterPage from './pages/User/UserRegisterPage';
 import UserListPage from './pages/User/UserListPage';
