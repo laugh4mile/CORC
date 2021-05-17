@@ -111,27 +111,19 @@ public class StoreService {
   }
 
   @Transactional
-  public int allowStoreApplication(int storeId) {
+  public void allowStoreApplication(int storeId) {
     Store store = storeRepository.findByStoreId(storeId);
-    if (store.getAccepted() != 2) {
       StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
       storeDto.setAccepted(2);
       storeRepository.save(storeDto.toEntity());
-      return 1;
-    }
-    return 0;
   }
 
   @Transactional
-  public int denyStoreApplication(int storeId) {
+  public void denyStoreApplication(int storeId) {
     Store store = storeRepository.findByStoreId(storeId);
-    if (store.getAccepted() != 0) {
       StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
       storeDto.setAccepted(0);
       storeRepository.save(storeDto.toEntity());
-      return 1;
-    }
-    return 0;
   }
 
   public boolean login(StoreDto storeDto) {

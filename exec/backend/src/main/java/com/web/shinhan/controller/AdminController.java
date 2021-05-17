@@ -196,7 +196,7 @@ public class AdminController {
   @ApiOperation(value = "회원 상태 변경", notes = "회원들의 상태를 변경하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
   @PutMapping("/user/status")
   public ResponseEntity<Boolean> userStatus(@RequestBody int[] userIds,
-      @RequestBody int userStatus) {
+		  @RequestParam int userStatus) {
     logger.info("userStatus - 호출");
 
     HttpStatus status = HttpStatus.ACCEPTED;
@@ -278,23 +278,22 @@ public class AdminController {
   }
 
   @ApiOperation(value = "회원 한도 수정", notes = "회원의 한도를 수정한다.", response = Boolean.class)
-  @PutMapping("/user/modify/limit")
-  public ResponseEntity<Boolean> modifyCardLimit(@RequestBody int[] userIds,
-      @RequestParam int limit) {
+  @PutMapping("/user/modify/cardlimit")
+  public ResponseEntity<Boolean> modifyCardLimit(@RequestParam int limit, @RequestBody int[] userIds
+      ) {
     logger.info("modifyCardLimit - 호출");
 
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
+    
+    System.out.println(userIds);
 
     try {
-//			int cnt = 0;
       for (int userId : userIds) {
-//				int limit = limits[cnt];
         flag = userService.modifyCardLimit(userId, limit);
         if (!flag) {
           return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
         }
-//				cnt++;
       }
       status = HttpStatus.ACCEPTED;
     } catch (Exception e) {
@@ -350,14 +349,14 @@ public class AdminController {
     return new ResponseEntity<Map<String, Object>>(resultMap, status);
   }
 
-  @ApiOperation(value = "정산", notes = "선택된 결제 내역을 정산한다.", response = Boolean.class)
+  @ApiOperation(value = "정산", notes = "선택된 가맹점의 미정산 금액을 정산한다.", response = Boolean.class)
   @PutMapping("/payment/confirm")
   public ResponseEntity<Boolean> confirmPayment(@RequestBody int[] storeIds) {
     logger.info("confirmPayment - 호출 ");
 
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
-
+    
     try {
       for (int storeId : storeIds) {
         flag = paymentService.confirmPayment(storeId);
@@ -369,7 +368,40 @@ public class AdminController {
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;
+      flag = false;
     }
+
+    return new ResponseEntity<Boolean>(flag, status);
+  }
+  
+  @ApiOperation(value = "정산", notes = "선택된 가맹점의 미정산 금액을 정산한다.", response = Boolean.class)
+  @PutMapping("/payment/status")
+  public ResponseEntity<Boolean> paymentStatus(@RequestBody int[] paymentIds, @RequestParam int paymentStatus) {
+    logger.info("paymentStatus - 호출 ");
+
+    HttpStatus status = HttpStatus.ACCEPTED;
+    boolean flag = false;
+    
+    try {
+    	if(paymentIds.length != 0) {
+         if (paymentStatus == 2) {
+          for (int paymentId : paymentIds) {
+            paymentService.allowPayment(paymentId);
+          }
+         } else if (paymentStatus == 0) {
+          for (int paymentId : paymentIds) {
+            paymentService.denyPayment(paymentId);
+          }
+         }
+    	} else {
+    		return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+    	}
+        flag = true;
+        status = HttpStatus.ACCEPTED;
+      } catch (Exception e) {
+        e.printStackTrace();
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+      }
 
     return new ResponseEntity<Boolean>(flag, status);
   }
@@ -519,20 +551,18 @@ public class AdminController {
 
     // 가맹점 탈퇴
     try {
+      if(storeIds.length != 0) {
       if (storeStatus == 2) {
         for (int userId : storeIds) {
-          int active = storeService.allowStoreApplication(userId);
-          if (active == 0) {
-            return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-          }
+          storeService.allowStoreApplication(userId);
         }
       } else if (storeStatus == 0) {
         for (int storeId : storeIds) {
-          int active = storeService.denyStoreApplication(storeId);
-          if (active == 0) {
-            return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
-          }
+          storeService.denyStoreApplication(storeId);
         }
+      }
+      } else {
+    	  return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
       }
       flag = true;
       status = HttpStatus.ACCEPTED;
