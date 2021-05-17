@@ -112,7 +112,7 @@ const PaymentHistory = (props) => {
     setPaymentList([...paymentList, ...payments]);
     // setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
     setpage(page + 1);
-    sethasMore(!response.data.paymentList.last);
+    sethasMore(response.data.paymentList.last === false);
 
     setIsLoading(false);
     setisSent(false);
