@@ -200,7 +200,7 @@ const Home = (props) => {
             paddingVertical: 10,
           }}
           onPress={() => {
-            props.navigation.navigate('Wallet');
+            props.navigation.navigate('TopNavigator');
           }}
           activeOpacity={0.5}
         >
