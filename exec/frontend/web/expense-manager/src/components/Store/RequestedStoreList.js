@@ -1,12 +1,12 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from "react";
 // import { useHistory, useLocation } from "react-router-dom";
 
-import Button from '../../components/UI/Button/Button';
-import Card from '../../components/UI/Card/Card';
-import RequestedStoreItem from './RequestedStoreItem';
-import { storeApplication } from '../../lib/api-store';
-import useHttp from '../../hooks/use-http';
-import classes from './List.module.css';
+import Button from "../../components/UI/Button/Button";
+import Card from "../../components/UI/Card/Card";
+import RequestedStoreItem from "./RequestedStoreItem";
+import { storeApplication } from "../../lib/api-store";
+import useHttp from "../../hooks/use-http";
+import classes from "./List.module.css";
 
 const RequestedStoreList = (props) => {
   const { sendRequest, status } = useHttp(storeApplication);
@@ -34,7 +34,7 @@ const RequestedStoreList = (props) => {
 
   const handleAllCheck = (checked, index) => {
     if (checked) {
-      console.log('checked');
+      console.log("checked");
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -72,8 +72,8 @@ const RequestedStoreList = (props) => {
     // setCheckItems([]);
   };
 
-  console.log('checkItems', checkItems);
-  console.log('storeIdx', storeIdx);
+  console.log("checkItems", checkItems);
+  console.log("storeIdx", storeIdx);
 
   // checked
   // 제거
@@ -92,7 +92,7 @@ const RequestedStoreList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: '10%' }}>
+              <th style={{ width: "10%" }}>
                 <input
                   type="checkbox"
                   name="status"
@@ -109,11 +109,11 @@ const RequestedStoreList = (props) => {
                   }
                 />
               </th>
-              <th style={{ width: '60%' }}>사업자 등록 번호</th>
+              <th style={{ width: "60%" }}>사업자 등록 번호</th>
               <th>가맹점명</th>
-              <th style={{ width: '60%' }}>지역</th>
-              <th style={{ width: '80%' }}>업종</th>
-              <th style={{ width: '40%' }}>신청 날짜</th>
+              <th style={{ width: "60%" }}>지역</th>
+              <th style={{ width: "80%" }}>업종</th>
+              <th style={{ width: "40%" }}>신청 날짜</th>
             </tr>
           </thead>
           {stores.map((store, index) => (

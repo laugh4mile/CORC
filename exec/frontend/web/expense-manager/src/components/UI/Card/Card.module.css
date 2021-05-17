@@ -7,7 +7,7 @@
   justify-content: center;
   width: fit-content;
   padding: 2rem;
-  padding-right: 4rem;
+  /* padding-right: 4rem; */
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 3rem;
@@ -19,7 +19,8 @@
   padding-right: 2rem;
 }
 
-.marginSM {
-  margin: 1rem 0.5rem;
-  padding: 0.5rem;
+.unset {
+  width: unset;
+  display: unset;
+  position: unset;
 }

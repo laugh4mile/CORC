@@ -2,10 +2,10 @@ import React from "react";
 
 import classes from "./Card.module.css";
 
-const Card = ({ children, type, marginSM }) => (
+const Card = ({ children, type, unset }) => (
   <div
     className={`${classes.card} ${type === "nofit" ? classes.nofit : ""} ${
-      marginSM ? classes.marginSM : ""
+      unset ? classes.unset : ""
     }`}
   >
     {children}
