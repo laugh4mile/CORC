@@ -166,16 +166,51 @@ const PaymentHistory = (props) => {
     setshowEndPicker(Platform.OS === 'ios');
     setend(currentDate);
   };
+  var newDate = new Date();
+  var first = true;
+  const match = (date) => {
+    const year = date.substring(0, 4);
+    const month = +date.substring(5, 7);
+    const day = +date.substring(8, 10);
+    if (first) {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            first = false;
+            return false;
+          }
+        }
+      }
+    } else {
+      if (year == newDate.getFullYear()) {
+        if (month == newDate.getMonth() + 1) {
+          if (day == newDate.getDate()) {
+            return true;
+          }
+        }
+      }
+    }
+    newDate = new Date(year, month - 1, day);
+    return false;
+  };
 
   const renderList = ({ item }) => {
     return (
       <View>
-        {!checkDate(item.date) && (
-          <View style={styles.dateSeperatorBox}>
-            <View style={styles.dateView}>
-              <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
+        {!match(item.date) && (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 13, color: '#414251' }}>
+                {+item.date.substring(5, 7)}월 {+item.date.substring(8, 10)}일
+              </Text>
             </View>
-            <View style={styles.dateSeperator} />
+            <View
+              style={{
+                flex: 3,
+                borderBottomColor: '#A09E9E',
+                borderBottomWidth: StyleSheet.hairlineWidth,
+              }}
+            />
           </View>
         )}
         <Payment
