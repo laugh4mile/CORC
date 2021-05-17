@@ -16,7 +16,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
-import PaymentItem from "../../components/PaymentItem";
+import HistoryItem from "../../components/HistoryItem";
 import Colors from "../../constants/Colors";
 import PaymentHistoryIcon from "../../navigations/icons/PaymentHistoryIcon";
 import { SERVER_URL } from "../../env";
@@ -67,29 +67,41 @@ const PaymentHistory = (props) => {
   const [size, setsize] = useState(20);
   const [page, setpage] = useState(0);
   const [isSent, setisSent] = useState(false);
+  const [hasMore, sethasMore] = useState(false);
 
   useEffect(() => {
     DeviceEventEmitter.addListener("detailFromMain", () => {
       handleButton(buttonList[1]); // initialize to one week selected button
+      if (days === buttonList[1].value) {
+        getData();
+        return;
+      }
     });
   }, []);
 
+  // 당일, 1주일, 1개월 버튼 클릭했을 때
   useEffect(() => {
     if (days !== -1) {
       getData();
     }
   }, [days]);
 
+  // 조건검색을 통해서 '조회하기' 버튼 클릭했을 때
   useEffect(() => {
     isSent && getData();
   }, [isSent]);
+
+  useEffect(() => {
+    console.log("length: ", paymentList.length);
+  }, [paymentList]);
 
   const getData = async () => {
     const startDate =
       days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
     const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
+    currentDate = new Date(1900, 1, 1);
 
-    console.log(userId, startDate, endDate, size, page);
+    console.log("startDate, endDate, page [", startDate, endDate, page, "]");
 
     const response = await axios.get(
       `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
@@ -97,9 +109,10 @@ const PaymentHistory = (props) => {
 
     let payments = response.data.paymentList.content;
 
-    // setPaymentList([...paymentList, ...payments]);
-    setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
+    setPaymentList([...paymentList, ...payments]);
+    // setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
     setpage(page + 1);
+    sethasMore(!response.data.paymentList.last);
 
     setIsLoading(false);
     setisSent(false);
@@ -124,7 +137,8 @@ const PaymentHistory = (props) => {
     return `${year}.${month}.${day}`;
   };
 
-  const lookUpDate = () => {
+  // 조회하기 버튼
+  const lookUpHandler = () => {
     setPaymentList([]);
     setpage(0);
     if (start > end) {
@@ -135,19 +149,19 @@ const PaymentHistory = (props) => {
     setisSent(true);
   };
 
-  var currentDate = new Date();
+  var currentDate = new Date(1900, 0, 1);
 
-  const checkDate = (date) => {
+  const matchedDate = (date) => {
     const year = +date.slice(0, 4);
     const month = +date.slice(5, 7) - 1;
     const day = +date.slice(8, 10);
 
-    if (year == currentDate.getFullYear()) {
-      if (month == currentDate.getMonth()) {
-        if (day == currentDate.getDate()) {
-          return true;
-        }
-      }
+    if (
+      year == currentDate.getFullYear() &&
+      month == currentDate.getMonth() &&
+      day == currentDate.getDate()
+    ) {
+      return true;
     }
     currentDate = new Date(year, month, day);
     return false;
@@ -176,17 +190,17 @@ const PaymentHistory = (props) => {
 
   const renderList = ({ item }) => {
     return (
-      <View>
-        {!checkDate(item.date) && (
-          <View style={styles.dateSeperatorBox}>
-            <View style={styles.dateView}>
-              <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
-            </View>
-            <View style={styles.dateSeperator} />
-          </View>
-        )}
-        <PaymentItem payment={item} />
-      </View>
+      // <View>
+      //   {!matchedDate(item.date) && (
+      //     <View style={styles.dateSeparatorBox}>
+      //       <View style={styles.dateView}>
+      //         <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
+      //       </View>
+      //       <View style={styles.dateSeparator} />
+      //     </View>
+      //   )}
+        <HistoryItem payment={item} />
+      // </View>
     );
   };
 
@@ -284,7 +298,7 @@ const PaymentHistory = (props) => {
             <View style={{ flex: 1 }}>
               <Button
                 title="조회하기"
-                onPress={lookUpDate}
+                onPress={lookUpHandler}
                 backgroundColor={Colors.primary.backgroundColor}
                 fontColor={Colors.primary.fontColor}
               />
@@ -302,12 +316,15 @@ const PaymentHistory = (props) => {
           renderItem={renderList}
           style={styles.resultScroll}
           keyExtractor={(item, index) => item.paymentId.toString()}
-          onEndReached={getData}
-          onEndReachedThreshold={1}
-          refreshing={isLoading}
-          onRefresh={handleRefresh}
-          ItemSeparatorComponent={() => <View style={{ marginVertical: 5 }} />}
-          windowSize={size}
+          onEndReached={() => {
+            if (hasMore) {
+              getData();
+            }
+          }}
+          ItemSeparatorComponent={() => <View style={{ marginBottom: 3 }} />}
+          onEndReachedThreshold={0.3}
+          // refreshing={isLoading}
+          // onRefresh={handleRefresh}
         />
       </Card>
     </View>
@@ -389,17 +406,15 @@ const styles = StyleSheet.create({
   resultCard: {
     flex: 1,
     marginBottom: "10%",
+    paddingVertical: 10,
   },
   resultScroll: {
-    flex: 1,
     paddingHorizontal: 10,
-    paddingBottom: "5%",
-    paddingTop: "3%",
   },
-  dateSeperatorBox: {
+  dateSeparatorBox: {
     flexDirection: "row",
     alignItems: "center",
-    // marginTop: "2%",
+    marginTop: 2,
   },
   dateView: {
     flex: 1,
@@ -408,7 +423,7 @@ const styles = StyleSheet.create({
     fontSize: windowWidth * 0.033,
     color: "#414251",
   },
-  dateSeperator: {
+  dateSeparator: {
     flex: 2.5,
     borderBottomColor: "#A09E9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
