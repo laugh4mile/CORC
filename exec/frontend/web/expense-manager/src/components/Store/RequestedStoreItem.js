@@ -50,7 +50,11 @@ const RequestedStoreItem = (props) => {
             value={props.storeId}
             name="storeId"
             onChange={(e) =>
-              props.handleSingleCheck(e.target.checked, props.storeId)
+              props.handleSingleCheck(
+                e.target.checked,
+                props.storeId,
+                props.index
+              )
             }
             // checkItems에 data.id가 있으면 체크 아니면 체크 해제
             checked={props.checkItems.includes(props.storeId) ? true : false}

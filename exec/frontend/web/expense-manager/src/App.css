@@ -41,6 +41,10 @@ body {
   margin: 0;
 }
 
+#init {
+  width: auto;
+}
+
 .page {
   display: flex;
   flex-direction: column;

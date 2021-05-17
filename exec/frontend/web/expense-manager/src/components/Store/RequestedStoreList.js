@@ -9,22 +9,13 @@ import { storeApplication } from "../../lib/api-store";
 import useHttp from "../../hooks/use-http";
 import classes from "./List.module.css";
 
-// const sortStores = (stores, ascending) => {
-//   return stores.sort((storeA, storeB) => {
-//     if (ascending) {
-//       return storeA.id - storeB.id;
-//     } else {
-//       return storeB.id - storeA.id;
-//     }
-//   });
-// };
-
 const RequestedStoreList = (props) => {
   const { sendRequest, status } = useHttp(storeApplication);
 
   const [checkItems, setCheckItems] = useState([]);
 
-  const handleSingleCheck = (checked, id) => {
+  const handleSingleCheck = (checked, id, index) => {
+    console.log(index);
     if (checked) {
       setCheckItems([...checkItems, id]);
     } else {
@@ -39,7 +30,7 @@ const RequestedStoreList = (props) => {
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
-      props.stores.forEach((el) => idArray.push(el.storeId));
+      props.stores.forEach((el, index) => idArray.push(el.storeId));
       setCheckItems(idArray);
     }
     // 반대의 경우 전체 체크 박스 체크 삭제
@@ -116,9 +107,10 @@ const RequestedStoreList = (props) => {
                 <th style={{ width: "40%" }}>신청 날짜</th>
               </tr>
             </thead>
-            {props.stores.map((store) => (
+            {props.stores.map((store, index) => (
               <RequestedStoreItem
                 key={store.storeId}
+                index={index}
                 {...store}
                 handleSingleCheck={handleSingleCheck}
                 checkItems={checkItems}

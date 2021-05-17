@@ -8,6 +8,9 @@ import {
   Tooltip,
 } from "recharts";
 
+import "./Chart.css";
+import classes from "./Chart.module.css";
+
 const COLORS = ["#F35C59", "#FDA92E", "#A6D07D", "#53D6FF", "#A48EF0"];
 
 const renderActiveShape = (props) => {
@@ -97,24 +100,27 @@ const ActiveShapePieChart = (props) => {
   );
 
   return (
-    <PieChart width={380} height={320}>
-      <Pie
-        activeIndex={activeIndex}
-        activeShape={renderActiveShape}
-        data={props.data}
-        cx={190}
-        cy={160}
-        innerRadius={60}
-        outerRadius={80}
-        fill="#8884d8"
-        dataKey="value"
-        onMouseEnter={onPieEnter}
-      >
-        {props.data.map((_, index) => (
-          <Cell fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Pie>
-    </PieChart>
+    <article className={classes.card}>
+      <span className={classes.title}>{props.title}</span>
+      <PieChart width={380} height={320}>
+        <Pie
+          activeIndex={activeIndex}
+          activeShape={renderActiveShape}
+          data={props.data}
+          cx={190}
+          cy={160}
+          innerRadius={60}
+          outerRadius={80}
+          fill="#8884d8"
+          dataKey="value"
+          onMouseEnter={onPieEnter}
+        >
+          {props.data.map((_, index) => (
+            <Cell fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+      </PieChart>
+    </article>
   );
 };
 
