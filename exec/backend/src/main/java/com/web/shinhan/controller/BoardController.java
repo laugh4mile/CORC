@@ -87,7 +87,11 @@ public class BoardController {
     try {
       for (int i = 1; i <= 12; i++) {
         int payment = paymentService.expenseByMonth(i, year);
-        resultMap.put(i, payment);
+        int confirmed = paymentService.confirmedByMonth(i, year);
+        List<Integer> temp = new ArrayList<>();
+        temp.add(payment);
+        temp.add(confirmed);
+        resultMap.put(i, temp);
       }
       status = HttpStatus.ACCEPTED;
     } catch (RuntimeException e) {
@@ -107,7 +111,7 @@ public class BoardController {
 
     try {
       List<PaymentDto> paymentList = paymentService.findAllByStatus();
-      resultMap.put("payment", paymentList);
+      resultMap.put("category", paymentList);
       status = HttpStatus.ACCEPTED;
     } catch (RuntimeException e) {
       resultMap.put("message", e.getMessage());

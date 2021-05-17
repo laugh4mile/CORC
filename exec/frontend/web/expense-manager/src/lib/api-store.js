@@ -76,7 +76,7 @@ export async function getAllRequestedStores({ page, size }) {
   try {
     const rs = await axios.get(`/admin/store/list/unassigned?page=${page}&size=${size}`);
     const data = rs.data.storeLists;
-
+    console.log('data', data);
     return data;
   } catch (err) {
     throw new Error(err);
