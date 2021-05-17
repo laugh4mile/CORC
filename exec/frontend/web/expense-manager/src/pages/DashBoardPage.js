@@ -1,6 +1,7 @@
 import React from "react";
 
 import ActiveShapePieChart from "../components/Chart/ActiveShapePieChart";
+import VerifiedDataChart from "../components/Chart/VerifiedDataChart";
 
 import classes from "./DashBoardPage.module.css";
 
@@ -32,6 +33,10 @@ const DashBoardPage = () => {
           <article className={classes.card}>
             <span className={classes.title}>부서별 소비 현황</span>
             <ActiveShapePieChart data={data_consumedDepartment} />
+          </article>
+          <article className={classes.card}>
+            <span className={classes.title}>데이터 검증 현황</span>
+            <VerifiedDataChart />
           </article>
         </section>
       </div>
