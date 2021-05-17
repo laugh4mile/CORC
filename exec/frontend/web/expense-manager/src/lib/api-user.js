@@ -46,9 +46,11 @@ export async function getSingleUser(userId) {
   }
 }
 
-export async function getUserPaymentDetails(userId) {
+export async function getUserPaymentDetails(userId, sort = { sortBy: "paymentId", isDesc: true }) {
   try {
-    const rs = await axios.get(`/admin/user/payment?userId=${userId}`);
+    const rs = await axios.get(
+      `/admin/user/payment?userId=${userId}` + (sort ? `&sort=${sort.sortBy},${sort.isDesc ? "desc" : "asc"}` : "")
+    );
     const data = rs.data.paymentList.content;
 
     return data;
@@ -68,9 +70,11 @@ export async function getUsers({ page, size }) {
   }
 }
 
-export async function getAllPayment({ page, size }) {
+export async function getAllPayment({ page, size, sort = { sortBy: "paymentId", isDesc: true } }) {
   try {
-    const rs = await axios.get(`/admin/payment?page=${page}&size=${size}`);
+    const rs = await axios.get(
+      `/admin/payment?page=${page}&size=${size}` + (sort ? `&sort=${sort.sortBy},${sort.isDesc ? "desc" : "asc"}` : "")
+    );
     const data = rs.data.paymentList;
 
     return data;

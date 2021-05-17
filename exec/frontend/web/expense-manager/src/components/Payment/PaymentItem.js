@@ -1,12 +1,12 @@
-import { Fragment, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Fragment, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import Modal from '../UI/Modal/Modal';
-import Backdrop from '../UI/Backdrop/Backdrop';
-import Receipt from '../UI/Receipt/Receipt';
-import { ReactComponent as ReceiptIcon } from '../../assets/receipt.svg';
+import Modal from "../UI/Modal/Modal";
+import Backdrop from "../UI/Backdrop/Backdrop";
+import Receipt from "../UI/Receipt/Receipt";
+import { ReactComponent as ReceiptIcon } from "../../assets/receipt.svg";
 
-import classes from './Item.module.css';
+import classes from "./Item.module.css";
 
 const PaymentItem = (props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -23,16 +23,22 @@ const PaymentItem = (props) => {
 
   const history = useHistory();
 
-  const isAccepted = (accepted) => {
-    if (accepted === 0) return '거절';
-    else if (accepted === 1) return '대기';
-    else return '승인';
+  const isAccepted = (status) => {
+    if (status === 0) return "거절";
+    else if (status === 1) return "대기";
+    else return "승인";
   };
 
-  const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
+  const acceptedStyle = (status) => {
+    if (status === 0) return classes.deleted;
+    else if (status === 1) return classes.inactive;
+    else return classes.active;
+  };
+
+  const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
   const activeStyle = (status) => {
-    console.log('status', status);
+    console.log("status", status);
     if (status === 0) return classes.deleted;
     else if (status === 1) return classes.inactive;
     else return classes.active;
@@ -55,36 +61,23 @@ const PaymentItem = (props) => {
         <Receipt {...props} />
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
-      <tr className={classes.tr}>
-        <td
-          // style={{ width: '40%' }}
-          className={`${classes.td}`}
-        >
-          {props.paymentId}
+      <tr className={`${classes.tr}  ${props.verified ? null : classes["verify-fail"]}`}>
+        <td style={{ width: "10%" }} className={classes.td}>
+          <input type="checkbox" />
         </td>
-        <td
-          className={`${classes.td} ${classes['text-sm']} ${classes['font-normal']}`}
-        >
+        <td className={`${classes.td} ${classes["text-left"]} ${classes.link}`} onClick={trClickHandler}>
           {props.store.storeName}
         </td>
-        <td className={`${classes.td}`}>{props.user.userName}</td>
-        <td className={`${classes.td} ${classes['td-flex']}`}>
-          <span>{paymentContents(props.paymentitem)}</span>
-          <ReceiptIcon className={classes.icon} onClick={showModal} />
+        <td style={{ width: "40%" }} className={classes.td}>
+          {props.user.userName}
         </td>
-        <td
-          // style={{ width: '60%' }}
-          className={`${classes.td} ${classes['text-sm']} ${classes.date}`}
-        >
-          {props.date.slice(0, 10)}
-        </td>
-        <td
-          // style={{ width: '60%' }}
-          className={`${classes.td} ${classes['text-sm']} ${classes['align-right']}`}
-        >
+        <td style={{ width: "50%" }} className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}>
           {formatMoney(props.total)}
         </td>
-        <td className={`${classes.td} ${activeStyle(props.status)} `}>
+        <td style={{ width: "40%" }} className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}>
+          {props.date.slice(0, 10)}
+        </td>
+        <td style={{ width: "20%" }} className={`${classes.td} ${acceptedStyle(props.status)} ${classes["font-bold"]}`}>
           {isAccepted(props.status)}
         </td>
       </tr>

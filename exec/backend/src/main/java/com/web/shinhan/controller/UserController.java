@@ -91,15 +91,18 @@ public class UserController {
   @ApiOperation(value = "회원 결제 상세 내역", notes = "회원의 결제 상세 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment/custom")
   public ResponseEntity<Map<String, Object>> findUserPaymentCustom(@RequestParam int userId,
-      @RequestParam int startDate, @RequestParam int endDate, Pageable pageable) throws Exception {
+      @RequestParam int startDate, @RequestParam int endDate, @RequestParam(required = false) boolean forStatistics, 
+      Pageable pageable) throws Exception {
     logger.info("findUserPaymentCustom - 호출");
-
     Map<String, Object> resultMap = new HashMap<>();
     Page<PaymentDto> page = null;
     HttpStatus status = HttpStatus.ACCEPTED;
     pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
         Sort.by(Sort.Direction.DESC, "date"));
-
+    if (forStatistics) {
+		pageable = Pageable.unpaged();
+	}
+    
     try {
       resultMap.put("info", userService.findUserInfo(userId));
       page = paymentService.findUserPaymentCustom(userId, pageable, startDate, endDate);
@@ -166,29 +169,7 @@ public class UserController {
             resultMap.put("message", "잔고 부족");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
           } else {
-            paymentService.pay(userId, storeId, total);
-            PaymentDto payment = paymentService.findLastPayment();
-            int paymentId = payment.getPaymentId();
-            for (int i = 0; i < paymentitems.size(); i++) {
-              paymentitemService.registPaymentitem(paymentitems.get(i).getProductName(),
-                  paymentitems.get(i).getPrice(), paymentitems.get(i).getAmount(), paymentId);
-            }
-
-            logger.info("payment: " + payment.toString());
-            // 블록체인 트렌젝션 생성
-            TransactionDto tx = TransactionDto.builder()
-                .from(user.getEmail())
-                .to(store.getEmail())
-                .value(total)
-                .build();
-            Mono<TransactionDto> t = blockchainService.createTransaction(tx);
-            t.subscribe(response -> {
-              // 생성된 경우 상태 변경
-              payment.setTransactionId(response.getTxId());
-              payment.setTestCode(1);
-              paymentService.setTransaction(payment);
-              logger.info("payment: " + payment.toString());
-            });
+            paymentService.pay(userId, storeId, total, paymentitems);
 
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;

@@ -123,18 +123,20 @@ public class UserService {
         userDto.setBalance(limit);
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
+        setBlockUserBalance(userDto);
         return true;
       } else if (balance == limit) {
-	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        UserDto userDto = mapper.INSTANCE.userToDto(user);
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
         return true;
       } else {
-    	int oldLimit = user.getCardLimit();
-	    UserDto userDto = mapper.INSTANCE.userToDto(user);
+        int oldLimit = user.getCardLimit();
+        UserDto userDto = mapper.INSTANCE.userToDto(user);
         userDto.setBalance(balance + (limit - oldLimit));
         userDto.setCardLimit(limit);
         userRepository.save(userDto.toEntity());
+        setBlockUserBalance(userDto);
         return true;
       }
     }
@@ -221,9 +223,11 @@ public class UserService {
   public Boolean pay(int userId, int bill) {
     User user = userRepository.findByUserId(userId);
     UserDto userDto = mapper.INSTANCE.userToDto(user);
-    if (userDto.getBalance() - bill >= 0) {
-      userDto.setBalance(userDto.getBalance() - bill);
+    int afterBalance = userDto.getBalance() - bill;
+    if (afterBalance >= 0) {
+      userDto.setBalance(afterBalance);
       userRepository.save(userDto.toEntity());
+      // user write 이후 read 불가능하기 때문에 transaction 생성 이후 user write
       return true;
     } else {
       return false;
@@ -244,8 +248,7 @@ public class UserService {
       }
 
       return true;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return false;
     }
   }
@@ -255,7 +258,7 @@ public class UserService {
         .userId(user.getEmail())
         .balance(user.getBalance())
         .build();
-    blockchainService.setBalance(blockUser);
+    blockchainService.setBalance(blockUser).subscribe();
   }
 
   public void createBlockUser(UserDto user) {
@@ -264,7 +267,6 @@ public class UserService {
         .type("User")
         .balance(user.getBalance())
         .build();
-    blockchainService.createUser(blockUser);
 
     Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
     u.subscribe(response -> {
@@ -275,15 +277,16 @@ public class UserService {
   }
 
   public boolean resetBalance(int userId) {
-	User user = userRepository.findByUserId(userId);
-	int cardLimit = user.getCardLimit();
-	if (user.getActive() != 0) {
+    User user = userRepository.findByUserId(userId);
+    int cardLimit = user.getCardLimit();
+    if (user.getActive() != 0) {
       UserDto userDto = mapper.INSTANCE.userToDto(user);
       userDto.setBalance(cardLimit);
       userRepository.save(userDto.toEntity());
+      setBlockUserBalance(userDto);
       return true;
     }
-	return false;
+    return false;
   }
 
 

@@ -17,7 +17,11 @@ import com.web.shinhan.entity.Payment;
 public interface PaymentRepository extends JpaRepository<Payment, Integer>,
     PagingAndSortingRepository<Payment, Integer>, QueryByExampleExecutor<Payment> {
 
+<<<<<<< HEAD
   @Query(value = "select p.paymentId, p.userId, p.storeId, p.total, p.date, p.status, p.testCode, p.transactionId from payment p inner join (select s.storeId from store s where s.accepted = 2) as t using(storeId)", 
+=======
+  @Query(value = "select p.paymentId, p.userId, p.storeId, p.total, p.date, p.status, p.testCode, p.transactionId from payment p inner join (select s.storeId from store s where s.accepted = 2) as t using(storeId)",
+>>>>>>> branch 'develop' of https://lab.ssafy.com/s04-final/s04p31a301.git
 		  countQuery = "select count(*) from payment p inner join (select s.storeId from store s where s.accepted = 2) as t using(storeId)",
 	      nativeQuery = true)
   Page<Payment> findAll(Pageable pageable);
@@ -53,8 +57,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer>,
   @Query("select total from payment where date between :startDate and :endDate and status != 0")
   List<Integer> findAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
 
-  @Query("select total from payment where storeId = :storeId and status != 0")
-  List<Integer> findTotalByStoreId(int storeId);
+  @Query("select total from payment where storeId = :storeId and status != 0 and date between :startDate and :endDate")
+  List<Integer> findTotalByStoreId(int storeId, LocalDateTime startDate, LocalDateTime endDate);
 
   @Query("select total from payment where storeId = :storeId and status = 1")
   List<Integer> findNotConfirmedByStoreId(int storeId);

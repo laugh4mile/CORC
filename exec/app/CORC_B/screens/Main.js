@@ -1,21 +1,45 @@
-import React from 'react';
+import React from "react";
 import {
-  Alert,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   ActivityIndicator,
-} from 'react-native';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import Colors from '../constants/Colors';
-import Button from '../components/Button';
-import Card from '../components/Card';
-import PaymentItem from '../components/PaymentItem';
-import PaymentHistoryIcon from '../navigations/icons/PaymentHistoryIcon';
+  Dimensions,
+} from "react-native";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import Colors from "../constants/Colors";
+import Card from "../components/Card";
+import PaymentItem from "../components/PaymentItem";
+import PaymentHistoryIcon from "../navigations/icons/PaymentHistoryIcon";
+import { SERVER_URL } from "../env";
 
-const SERVER_URL = 'http://192.168.0.14:8765/shinhan';
+const { width } = Dimensions.get("window");
+
+const getCurrentMonth = () => {
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  if (month < 10) {
+    month = "0" + month;
+  }
+  return year + "." + month;
+};
+
+const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+
+const formatMoney = (number) =>
+  number !== null && +number >= 0
+    ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    : null;
+
+const getMMDD_DT = (date) => {
+  let _date = new Date(date);
+  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
+    dayOfWeek[_date.getDay()]
+  })`;
+};
 
 const Main = (props) => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -31,31 +55,19 @@ const Main = (props) => {
   const getData = async () => {
     setIsLoading(true);
     let response = await axios.get(
-      SERVER_URL + '/store/payment?storeId=' + userId
+      SERVER_URL + "/store/payment?storeId=" + userId
     );
     setStoreInfo(response.data.info);
     setPaymentList(response.data.paymentList);
-    // console.log(paymentList.content);
 
     let response2 = await axios.get(
-      SERVER_URL + '/store/payment/total?storeId=' + userId
+      SERVER_URL + "/store/payment/total?storeId=" + userId
     );
     setTransacAmount(response2.data);
     setIsLoading(false);
   };
 
-  const now = () => {
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    return year + '.' + month;
-  };
-
   var currentDate = new Date();
-  var dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
   const checkDate = (date) => {
     const year = +date.slice(0, 4);
@@ -72,9 +84,6 @@ const Main = (props) => {
     currentDate = new Date(year, month, day);
     return false;
   };
-
-  const formatMoney = (number) =>
-    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
   if (isLoading) {
     return (
@@ -93,7 +102,9 @@ const Main = (props) => {
       </View>
       <Card style={styles.paymentCard}>
         <View style={{ paddingTop: 10, paddingLeft: 15 }}>
-          <Text style={{ color: 'gray', fontSize: 13 }}>{now()} 거래 내역</Text>
+          <Text style={{ color: "gray", fontSize: 13 }}>
+            {getCurrentMonth()} 거래 내역
+          </Text>
         </View>
         <View style={styles.paymentTotal}>
           <Text style={{ fontSize: 35 }}>
@@ -101,107 +112,64 @@ const Main = (props) => {
           </Text>
         </View>
         <View style={styles.notConfirmed}>
-          <Text style={{ fontSize: 14, color: 'gray' }}>
-            {'미정산금 '}
+          <Text style={{ fontSize: 14, color: "gray" }}>
+            {"미정산금 "}
             <Text
               style={{
                 color: Colors.primary.backgroundColor,
-                fontWeight: 'bold',
+                fontWeight: "bold",
+                fontSize: 16,
               }}
             >
               {formatMoney(transacAmount.notConfirmed)}
             </Text>
-            {' 원'}
+            {" 원"}
           </Text>
         </View>
       </Card>
-      <Button
-        title="정산하기"
-        onPress={() => {
-          Alert.alert(null, '서비스 준비 중입니다.\n잠시만 기다려주세요!', [
-            { text: '확인' },
-          ]);
-        }}
-        backgroundColor={Colors.primary.backgroundColor}
-        fontColor={Colors.primary.fontColor}
-      />
       <Card style={styles.recentCard}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 3,
-            justifyContent: 'center',
-            // borderBottomWidth: StyleSheet.hairlineWidth,
-            // borderBottomColor: "#737373",
-          }}
-        >
-          <View style={{ flex: 1, alignItems: 'flex-end', paddingLeft: 5 }}>
-            <PaymentHistoryIcon color={'#b7b7b7'} size="80%" />
+        <View style={styles.recentCardHeader}>
+          <View style={styles.recentCardHeaderIcon}>
+            <PaymentHistoryIcon color={"#b7b7b7"} size="80%" />
           </View>
           <View style={{ flex: 8, paddingLeft: 4 }}>
-            <Text style={{ fontWeight: 'bold' }}>최근 판매 내역</Text>
+            <Text style={{ fontWeight: "bold" }}>최근 판매 내역</Text>
           </View>
         </View>
         <View style={styles.recentList}>
           {paymentList.empty ? (
             <Text>최근 거래 내역이 없습니다.</Text>
           ) : (
-            paymentList.content.slice(0, 3).map((payment) => (
-              <View key={payment.paymentId}>
+            paymentList.content.slice(0, 3).map((payment, index) => (
+              <View key={payment.paymentId.toString()}>
                 {!checkDate(payment.date) && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      ...styles.dateSeperator,
+                      marginTop: index !== 0 ? "2%" : 0,
+                    }}
+                  >
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 13, color: '#414251' }}>
-                        {new Date(payment.date).getMonth() + 1}
-                        {'월 '}
-                        {new Date(payment.date).getDate()}
-                        {'일 ('}
-                        {dayOfWeek[new Date(payment.date).getDay()]}
-                        {')'}
+                      <Text style={styles.dateSeperatorText}>
+                        {getMMDD_DT(payment.date)}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        flex: 3,
-                        backgroundColor: '#A09E9E',
-                        height: 0.7,
-                      }}
-                    ></View>
+                    <View style={styles.dateSeperatorLine} />
                   </View>
                 )}
-                <PaymentItem
-                  key={payment.paymentId}
-                  payment={payment}
-                  formatMoney={(money) => formatMoney(money)}
-                />
+                <PaymentItem payment={payment} />
               </View>
             ))
           )}
         </View>
         <TouchableOpacity
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderTopWidth: StyleSheet.hairlineWidth,
-            borderTopColor: '#737373',
-          }}
+          style={styles.goDetail}
           onPress={() => {
-            props.navigation.navigate('PaymentHistory');
+            props.navigation.navigate("PaymentHistory");
           }}
           activeOpacity={1}
         >
-          <Text
-            style={{
-              color: Colors.primary.backgroundColor,
-              fontSize: 15,
-              fontWeight: 'bold',
-            }}
-          >
-            상세 내역 보러 가기
-          </Text>
+          <Text style={styles.goDetailText}>상세 내역 보러 가기</Text>
         </TouchableOpacity>
       </Card>
     </View>
@@ -213,19 +181,19 @@ export default Main;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: '10%',
-    backgroundColor: 'white',
+    paddingHorizontal: "10%",
+    backgroundColor: "white",
   },
   loading: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   storeNameView: {
     flex: 2,
-    fontFamily: 'bold',
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontFamily: "bold",
+    justifyContent: "center",
+    alignItems: "center",
   },
   storeNameViewText: {
     fontSize: 30,
@@ -233,29 +201,63 @@ const styles = StyleSheet.create({
   paymentCard: {
     marginHorizontal: 0,
     marginTop: 10,
-    marginBottom: '10%',
+    marginBottom: "10%",
     flex: 2.2,
   },
   paymentTotal: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   notConfirmed: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     paddingRight: 25,
     paddingBottom: 10,
   },
   recentCard: {
-    marginHorizontal: '0%',
-    marginTop: '10%',
-    marginBottom: '20%',
-    flex: 4,
+    marginHorizontal: "0%",
+    marginTop: "10%",
+    marginBottom: "20%",
+    flex: 5,
+  },
+  recentCardHeader: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  recentCardHeaderIcon: {
+    flex: 1,
+    alignItems: "flex-end",
+    paddingLeft: 5,
   },
   recentList: {
-    flex: 5,
-    // alignItems: "stretch",
+    flex: 6,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingBottom: 3,
+  },
+  dateSeperator: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  dateSeperatorText: {
+    fontSize: width * 0.033,
+    color: "#414251",
+  },
+  dateSeperatorLine: {
+    flex: 2.5,
+    backgroundColor: "#A09E9E",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  goDetail: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "#737373",
+  },
+  goDetailText: {
+    color: Colors.primary.backgroundColor,
+    fontSize: 15,
+    fontWeight: "bold",
   },
 });

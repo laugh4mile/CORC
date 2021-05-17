@@ -32,7 +32,7 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
   const month = date.substring(5, 7);
   const day = date.substring(8, 10);
   const time = date.substring(11, 16);
-  console.log('paymentitem : ', paymentitem);
+  // console.log('paymentitem : ', paymentitem);
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -65,9 +65,9 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
                 {' '}
                 {year}-{month}-{day} {time}{' '}
               </Text>
-              {paymentitem.map((item) => (
+              {paymentitem.map((item, index) => (
                 <View
-                  key={item.paymentId}
+                  key={index}
                   style={{ flexDirection: 'row', marginVertical: 5 }}
                 >
                   <View style={{ flex: 2 }}>

@@ -15,6 +15,7 @@ import Payment from '../components/Payment';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
 import MoneyIcon from '../components/icons/MoneyIcon';
 import Colors from '../constants/Colors';
+import SERVER_URL from '../env';
 
 const Home = (props) => {
   const userId = useSelector((state) => state.auth.userId);
@@ -23,7 +24,7 @@ const Home = (props) => {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  const SERVER_URL = 'http://192.168.219.102:8765/shinhan/';
+  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -59,15 +60,14 @@ const Home = (props) => {
   useEffect(() => {
     (async () => {
       let response = await axios.get(
-        SERVER_URL + 'admin/user/info?userId=' + userId
+        SERVER_URL + '/admin/user/info?userId=' + userId
       );
       setUserInfo(response.data);
 
       let response2 = await axios.get(
-        SERVER_URL + 'user/payment?userId=' + userId
+        SERVER_URL + '/user/payment?userId=' + userId
       );
       setPayment(response2.data);
-      // console.log('paymentList ===> : ', response2.data);
       setIsLoading(false);
     })();
   }, []);

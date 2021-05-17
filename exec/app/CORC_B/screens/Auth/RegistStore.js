@@ -48,9 +48,13 @@ const RegistStore = (props) => {
   const accountRef = useRef();
   const contactRef = useRef();
 
-  const emailReg = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+  const emailReg =
+    /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const [isEmailVaild, setisEmailVaild] = useState(false);
   const [checkEmailColor, setcheckEmailColor] = useState("#a5a5a8");
+
+  const [isCrNumValid, setisCrNumVaild] = useState(false);
+  const [checkCrNumColor, setcheckCrNumColor] = useState("#a5a5a8");
 
   useEffect(() => {
     getSido();
@@ -96,49 +100,54 @@ const RegistStore = (props) => {
         { text: "확인", onPress: () => crNumRef.current.focus() },
       ]);
     }
+    if (!isCrNumValid) {
+      return Alert.alert(null, "사업자 등록번호가 유효하지 않습니다.\n확인해 주세요.", [
+        { text: "확인", onPress: () => crNumRef.current.focus() },
+      ]);
+    }
     if (!storeName) {
       return Alert.alert(null, "가맹점명을 입력해 주세요.", [
         { text: "확인", onPress: () => storeNameRef.current.focus() },
       ]);
     }
-    if (!categoryCode || categoryCode.toString().trim().length < 5) {
+    if (!categoryCode || categoryCode.toString().trim().length !== 5) {
       return Alert.alert(null, "업종코드를 확인해 주세요.", [
         { text: "확인", onPress: () => categoryCodeRef.current.focus() },
       ]);
     }
     if (!sidoCode || sidoCode === "선택") {
-      return Alert.alert(null, "시/도를 선택해 주세요!", [{ text: "확인" }]);
+      return Alert.alert(null, "시/도를 선택해 주세요.", [{ text: "확인" }]);
     }
     if (!gugunCode || gugunCode === "선택") {
-      return Alert.alert(null, "구/군을 선택해 주세요!", [{ text: "확인" }]);
+      return Alert.alert(null, "구/군을 선택해 주세요.", [{ text: "확인" }]);
     }
     if (!email) {
-      return Alert.alert(null, "이메일을 입력해 주세요!", [
+      return Alert.alert(null, "이메일을 입력해 주세요.", [
         { text: "확인", onPress: () => emailRef.current.focus() },
       ]);
     }
     if (!isEmailVaild) {
-      return Alert.alert(null, "이메일 중복 확인을 해 주세요!", [
+      return Alert.alert(null, "이메일 중복여부를 확인해 주세요.", [
         { text: "확인" },
       ]);
     }
     if (!password) {
-      return Alert.alert(null, "비밀번호를 입력해 주세요!", [
+      return Alert.alert(null, "비밀번호를 입력해 주세요.", [
         { text: "확인", onPress: () => passwordRef.current.focus() },
       ]);
     }
     if (!bankName) {
-      return Alert.alert(null, "은행명을 입력해 주세요!", [
+      return Alert.alert(null, "은행명을 입력해 주세요.", [
         { text: "확인", onPress: () => bankNameRef.current.focus() },
       ]);
     }
     if (!account) {
-      return Alert.alert(null, "계좌번호를 입력해 주세요!", [
+      return Alert.alert(null, "계좌번호를 입력해 주세요.", [
         { text: "확인", onPress: () => accountRef.current.focus() },
       ]);
     }
     if (!contact) {
-      return Alert.alert(null, "연락처를 입력해 주세요!", [
+      return Alert.alert(null, "연락처를 입력해 주세요.", [
         { text: "확인", onPress: () => contactRef.current.focus() },
       ]);
     }
@@ -170,38 +179,67 @@ const RegistStore = (props) => {
 
   const checkEmail = async () => {
     if (!email) {
-      setisEmailVaild(false)
+      setisEmailVaild(false);
       setcheckEmailColor("red");
-      return Alert.alert(null, "이메일을 입력해 주세요!", [
+      return Alert.alert(null, "이메일을 입력해 주세요.", [
         { text: "확인", onPress: () => emailRef.current.focus() },
       ]);
     }
     if (!emailReg.test(email)) {
-      setisEmailVaild(false)
+      setisEmailVaild(false);
       setcheckEmailColor("red");
-      return Alert.alert(null, "이메일 형식에 맞춰주세요!", [
+      return Alert.alert(null, "이메일 형식에 맞춰주세요.\nex) example@example.com", [
         { text: "확인", onPress: () => emailRef.current.focus() },
       ]);
     }
 
     let action = authActions.checkEmail(email);
     let existed = await dispatch(action);
-    // console.log(typeof existed);
-    changeEmail(existed)
+
+    changeEmail(existed);
   };
 
   const changeEmail = (bool) => {
     setisEmailVaild(!bool);
-    setcheckEmailColor(bool ? "red" : "green")
-  }
+    setcheckEmailColor(bool ? "red" : "green");
+  };
+
+  const checkCrNum = () => {
+    if (!checkCrNumValid(crNum)) {
+      setisCrNumVaild(false);
+      setcheckCrNumColor("red");
+      return Alert.alert(null, "유효한 사업자 등록번호를 입력해 주세요.", [
+        { text: "확인", onPress: () => crNumRef.current.focus() },
+      ]);
+    }
+
+    setisCrNumVaild(true);
+    setcheckCrNumColor("green");
+  };
+
+  const checkCrNumValid = (crNum) => {
+    if (crNum === "" || crNum.toString().length !== 12) {
+      return false;
+    }
+    if ((crNum = (crNum + "").match(/\d{1}/g)).length != 10) {
+      return false;
+    }
+
+    var sum = 0,
+      key = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+
+    for (var i = 0; i < 9; i++) {
+      sum += key[i] * Number(crNum[i]);
+    }
+
+    return (
+      10 - ((sum + Math.floor((key[8] * Number(crNum[8])) / 10)) % 10) ==
+      Number(crNum[9])
+    );
+  };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}> */}
-      {/* <View style={styles.headerView}>
-          <Text style={styles.headerText}>가맹점 신청</Text>
-        </View> */}
-      {/* </View> */}
       <View style={styles.form}>
         <ScrollView style={{ flex: 6 }}>
           <Text style={styles.inputLabel}>사업자 등록번호</Text>
@@ -209,24 +247,23 @@ const RegistStore = (props) => {
             <Input
               style={{ flex: 1 }}
               maxLength={12}
-              placeholder="사업자 등록번호"
+              placeholder="123-45-67891"
               onChangeText={(text) => {
                 setCrNum(text);
               }}
               returnKeyType="next"
               onSubmitEditing={() => {
+                // checkCrNum();
                 storeNameRef.current.focus();
               }}
               blurOnSubmit={false}
               ref={crNumRef}
             />
             <FontAwesome.Button
-              name="search"
-              onPress={() => {
-                Alert.alert(null, "검색버튼", [{ text: "확인" }]);
-              }}
+              name="check"
+              onPress={() => checkCrNum()}
               backgroundColor="white"
-              color="#a5a5a8"
+              color={checkCrNumColor}
               size={imgSize}
               underlayColor="white"
               iconStyle={{ marginRight: 0 }}
@@ -248,7 +285,6 @@ const RegistStore = (props) => {
             ref={storeNameRef}
           />
           <Text style={styles.inputLabel}>업종코드</Text>
-          {/* Picker */}
           <Input
             maxLength={5}
             placeholder="세세분류(5자리 숫자)의 코드를 입력해 주세요."
@@ -310,7 +346,7 @@ const RegistStore = (props) => {
             <Input
               style={{ flex: 1 }}
               maxLength={45}
-              placeholder="이메일"
+              placeholder="example@example.com"
               keyboardType="email-address"
               onChangeText={(text) => {
                 setEmail(text);
@@ -318,7 +354,7 @@ const RegistStore = (props) => {
               }}
               returnKeyType="next"
               onSubmitEditing={() => {
-                checkEmail();
+                // checkEmail();
                 passwordRef.current.focus();
               }}
               blurOnSubmit={false}
@@ -396,8 +432,6 @@ const RegistStore = (props) => {
       </View>
       <Text style={styles.reqText}>* 모든 항목은 필수 항목입니다.</Text>
       <View style={styles.footer}>
-        {/* <View style={styles.reqView}> */}
-        {/* </View> */}
         <Button title="신청" onPress={() => applyFor()} />
       </View>
     </View>

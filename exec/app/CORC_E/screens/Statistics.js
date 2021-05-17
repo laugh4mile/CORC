@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
   Dimensions,
   ActivityIndicator,
   Text,
-} from "react-native";
-import { PieChart } from "react-native-chart-kit";
-import { Picker } from "@react-native-picker/picker";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { SERVER_URL } from "../../env";
-import Card from "../../components/Card";
-import Colors from "../../constants/Colors";
+} from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
+import { Picker } from '@react-native-picker/picker';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import Colors from '../constants/Colors';
+import SERVER_URL from '../env';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
+// const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
 
 const chartConfig = {
-  backgroundGradientFrom: "#1E2923",
+  backgroundGradientFrom: '#1E2923',
   backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: "#08130D",
+  backgroundGradientTo: '#08130D',
   backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
   strokeWidth: 2, // optional, default 3
@@ -30,9 +30,9 @@ const chartConfig = {
 };
 
 const chartConfig2 = {
-  backgroundColor: "#e26a00",
-  backgroundGradientFrom: "#fb8c00",
-  backgroundGradientTo: "#ffa726",
+  backgroundColor: '#e26a00',
+  backgroundGradientFrom: '#fb8c00',
+  backgroundGradientTo: '#ffa726',
   decimalPlaces: 2, // optional, defaults to 2dp
   color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -40,9 +40,9 @@ const chartConfig2 = {
     borderRadius: 16,
   },
   propsForDots: {
-    r: "6",
-    strokeWidth: "2",
-    stroke: "#ffa726",
+    r: '6',
+    strokeWidth: '2',
+    stroke: '#ffa726',
   },
 };
 
@@ -75,11 +75,11 @@ const dateStrToNum = (date) => {
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
   if (month < 10) {
-    month = "0" + month;
+    month = '0' + month;
   }
   let day = date.getDate();
   if (day < 10) {
-    day = "0" + day;
+    day = '0' + day;
   }
   return +(year + month + day);
 };
@@ -92,23 +92,23 @@ const formatDate = (date, type) => {
   var year = date.getFullYear();
   var month = date.getMonth() + 1;
   if (month < 10) {
-    month = "0" + month;
+    month = '0' + month;
   }
   var day = date.getDate();
   if (day < 10) {
-    day = "0" + day;
+    day = '0' + day;
   }
-  if (type == "end") {
+  if (type == 'end') {
     return `${year}.${month}.${day} 23:59`;
   }
-  if (type == "start") {
+  if (type == 'start') {
     return `${year}.${month}.${day} 00:00`;
   }
   return `${year}.${month}.${day}`;
 };
 
 const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
+  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
 const Statistics = () => {
   const userId = useSelector((state) => state.auth.userId);
@@ -116,11 +116,13 @@ const Statistics = () => {
   const [itemList, setitemList] = useState([]);
   const [total, settotal] = useState(0);
   const [startDate, setstartDate] = useState(7);
+  const [storeList, setStoreList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   var searchDateList = [
-    { label: "일간", value: 1 },
-    { label: "주간", value: 7 },
-    { label: "월간", value: 30 },
+    { label: '일간', value: 1 },
+    { label: '주간', value: 7 },
+    { label: '월간', value: 30 },
   ];
 
   useEffect(() => {
@@ -130,16 +132,16 @@ const Statistics = () => {
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
-      `${SERVER_URL}/store/payment/custom?storeId=${userId}&forStatistics=true&startDate=${dateStrToNum(
+      `${SERVER_URL}/user/payment/custom?userId=${userId}&forStatistics=true&startDate=${dateStrToNum(
         dateFrom(startDate)
       )}&endDate=${dateStrToNum(new Date())}`
     );
-
     setitemList([]);
-
     var payments;
     var copiedItemList = [];
     var totalSum = 0;
+    var stores = [];
+    var categories = [];
 
     if (response.data !== undefined && !response.data.paymentList.empty) {
       payments = response.data.paymentList.content;
@@ -163,37 +165,106 @@ const Statistics = () => {
               name: item.productName,
               amount: item.amount,
               priceSum: item.amount * item.price,
-              legendFontColor: "#050505",
+              legendFontColor: '#050505',
               legendFontSize: 16,
             });
           }
+        }
+
+        // 매장별 금액 통계
+        var isContained2 = false;
+        const item2 = payments[i].store;
+        for (let k = 0; k < stores.length; k++) {
+          if (stores[k].name == item2.storeName) {
+            stores[k].amount += 1;
+            stores[k].priceSum += payments[i].total;
+            isContained2 = true;
+            break;
+          }
+        }
+        if (!isContained2) {
+          stores.push({
+            name: item2.storeName,
+            amount: 1,
+            priceSum: payments[i].total,
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
+        }
+
+        // 카테고리별 금액 통계
+        var isContained3 = false;
+        // const item3 = payments[i].store;
+        for (let k = 0; k < categories.length; k++) {
+          if (categories[k].name == item2.category.categoryName) {
+            categories[k].amount += 1;
+            categories[k].priceSum += payments[i].total;
+            isContained3 = true;
+            break;
+          }
+        }
+        if (!isContained3) {
+          categories.push({
+            name: item2.category.categoryName,
+            amount: 1,
+            priceSum: payments[i].total,
+            legendFontColor: '#050505',
+            legendFontSize: 16,
+          });
         }
       }
 
       for (let index = 0; index < copiedItemList.length; index++) {
         copiedItemList[index].color =
-          "#" +
+          '#' +
           Math.round(
             ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
           ).toString(16);
       }
+      for (let index = 0; index < stores.length; index++) {
+        stores[index].color =
+          '#' +
+          Math.round(((index + 1) * 0xffffff) / (stores.length + 2)).toString(
+            16
+          );
+      }
+      for (let index = 0; index < categories.length; index++) {
+        categories[index].color =
+          '#' +
+          Math.round(
+            ((index + 1) * 0xffffff) / (categories.length + 2)
+          ).toString(16);
+      }
     }
-    setitemList(sort(copiedItemList, "amount", "priceSum"));
+    // console.log(categories);
+    setStoreList(sort(stores, 'priceSum', 'amount'));
+    setitemList(sort(copiedItemList, 'amount', 'priceSum'));
+    setCategoryList(sort(categories, 'priceSum', 'amount'));
     settotal(totalSum);
 
     setIsLoading(false);
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator
+          size="large"
+          color={Colors.primary.backgroundColor}
+        />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerDateView}>
-          <View style={{ flexDirection: "column" }}>
+          <View style={{ flexDirection: 'column' }}>
             <Text style={styles.headerDateText}>
-              {formatDate(dateFrom(startDate), "start")}
+              {formatDate(dateFrom(startDate), 'start')}
             </Text>
             <Text style={styles.headerDateText}>
-              {formatDate(new Date(), "end")}
+              {formatDate(new Date(), 'end')}
             </Text>
           </View>
         </View>
@@ -210,43 +281,34 @@ const Statistics = () => {
           </Picker>
         </View>
       </View>
-      {isLoading ? (
-        <View style={styles.loading}>
-          <ActivityIndicator
-            size="large"
-            color={Colors.primary.backgroundColor}
-          />
-        </View>
-      ) : itemList.length > 0 ? (
+      {itemList.length > 0 ? (
         <>
-          <Card style={styles.pieChart}>
+          <View style={styles.pieChart}>
             <PieChart
-              style={{ marginTop: "10%" }}
-              data={itemList}
+              style={{ marginTop: '10%' }}
+              data={categoryList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
-              accessor={"amount"}
-              backgroundColor={"transparent"}
+              accessor={'priceSum'}
+              backgroundColor={'transparent'}
               center={[10, 0]}
               absolute
             />
-            <Text style={styles.basisText}>[판매 수량 기준]</Text>
-          </Card>
-          <Card style={styles.pieChart}>
+            <Text style={styles.basisText}>[카테고리 기준]</Text>
             <PieChart
-              style={{ marginTop: "10%" }}
-              data={itemList}
+              style={{ marginTop: '10%' }}
+              data={storeList}
               width={pieWidth}
               height={pieHeight}
               chartConfig={chartConfig}
-              accessor={"priceSum"}
-              backgroundColor={"transparent"}
+              accessor={'priceSum'}
+              backgroundColor={'transparent'}
               center={[10, 0]}
               absolute
             />
-            <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
-          </Card>
+            <Text style={styles.basisText}>[지출량 기준]</Text>
+          </View>
           <View style={styles.totalView}>
             <Text style={styles.totalText}>
               <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text> 원
@@ -267,39 +329,36 @@ export default Statistics;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "white",
+    flexDirection: 'column',
+    backgroundColor: 'white',
   },
   loading: {
-    flex: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
-    flex: 1.5,
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: "10%",
-    marginTop: "7%",
-    paddingBottom: "5%",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: '5%',
+    marginTop: '7%',
   },
   headerDateView: {
     flex: 1,
-    // paddingLeft: '10%'
+    paddingLeft: '10%',
   },
   headerDateText: {
     fontSize: 15,
   },
   pickerView: {
-    justifyContent: "center",
-    backgroundColor: "white",
-    width: "30%",
-    height: 34,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    width: '30%',
     borderRadius: 12,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderWidth: 0,
     // ios
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOpacity: 0.21,
     shadowRadius: 10,
     shadowOffset: {
@@ -310,42 +369,38 @@ const styles = StyleSheet.create({
     elevation: 15,
   },
   picker: {
-    // height: 34,
+    height: 34,
   },
-  pickerItem: {
-    // height: 34,
-  },
+  pickerItem: {},
   pieChart: {
-    flex: 12,
-    alignItems: "center",
-    marginBottom: "7%",
-    justifyContent: "flex-start",
+    flex: 8,
+    alignItems: 'center',
+    marginBottom: '30%',
   },
   basisText: {
-    fontSize: screenHeight * 0.015,
-    fontWeight: "900",
+    fontSize: 14,
+    fontWeight: '900',
   },
   totalView: {
     flex: 1,
-    marginBottom: "10%",
-    marginHorizontal: "10%",
-    alignItems: "flex-end",
+    marginBottom: '3%',
+    marginRight: '7%',
+    alignItems: 'flex-end',
   },
   totalText: {
     fontSize: 30,
   },
   totalMoneyText: {
     fontSize: 35,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   noContent: {
-    flex: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: "10%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noContentText: {
     fontSize: 17,
-    fontWeight: "800",
+    fontWeight: '800',
   },
 });

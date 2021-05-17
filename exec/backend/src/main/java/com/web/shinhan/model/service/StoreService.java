@@ -1,9 +1,7 @@
 package com.web.shinhan.model.service;
 
 import com.web.shinhan.model.BlockUserDto;
-import com.web.shinhan.model.UserDto;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.Store;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.mapper.StoreMapper;
@@ -34,6 +31,9 @@ public class StoreService {
   private PaymentRepository paymentRepository;
 
   @Autowired
+  private PaymentService paymentService;
+
+  @Autowired
   private BlockchainService blockchainService;
 
   private final StoreMapper mapper = Mappers.getMapper(StoreMapper.class);
@@ -41,18 +41,27 @@ public class StoreService {
   @Transactional
   public Page<StoreDto> findAllStore(Pageable pageable) {
     Page<Store> stores = storeRepository.findAll(pageable);
-    return stores.map(StoreDto::of);
+    return stores.map(post -> {
+      StoreDto store = StoreDto.of(post);
+      verifyBlockStore(store);
+      return store;
+    });
   }
 
   @Transactional
   public Page<StoreDto> findAllUnassignedStore(Pageable pageable) {
     Page<Store> stores = storeRepository.findAllUnassignedStore(pageable);
-    return stores.map(StoreDto::of);
+    return stores.map(post -> {
+      StoreDto store = StoreDto.of(post);
+      verifyBlockStore(store);
+      return store;
+    });
   }
 
   public StoreDto findStoreInfo(int storeId) {
     Store storeInfo = storeRepository.findByStoreId(storeId);
     StoreDto storeDto = mapper.INSTANCE.storeToDto(storeInfo);
+    verifyBlockStore(storeDto);
     return storeDto;
   }
 
@@ -70,6 +79,9 @@ public class StoreService {
     Store storeEntity = storeDto.toEntity();
     storeRepository.save(storeEntity);
     storeDto.setStoreId(storeEntity.getStoreId());
+
+    // 블록체인 삽입
+    createBlockUser(storeDto);
   }
 
   public boolean modifyStoreInfo(String email, StoreDto newDto) {
@@ -139,6 +151,7 @@ public class StoreService {
   public StoreDto findStoreByEmail(String email) {
     Store storeInfo = storeRepository.findByEmail(email);
     StoreDto storeDto = mapper.INSTANCE.storeToDto(storeInfo);
+    verifyBlockStore(storeDto);
     return storeDto;
   }
 
@@ -151,11 +164,12 @@ public class StoreService {
     return count;
   }
 
-  public boolean verifyBlockUser(UserDto user) {
+  public boolean verifyBlockStore(StoreDto user) {
     try {
       BlockUserDto blockUser = blockchainService.getUser(user.getEmail()).block();
+      int balance = paymentService.findNotConfirmed(user.getStoreId());
       if (user.getEmail().equals(blockUser.getUserId()) &&
-          user.getBalance() == blockUser.getBalance()) {
+          balance == blockUser.getBalance()) {
         user.setVerified(true);
       }
 
@@ -171,7 +185,7 @@ public class StoreService {
         .userId(store.getEmail())
         .balance(balance)
         .build();
-    blockchainService.setBalance(blockUser);
+    blockchainService.setBalance(blockUser).subscribe();
   }
 
   public void createBlockUser(StoreDto store) {
@@ -180,7 +194,6 @@ public class StoreService {
         .type("Store")
         .balance(0)
         .build();
-    blockchainService.createUser(blockUser);
 
     Mono<BlockUserDto> u = blockchainService.createUser(blockUser);
     u.subscribe(response -> {

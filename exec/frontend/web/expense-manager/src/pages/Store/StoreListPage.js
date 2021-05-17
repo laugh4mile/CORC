@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import StoreList from '../../components/Store/StoreList';
-import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
-import useHttp from '../../hooks/use-http';
-import { getStores } from '../../lib/api-store';
-import Page from '../../components/Pagenation';
+import StoreList from "../../components/Store/StoreList";
+import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
+import useHttp from "../../hooks/use-http";
+import { getStores } from "../../lib/api-store";
+import Page from "../../components/Pagenation/Page";
 
-import classes from './list.module.css';
+import classes from "./ListPage.module.css";
 
 const StoreListPage = () => {
-  const {
-    sendRequest,
-    status,
-    data: loadedStores,
-    error,
-  } = useHttp(getStores, true);
+  const { sendRequest, status, data: loadedStores, error } = useHttp(
+    getStores,
+    true
+  );
 
   const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
@@ -22,7 +20,7 @@ const StoreListPage = () => {
     sendRequest(pageInfo);
   }, [sendRequest, pageInfo]);
 
-  if (status === 'pending') {
+  if (status === "pending") {
     return (
       <div className="page">
         <span className="title">가맹점 목록</span>
@@ -34,17 +32,19 @@ const StoreListPage = () => {
   }
 
   if (error) {
-    return <p className="centered focused">{error}</p>;
-  }
-
-  if (
-    status === 'completed' &&
-    (!loadedStores.content || loadedStores.content.length === 0)
-  ) {
     return (
       <div className="page">
-        <span className="title">가맹점이 없습니다</span>
-        <section className={classes.section}></section>
+        <span className="title">가맹점 목록</span>
+        <span className={classes.inform}>{error}</span>
+      </div>
+    );
+  }
+
+  if (status === "completed" && (!loadedStores || loadedStores.length === 0)) {
+    return (
+      <div className="page">
+        <span className="title">가맹점 목록</span>
+        <span className={classes.inform}>가맹점이 없습니다.</span>
       </div>
     );
   }

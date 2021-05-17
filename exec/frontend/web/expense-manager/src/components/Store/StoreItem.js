@@ -1,18 +1,18 @@
-import { useEffect, useState, Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useEffect, useState, Fragment } from "react";
+import { useHistory } from "react-router-dom";
 
-import classes from './Item.module.css';
+import classes from "./Item.module.css";
 
 const StoreItem = (props) => {
   const history = useHistory();
 
   const isAccepted = (accepted) => {
-    if (accepted === 0) return '삭제';
-    else if (accepted === 1) return '대기';
-    else return '활성';
+    if (accepted === 0) return "삭제";
+    else if (accepted === 1) return "대기";
+    else return "활성";
   };
 
-  const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
+  const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
   const trClickHandler = () =>
     history.push({
@@ -26,35 +26,31 @@ const StoreItem = (props) => {
 
   return (
     <tbody>
-      <tr className={classes.tr}>
-        <td className={`${classes.td} ${classes.checkbox}`}>
+      <tr className={`${classes.tr} ${props.verified ? null : classes["verify-fail"]}`}>
+        <td style={{ width: "10%" }}>
           <input
             type="checkbox"
             value={props.storeId}
             name="storeId"
-            onChange={(e) =>
-              props.handleSingleCheck(e.target.checked, props.storeId)
-            }
+            onChange={(e) => props.handleSingleCheck(e.target.checked, props.storeId)}
             // checkItems에 data.id가 있으면 체크 아니면 체크 해제
             checked={props.checkItems.includes(props.storeId) ? true : false}
           />
         </td>
-        <td
-          className={`${classes.td} ${classes.link}`}
-          onClick={trClickHandler}
-        >
+        <td style={{ width: "60%" }} className={classes.td} onClick={trClickHandler}>
           {props.crNum}
         </td>
-        <td className={`${classes.td}`}>{props.storeName}</td>
-        <td className={`${classes.td}`}>{props.categoryCode}</td>
-        <td className={`${classes.td}`}>
+        <td className={`${classes.td} ${classes["text-left"]} ${classes.link}`}>{props.storeName}</td>
+        <td style={{ width: "40%" }} className={classes.td}>
+          {props.categoryCode}
+        </td>
+        <td style={{ width: "60%" }} className={classes.td}>
           {props.sido.sidoName} {props.gugun.gugunName}
         </td>
-        <td
-          className={`${classes.td} ${classes['text-sm']} ${classes['align-right']}`}
-        >
+        <td style={{ width: "60%" }} className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}>
           {formatMoney(props.total)}
         </td>
+        {/* <td>{isAccepted(props.accepted)}</td> */}
       </tr>
     </tbody>
   );

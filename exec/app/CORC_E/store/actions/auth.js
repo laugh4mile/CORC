@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import SERVER_URL from '../../env';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 // export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
-const SERVER_URL = 'http://192.168.219.102:8765/shinhan';
+// const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
 
 export const setDidTryAL = () => {
   return { type: SET_DID_TRY_AL };

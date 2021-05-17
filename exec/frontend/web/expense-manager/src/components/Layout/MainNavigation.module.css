@@ -1,11 +1,12 @@
 .header {
-  width: 20vw;
+  width: 18vw;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: start;
   color: #a5a5a8;
   background-color: white;
+  position: fixed;
 }
 
 .header-title {

@@ -1,7 +1,7 @@
-import { Fragment } from 'react';
+import { Fragment } from "react";
 
-import StoreSalesItem from '../Payment/PaymentItem';
-import classes from './List.module.css';
+import StoreSalesItem from "../Payment/PaymentItem";
+import classes from "./List.module.css";
 
 const StoreSales = (props) => {
   if (props.logs.length === 0) {
@@ -16,13 +16,14 @@ const StoreSales = (props) => {
       <table>
         <thead>
           <tr className={classes.tr}>
-            <th>거래번호</th>
-            <th>상호명</th>
-            <th>사용자명</th>
-            <th>상세 내용</th>
-            <th>결제 날짜</th>
-            <th>결제 금액</th>
-            <th>승인 여부</th>
+            <th style={{ width: "10%" }}>
+              <input type="checkbox" name="status" />
+            </th>
+            <th>가맹점명</th>
+            <th style={{ width: "40%" }}>사용자명</th>
+            <th style={{ width: "50%" }}>결제 금액</th>
+            <th style={{ width: "40%" }}>결제 날짜</th>
+            <th style={{ width: "20%" }}>승인 여부</th>
           </tr>
         </thead>
         <tbody>
