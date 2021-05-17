@@ -1,8 +1,19 @@
 package com.web.shinhan.model.service;
 
+import com.web.shinhan.entity.Payment;
+import com.web.shinhan.entity.Store;
+import com.web.shinhan.entity.User;
+import com.web.shinhan.exception.VerifyDataException;
 import com.web.shinhan.model.BlockUserDto;
 import com.web.shinhan.model.TransactionDto;
+import com.web.shinhan.model.VerityResult;
+import com.web.shinhan.repository.PaymentRepository;
+import com.web.shinhan.repository.StoreRepository;
+import com.web.shinhan.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +27,25 @@ public class BlockchainService {
   @Value("${fabric.url}")
   private String fabricUrl;
   private WebClient webClient;
+
+  private UserRepository userRepository;
+  private StoreRepository storeRepository;
+  private PaymentRepository paymentRepository;
+
+  @Autowired
+  public void setUserRepository(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  @Autowired
+  public void setStoreRepository(StoreRepository storeRepository) {
+    this.storeRepository = storeRepository;
+  }
+
+  @Autowired
+  public void setPaymentRepository(PaymentRepository paymentRepository) {
+    this.paymentRepository = paymentRepository;
+  }
 
   @PostConstruct
   public void init() {
@@ -68,5 +98,62 @@ public class BlockchainService {
         .uri("/transaction/{txId}", txId)
         .retrieve()
         .bodyToMono(TransactionDto.class);
+  }
+
+  public VerityResult<User> getUserVerityResult() throws Exception {
+    List<User> userList = userRepository.findAll();
+    List<User> failedList = new ArrayList<>();
+    int total = userList.size();
+    int verified = 0;
+
+    for (User user : userList) {
+      try {
+        getUser(user.getEmail()).block();
+        verified++;
+      } catch (Exception e) {
+        failedList.add(user);
+      }
+    }
+
+    return new VerityResult<>(verified, total, failedList);
+  }
+
+  public VerityResult<Store> getStoreVerityResult() throws Exception {
+    List<Store> storeList = storeRepository.findAll();
+    List<Store> failedList = new ArrayList<>();
+    int total = storeList.size();
+    int verified = 0;
+
+    for (Store store : storeList) {
+      try {
+        getUser(store.getEmail()).block();
+        verified++;
+      } catch (Exception e) {
+        failedList.add(store);
+      }
+    }
+
+    return new VerityResult<>(verified, total, failedList);
+  }
+
+  public VerityResult<Payment> getTransactionVerityResult() throws Exception {
+    List<Payment> paymentList = paymentRepository.findAll();
+    List<Payment> failedList = new ArrayList<>();
+    int total = paymentList.size();
+    int verified = 0;
+
+    for (Payment payment : paymentList) {
+      try {
+        if (payment.getTransactionId() == null) {
+          throw new VerifyDataException("transaction does not exist");
+        }
+        getTransaction(payment.getTransactionId());
+        verified++;
+      } catch (Exception e) {
+        failedList.add(payment);
+      }
+    }
+
+    return new VerityResult<>(verified, total, failedList);
   }
 }

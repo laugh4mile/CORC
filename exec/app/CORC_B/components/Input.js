@@ -6,7 +6,8 @@ const Input = forwardRef((props, ref) => {
   const [secure, setSecure] = useState(true);
   const [focus, setFocus] = useState(false);
 
-  const {style: cStyle, ...others} = props;
+  const { style: cStyle, ...others } = props;
+  const { children, ...otherProps } = others;
 
   return (
     <View style={[!focus ? styles.container : styles.containerFocused, cStyle]}>
@@ -22,7 +23,7 @@ const Input = forwardRef((props, ref) => {
             onBlur={() => {
               setFocus(false);
             }}
-            ref={ref? ref: null}
+            ref={ref ? ref : null}
           />
           <TouchableOpacity
             onPress={() => {
@@ -33,17 +34,20 @@ const Input = forwardRef((props, ref) => {
           </TouchableOpacity>
         </>
       ) : (
-        <TextInput
-          {...others}
-          style={styles.input}
-          onFocus={() => {
-            setFocus(true);
-          }}
-          onBlur={() => {
-            setFocus(false);
-          }}
-          ref={ref? ref: null}
-        />
+        <>
+          <TextInput
+            {...otherProps}
+            style={styles.input}
+            onFocus={() => {
+              setFocus(true);
+            }}
+            onBlur={() => {
+              setFocus(false);
+            }}
+            ref={ref ? ref : null}
+          />
+          {children}
+        </>
       )}
     </View>
   );

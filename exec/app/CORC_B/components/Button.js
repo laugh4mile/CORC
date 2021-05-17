@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import Colors from '../constants/Colors'
 
 const Button = (props) => {
-  const {title, onPress, backgroundColor, fontColor, style, ...others} = props
+  const {title, onPress, backgroundColor, fontColor, style, fontStyle, ...others} = props
 
   let bColor = backgroundColor ? backgroundColor : Colors.primary.backgroundColor
   let fColor = fontColor ? fontColor : Colors.primary.fontColor
@@ -14,7 +14,7 @@ const Button = (props) => {
       activeOpacity={0.8}
       onPress={onPress}
     >
-      <Text style={[styles.text, {color: fColor}]}>{title}</Text>
+      <Text style={{...styles.text, ...fontStyle, color: fColor}}>{title}</Text>
     </TouchableOpacity>
   );
 };
