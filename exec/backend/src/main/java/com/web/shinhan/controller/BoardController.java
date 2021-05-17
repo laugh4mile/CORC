@@ -1,5 +1,10 @@
 package com.web.shinhan.controller;
 
+import com.web.shinhan.entity.Payment;
+import com.web.shinhan.entity.Store;
+import com.web.shinhan.entity.User;
+import com.web.shinhan.model.VerityResult;
+import com.web.shinhan.model.service.BlockchainService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +47,9 @@ public class BoardController {
 
   @Autowired
   PaymentService paymentService;
+
+  @Autowired
+  BlockchainService blockchainService;
 
   @ApiOperation(value = "사용된 금액", notes = "assignedTotal: 배정된 총액\r\n"
       + "notConfirmed: 정산되어야 하는 금액\r\n"
@@ -153,4 +161,36 @@ public class BoardController {
     return new ResponseEntity<Map<String, Object>>(resultMap, status);
   }
 
+  @ApiOperation(value = "유저 데이터 검증", notes = "유저 데이터 검증 결과를 반환한다.")
+  @GetMapping("/user/verified")
+  public ResponseEntity<VerityResult<User>> getVerifiedUser() {
+    try {
+      return new ResponseEntity<>(blockchainService.getUserVerityResult(), HttpStatus.OK);
+    }
+    catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiOperation(value = "가맹점 데이터 검증", notes = "가맹점 데이터 검증 결과를 반환한다.")
+  @GetMapping("/store/verified")
+  public ResponseEntity<VerityResult<Store>> getVerifiedStore() {
+    try{
+      return new ResponseEntity<>(blockchainService.getStoreVerityResult(), HttpStatus.OK);
+    }
+    catch(Exception e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiOperation(value = "결제 데이터 검증", notes = "결제 데이터 검증 결과를 반환한다.")
+  @GetMapping("/payment/verified")
+  public ResponseEntity<VerityResult<Payment>> getVerifiedTransaction() {
+    try {
+      return new ResponseEntity<>(blockchainService.getTransactionVerityResult(), HttpStatus.OK);
+    }
+    catch(Exception e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+  }
 }
