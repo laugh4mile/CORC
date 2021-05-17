@@ -155,22 +155,22 @@ const RegistStore = (props) => {
         { text: "확인" },
       ]);
     }
-    if (!password) {
-      return Alert.alert(null, "비밀번호를 입력해 주세요.", [
+    if (!password || password.trim().length < 6) {
+      return Alert.alert(null, "비밀번호가 너무 짧습니다.\n다시 입력해 주세요.", [
         { text: "확인", onPress: () => passwordRef.current.focus() },
       ]);
     }
-    if (!bankName) {
+    if (!bankName || bankName.trim().length < 1) {
       return Alert.alert(null, "은행명을 입력해 주세요.", [
         { text: "확인", onPress: () => bankNameRef.current.focus() },
       ]);
     }
-    if (!account) {
+    if (!account || account.trim().length < 1) {
       return Alert.alert(null, "계좌번호를 입력해 주세요.", [
         { text: "확인", onPress: () => accountRef.current.focus() },
       ]);
     }
-    if (!contact) {
+    if (!contact || contact.trim().length < 1) {
       return Alert.alert(null, "연락처를 입력해 주세요.", [
         { text: "확인", onPress: () => contactRef.current.focus() },
       ]);
