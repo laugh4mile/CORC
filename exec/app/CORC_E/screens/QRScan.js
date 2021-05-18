@@ -84,7 +84,6 @@ export default function QRScan() {
     const temp = JSON.parse(data);
     console.log(temp);
     setPaymentData(temp);
-    console.log(temp.orderList);
   };
 
   if (hasPermission === null) {
