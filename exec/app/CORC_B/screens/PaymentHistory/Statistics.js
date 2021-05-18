@@ -127,6 +127,12 @@ const Statistics = () => {
     makeChart();
   }, [startDate]);
 
+  useEffect(() => {
+    return () => {
+      setitemList([defaultData]);
+    }
+  }, [])
+  
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
