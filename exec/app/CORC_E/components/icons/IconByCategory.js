@@ -21,6 +21,16 @@ export const GetIcon = (categoryCode) => {
       iconInfo.iconName = 'store';
       iconInfo.family = 'StoreIcon';
       break;
+    case '55101':
+      // 호텔업
+      iconInfo.iconName = 'hotel';
+      iconInfo.family = 'FontAwesome5';
+      break;
+    case '56111':
+      // 한식 일반 음식점업
+      iconInfo.iconName = 'restaurant-outline';
+      iconInfo.family = 'Ionicons';
+      break;
     case '56221':
       // 커피 전문점
       iconInfo.iconName = 'coffee';

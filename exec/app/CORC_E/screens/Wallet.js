@@ -170,7 +170,6 @@ const PaymentHistory = (props) => {
     newDate = new Date(year, month - 1, day);
     return false;
   };
-
   const renderList = ({ item }) => {
     return (
       <View>
