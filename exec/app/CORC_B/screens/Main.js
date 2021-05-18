@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Dimensions,
   DeviceEventEmitter,
+  ScrollView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
@@ -55,6 +56,12 @@ const Main = (props) => {
       getData();
     }, [])
   );
+  
+  React.useEffect((()=>{
+    return () => {
+      DeviceEventEmitter.emit("detailFromMain");
+    }
+  }),[])
 
   const getData = async () => {
     setIsLoading(true);
@@ -71,7 +78,7 @@ const Main = (props) => {
     setIsLoading(false);
   };
 
-  var currentDate = new Date();
+  var currentDate = new Date(1900, 0, 1);
 
   const checkDate = (date) => {
     const year = +date.slice(0, 4);
@@ -141,30 +148,32 @@ const Main = (props) => {
           </View>
         </View>
         <View style={styles.recentList}>
-          {paymentList.empty ? (
-            <Text>최근 거래 내역이 없습니다.</Text>
-          ) : (
-            paymentList.content.slice(0, 3).map((payment, index) => (
-              <View key={payment.paymentId.toString()}>
-                {!checkDate(payment.date) && (
-                  <View
-                    style={{
-                      ...styles.dateSeperator,
-                      marginTop: index !== 0 ? "2%" : 0,
-                    }}
-                  >
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.dateSeperatorText}>
-                        {getMMDD_DT(payment.date)}
-                      </Text>
+          <ScrollView style={{paddingHorizontal: 10}}>
+            {paymentList.empty ? (
+              <Text>거래 내역이 없습니다.</Text>
+            ) : (
+              paymentList.content.slice(0, 5).map((payment, index) => (
+                <View key={payment.paymentId.toString()}>
+                  {!checkDate(payment.date) && (
+                    <View
+                      style={{
+                        ...styles.dateSeperator,
+                        marginTop: index !== 0 ? "2%" : 0,
+                      }}
+                    >
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.dateSeperatorText}>
+                          {getMMDD_DT(payment.date)}
+                        </Text>
+                      </View>
+                      <View style={styles.dateSeperatorLine} />
                     </View>
-                    <View style={styles.dateSeperatorLine} />
-                  </View>
-                )}
-                <PaymentItem payment={payment} />
-              </View>
-            ))
-          )}
+                  )}
+                  <PaymentItem payment={payment} />
+                </View>
+              ))
+            )}
+          </ScrollView>
         </View>
         <TouchableOpacity
           style={styles.goDetail}
@@ -193,6 +202,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   storeNameView: {
     flex: 2,
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
   },
   recentList: {
     flex: 6,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     paddingBottom: 3,
   },
   dateSeperator: {

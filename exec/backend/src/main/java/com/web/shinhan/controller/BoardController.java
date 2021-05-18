@@ -88,12 +88,36 @@ public class BoardController {
 
     try {
       for (int i = 1; i <= 12; i++) {
-        int payment = paymentService.expenseByMonth(i, year);
-        int confirmed = paymentService.confirmedByMonth(i, year);
+        int payment = paymentService.expenseByYear(i, year);
+        int confirmed = paymentService.confirmedByYear(i, year);
         List<Integer> temp = new ArrayList<>();
         temp.add(payment);
         temp.add(confirmed);
         resultMap.put(i, temp);
+      }
+      status = HttpStatus.ACCEPTED;
+    } catch (RuntimeException e) {
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+    return new ResponseEntity<Map<Integer, Object>>(resultMap, status);
+  }
+  
+  @ApiOperation(value = "일간 소비량", notes = "일간 소비량을 보여준다.")
+  @GetMapping("/expenses/day")
+  public ResponseEntity<Map<Integer, Object>> expenseByDay(@RequestParam int year) {
+    logger.info("expenseByMonth - 호출");
+    Map<Integer, Object> resultMap = new HashMap<>();
+    HttpStatus status = HttpStatus.ACCEPTED;
+
+    try {
+      for (int i = 1; i <= 12; i++) {
+        List<Integer> exMonth = paymentService.expenseByMonth(i, year);
+        List<Integer> cfMonth = paymentService.confirmedByMonth(i, year);
+        List<List<Integer>> send = new ArrayList<>();
+        send.add(exMonth);
+        send.add(cfMonth);
+        resultMap.put(i, send);
       }
       status = HttpStatus.ACCEPTED;
     } catch (RuntimeException e) {

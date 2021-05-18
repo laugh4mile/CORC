@@ -1,13 +1,18 @@
-import { useState, useEffect } from "react";
-import { useParams, useLocation, useHistory } from "react-router-dom";
-import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
-import useHttp from "../../hooks/use-http";
-import { getSingleUser, getUserPaymentDetails } from "../../lib/api-user";
+import { useState, useEffect } from 'react';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
+import LoadingSpinner from '../../components/UI/LoadingSpinner/LoadingSpinner';
+import useHttp from '../../hooks/use-http';
+import {
+  getSingleUser,
+  getUserPaymentDetails,
+  modifyUser,
+} from '../../lib/api-user';
 
-import UserInfo from "../../components/User/UserInfo";
-import PaymentList from "../../components/User/PaymentList";
+import UserInfo from '../../components/User/UserInfo';
+import PaymentList from '../../components/User/PaymentList';
 
-import classes from "./UserDetailPage.module.css";
+import Page from '../../components/Pagenation/Page';
+import classes from './UserDetailPage.module.css';
 
 const UserDetailPage = () => {
   const params = useParams();
@@ -17,6 +22,7 @@ const UserDetailPage = () => {
   const { userName } = location.state;
   const [infoStyle, setInfoStyle] = useState(true);
   const [logStyle, setLogStyle] = useState(false);
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   // console.log("params", params);
   // console.log("state", location.state);
@@ -33,8 +39,8 @@ const UserDetailPage = () => {
 
   const goBackHandler = () => history.goBack();
 
-  const infoActiveStyle = () => (infoStyle ? classes.active : "");
-  const logActiveStyle = () => (logStyle ? classes.active : "");
+  const infoActiveStyle = () => (infoStyle ? classes.active : '');
+  const logActiveStyle = () => (logStyle ? classes.active : '');
 
   const { userId } = location.state;
 
@@ -52,12 +58,25 @@ const UserDetailPage = () => {
     error: userLogError,
   } = useHttp(getUserPaymentDetails, true);
 
+  const { sendRequest: sendModifyStore, status: modifyStatus } =
+    useHttp(modifyUser);
+
   useEffect(() => {
     sendUserInfoRequest(userId);
-    sendUserLogRequest(userId);
-  }, [sendUserInfoRequest, sendUserLogRequest, userId]);
+    sendUserLogRequest(userId, pageInfo);
+    console.log('pageInfo', pageInfo);
+  }, [sendUserInfoRequest, sendUserLogRequest, userId, pageInfo]);
 
-  if (userInfoStatus === "pending" && userLogStatus === "pending") {
+  useEffect(() => {
+    // modifyStatus = 'completed';
+    if (modifyStatus === 'completed') {
+      // 임시 prompt
+      // alert('가맹점 수정 완료');
+      history.goBack();
+    }
+  }, [modifyStatus, history]);
+
+  if (userInfoStatus === 'pending' && userLogStatus === 'pending') {
     return (
       <div>
         <LoadingSpinner />
@@ -113,8 +132,12 @@ const UserDetailPage = () => {
     );
   }
 
-  console.log("loadedUser", loadedUser);
-  console.log("loadedLogs", loadedLogs);
+  const addUserHandler = (userData) => {
+    sendModifyStore(userData);
+  };
+
+  console.log('loadedUser', loadedUser);
+  console.log('loadedLogs', loadedLogs);
 
   return (
     <section className="page">
@@ -136,8 +159,17 @@ const UserDetailPage = () => {
           사용자 로그
         </span>
       </article>
-      {infoStyle && <UserInfo {...loadedUser} />}
-      {logStyle && <PaymentList payments={loadedLogs} />}
+      {infoStyle && <UserInfo {...loadedUser} onModifyUser={addUserHandler} />}
+      {logStyle && <PaymentList payments={loadedLogs.content} />}
+      {logStyle && loadedLogs.content.length !== 0 && (
+        <Page
+          totalElements={loadedLogs.totalElements}
+          blockSize={4}
+          number={loadedLogs.number}
+          size={loadedLogs.size}
+          onClick={setPageInfo}
+        />
+      )}
     </section>
   );
 };

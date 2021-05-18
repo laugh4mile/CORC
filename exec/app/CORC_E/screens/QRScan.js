@@ -54,18 +54,12 @@ export default function QRScan() {
   };
   //
   const pay = async () => {
-    console.log(paymentData.orderList);
-
-    console.log(userId);
-    console.log(paymentData.storeid);
-
     let response = await axios.post(
       `${SERVER_URL}/user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
         paymentData.storeid
       }`,
       paymentData.orderList
     );
-    console.log('response.data.message : ', response.data.message);
     setModalVisible(false);
     setAlertModalVisible(true);
     setMessage(response.data.message);
@@ -90,7 +84,6 @@ export default function QRScan() {
     const temp = JSON.parse(data);
     console.log(temp);
     setPaymentData(temp);
-    console.log(temp.orderList);
   };
 
   if (hasPermission === null) {
@@ -194,16 +187,16 @@ export default function QRScan() {
                   <View style={{ justifyContent: 'center', marginTop: 10 }}>
                     <View style={{ flexDirection: 'row' }}>
                       <Pressable
-                        style={[styles.payButton, styles.buttonPay]}
-                        onPress={scanFingerprint}
-                      >
-                        <Text style={styles.payText}>결제 </Text>
-                      </Pressable>
-                      <Pressable
                         style={[styles.closeButton, styles.buttonClose]}
                         onPress={() => setModalVisible(!modalVisible)}
                       >
                         <Text style={styles.closeText}>취소</Text>
+                      </Pressable>
+                      <Pressable
+                        style={[styles.payButton, styles.buttonPay]}
+                        onPress={scanFingerprint}
+                      >
+                        <Text style={styles.payText}>결제 </Text>
                       </Pressable>
                     </View>
                   </View>
@@ -299,13 +292,13 @@ const styles = StyleSheet.create({
   },
   payButton: {
     flex: 1,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     padding: '5%',
     elevation: 2,
   },
   closeButton: {
     flex: 1,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
     padding: '5%',
     elevation: 2,
   },

@@ -21,7 +21,7 @@ function httpReducer(state, action) {
     return {
       data: null,
       error: action.errorMessage,
-      status: 'completed',
+      status: 'error',
     };
   }
 

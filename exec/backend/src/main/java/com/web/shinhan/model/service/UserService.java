@@ -99,10 +99,17 @@ public class UserService {
     userDto.setDays(newDto.getDays());
     userDto.setSidoCode(newDto.getSidoCode());
     userDto.setGugunCode(newDto.getGugunCode());
-    userDto.setBalance(newDto.getBalance());
-    userDto.setCardLimit(newDto.getCardLimit());
-    userDto.setAccessTime(newDto.getAccessTime());
-    userDto.setActive(newDto.getActive());
+    
+    if(userDto.getBalance() >= newDto.getCardLimit()) {
+    	userDto.setCardLimit(newDto.getCardLimit());
+    	userDto.setBalance(newDto.getCardLimit());
+    } else {
+    	userDto.setCardLimit(newDto.getCardLimit());
+        userDto.setBalance(userDto.getBalance() + (newDto.getCardLimit() - userDto.getCardLimit()));
+    	userDto.setCardLimit(newDto.getCardLimit());
+    }
+    
+    userDto.setActive(1);
     userRepository.save(userDto.toEntity());
 
     newDto.setPassword(encodePassword);
@@ -146,37 +153,37 @@ public class UserService {
   @Transactional
   public int banUser(int userId) {
     User user = userRepository.findByUserId(userId);
-    if (user.getActive() != 2) {
+//    if (user.getActive() != 2) {
       UserDto userDto = mapper.INSTANCE.userToDto(user);
       userDto.setActive(2);
       userRepository.save(userDto.toEntity());
       return 1;
-    }
-    return 0;
+//    }
+//    return 0;
   }
 
   @Transactional
   public int deleteUser(int userId) {
     User user = userRepository.findByUserId(userId);
-    if (user.getActive() != 0) {
+//    if (user.getActive() != 0) {
       UserDto userDto = mapper.INSTANCE.userToDto(user);
       userDto.setActive(0);
       userRepository.save(userDto.toEntity());
       return 1;
-    }
-    return 0;
+//    }
+//    return 0;
   }
 
   @Transactional
   public int activateUser(int userId) {
     User user = userRepository.findByUserId(userId);
-    if (user.getActive() != 1) {
+//    if (user.getActive() != 1) {
       UserDto userDto = mapper.INSTANCE.userToDto(user);
       userDto.setActive(1);
       userRepository.save(userDto.toEntity());
       return 1;
-    }
-    return 0;
+//    }
+//    return 0;
   }
 
   public boolean login(UserDto user) {

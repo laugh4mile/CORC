@@ -18,8 +18,7 @@ import Card from '../components/Card';
 import Payment from '../components/Payment';
 import Colors from '../constants/Colors';
 import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
-
-const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
+import SERVER_URL from '../env';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
@@ -30,16 +29,6 @@ var buttonList = [
   { key: 3, label: '1개월', value: 30, selected: false },
   { key: 4, label: '조건 검색', value: -1, selected: false },
 ];
-
-const getMMDD_DT = (date) => {
-  let _date = new Date(date);
-  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
-    dayOfWeek[_date.getDay()]
-  })`;
-};
-
-const formatMoney = (number) =>
-  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null;
 
 const dateStrToNum = (date) => {
   let year = date.getFullYear();
@@ -128,24 +117,6 @@ const PaymentHistory = (props) => {
     setisSent(true);
   };
 
-  var currentDate = new Date();
-
-  const checkDate = (date) => {
-    const year = +date.slice(0, 4);
-    const month = +date.slice(5, 7) - 1;
-    const day = +date.slice(8, 10);
-
-    if (year == currentDate.getFullYear()) {
-      if (month == currentDate.getMonth()) {
-        if (day == currentDate.getDate()) {
-          return true;
-        }
-      }
-    }
-    currentDate = new Date(year, month, day);
-    return false;
-  };
-
   const handleButton = (button) => {
     buttonList.map((btn) => (btn.selected = btn.key === button.key));
     setpage(0);
@@ -169,6 +140,7 @@ const PaymentHistory = (props) => {
   var newDate = new Date();
   var first = true;
   const match = (date) => {
+    // false 면 줄을 긋는다.
     const year = date.substring(0, 4);
     const month = +date.substring(5, 7);
     const day = +date.substring(8, 10);
@@ -190,10 +162,14 @@ const PaymentHistory = (props) => {
         }
       }
     }
+    if (first) {
+      newDate = new Date(year, month - 1, day);
+      first = false;
+      return false;
+    }
     newDate = new Date(year, month - 1, day);
     return false;
   };
-
   const renderList = ({ item }) => {
     return (
       <View>
