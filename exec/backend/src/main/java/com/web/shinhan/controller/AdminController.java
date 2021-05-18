@@ -182,9 +182,15 @@ public class AdminController {
 
     // 회원가입
     try {
-      userService.registUser(user);
-      flag = true;
-      status = HttpStatus.ACCEPTED;
+		if(!userService.employeeNumCheck(user.getEmployeeNum())) {
+			userService.registUser(user);
+			flag = true;
+			status = HttpStatus.ACCEPTED;
+		}else {
+			flag = false;
+			status = HttpStatus.UNAUTHORIZED;
+		    return new ResponseEntity<Boolean>(flag, status);
+		}
     } catch (Exception e) {
       e.printStackTrace();
       status = HttpStatus.INTERNAL_SERVER_ERROR;
