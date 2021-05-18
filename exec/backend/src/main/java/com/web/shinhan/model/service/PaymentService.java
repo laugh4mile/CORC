@@ -154,7 +154,7 @@ public class PaymentService {
     return total;
   }
 
-  public int expenseByMonth(int now, int year) {
+  public int expenseByYear(int now, int year) {
     int monthly = 0;
 
     if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
@@ -190,42 +190,145 @@ public class PaymentService {
     }
     return monthly;
   }
+  
+  public int confirmedByYear(int now, int year) {
+	    int monthly = 0;
 
-  public int confirmedByMonth(int now, int year) {
-    int monthly = 0;
-
-    if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
-      LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
-      LocalDateTime endDate = LocalDateTime.of(year, now, 31, 23, 59);
-      List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
-      for (int payment : payments) {
-        monthly += payment;
-      }
-    } else if (now == 4 || now == 6 || now == 9 || now == 11) {
-      LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
-      LocalDateTime endDate = LocalDateTime.of(year, now, 30, 23, 59);
-      List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
-      for (int payment : payments) {
-        monthly += payment;
-      }
-    } else {
-      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-        LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
-        LocalDateTime endDate = LocalDateTime.of(year, now, 29, 23, 59);
-        List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
-        for (int payment : payments) {
-          monthly += payment;
-        }
-      } else {
-        LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
-        LocalDateTime endDate = LocalDateTime.of(year, now, 28, 23, 59);
-        List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
-        for (int payment : payments) {
-          monthly += payment;
-        }
-      }
-    }
-    return monthly;
+	    if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
+	      LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+	      LocalDateTime endDate = LocalDateTime.of(year, now, 31, 23, 59);
+	      List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+	      for (int payment : payments) {
+	        monthly += payment;
+	      }
+	    } else if (now == 4 || now == 6 || now == 9 || now == 11) {
+	      LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+	      LocalDateTime endDate = LocalDateTime.of(year, now, 30, 23, 59);
+	      List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+	      for (int payment : payments) {
+	        monthly += payment;
+	      }
+	    } else {
+	      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+	        LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+	        LocalDateTime endDate = LocalDateTime.of(year, now, 29, 23, 59);
+	        List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+	        for (int payment : payments) {
+	          monthly += payment;
+	        }
+	      } else {
+	        LocalDateTime startDate = LocalDateTime.of(year, now, 01, 00, 00);
+	        LocalDateTime endDate = LocalDateTime.of(year, now, 28, 23, 59);
+	        List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+	        for (int payment : payments) {
+	          monthly += payment;
+	        }
+	      }
+	    }
+	    return monthly;
+	  }
+  
+  public List<Integer> expenseByMonth(int now, int year) {
+	  List<Integer> month = new ArrayList<>();
+	  if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
+		  for(int i = 1; i <= 31; i++) {
+			  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+		  }
+	  } else if (now == 4 || now == 6 || now == 9 || now == 11) {
+		  for(int i = 1; i <= 30; i++) {
+			  int daily = 0;
+		  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+		  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+		  List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+		  for (int payment : payments) {
+			  daily += payment;
+		  }
+		  month.add(daily);
+		  }
+	  } else {
+		  if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+			  for(int i = 1; i <= 29; i++) {
+				  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+			  }
+		  } else {
+			  for(int i = 1; i <= 28; i++) {
+				  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.findAllByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+			  }
+		  }
+	  }
+	  return month;
+  }
+  public List<Integer> confirmedByMonth(int now, int year) {
+	  List<Integer> month = new ArrayList<>();
+	  if (now == 1 || now == 3 || now == 5 || now == 7 || now == 8 || now == 10 || now == 12) {
+		  for(int i = 1; i <= 31; i++) {
+			  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+		  }
+	  } else if (now == 4 || now == 6 || now == 9 || now == 11) {
+		  for(int i = 1; i <= 30; i++) {
+			  int daily = 0;
+		  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+		  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+		  List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+		  for (int payment : payments) {
+			  daily += payment;
+		  }
+		  month.add(daily);
+		  }
+	  } else {
+		  if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+			  for(int i = 1; i <= 29; i++) {
+				  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+			  }
+		  } else {
+			  for(int i = 1; i <= 28; i++) {
+				  int daily = 0;
+			  LocalDateTime startDate = LocalDateTime.of(year, now, i, 00, 00);
+			  LocalDateTime endDate = LocalDateTime.of(year, now, i, 23, 59);
+			  List<Integer> payments = paymentRepository.confirmedByMonth(startDate, endDate);
+			  for (int payment : payments) {
+				  daily += payment;
+			  }
+			  month.add(daily);
+			  }
+		  }
+	  }
+	  return month;
   }
 
   public int findTotal(int storeId) {
@@ -435,4 +538,6 @@ public class PaymentService {
         .balance(blockUser.getBalance() - payemnt.getTotal())
         .build()).subscribe();
   }
+
+
 }
