@@ -56,6 +56,12 @@ const Main = (props) => {
       getData();
     }, [])
   );
+  
+  React.useEffect((()=>{
+    return () => {
+      DeviceEventEmitter.emit("detailFromMain");
+    }
+  }),[])
 
   const getData = async () => {
     setIsLoading(true);

@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from "react-native";
 import MainIcon from "./icons/MainIcon";
 import CardIcon from "./icons/CardIcon";
 import PaymentHistoryIcon from "./icons/PaymentHistoryIcon";
@@ -31,6 +32,7 @@ export default function TabNavigation() {
             tabBarIcon: ({ focused }) => (
               <MainIcon color={focusedColor(focused)} size="60%" />
             ),
+            unmountOnBlur: Platform.OS === 'ios' ? false : true,
           }}
         />
         <MainTab.Screen
@@ -51,6 +53,7 @@ export default function TabNavigation() {
             tabBarIcon: ({ focused }) => (
               <PaymentHistoryIcon color={focusedColor(focused)} size="70%" />
             ),
+            unmountOnBlur: Platform.OS === 'ios' ? false : true,
           }}
         />
         <MainTab.Screen

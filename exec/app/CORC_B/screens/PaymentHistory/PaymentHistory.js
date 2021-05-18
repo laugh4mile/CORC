@@ -73,6 +73,9 @@ const PaymentHistory = (props) => {
     DeviceEventEmitter.addListener("detailFromMain", () => {
       handleButton(buttonList[1]); // initialize to one week selected button
     });
+    return () => {
+      setDays(7);
+    }
   }, []);
 
   // 당일, 1주일, 1개월 버튼 클릭했을 때
