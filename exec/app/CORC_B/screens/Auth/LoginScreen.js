@@ -82,6 +82,7 @@ const LoginScreen = (props) => {
           onSubmitEditing={() => {
             passwordRef.current.focus();
           }}
+          keyboardType="email-address"
           blurOnSubmit={false}
           ref={userIdRef}
         />
