@@ -19,7 +19,19 @@ export async function expenseByMonth(year) {
     console.log('expenseByMonth data', data);
     return data;
   } catch (err) {
-    throw new Error(err || '전체 사용 금액을 불러 올 수 없습니다.');
+    throw new Error(err || '월별 사용 금액을 불러 올 수 없습니다.');
+  }
+}
+
+export async function expenseByDay(year) {
+  try {
+    const rs = await axios.get(`/board/expenses/day?year=${year}`);
+    const data = rs.data;
+
+    console.log('expenseByDay data', data);
+    return data;
+  } catch (err) {
+    throw new Error(err || '일별 사용 금액을 불러 올 수 없습니다.');
   }
 }
 

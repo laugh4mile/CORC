@@ -155,12 +155,12 @@ public class UserController {
     	  itemsTotal += paymentitem.getPrice() * paymentitem.getAmount();
       }
       if(itemsTotal == total) {
-      UserDto user = userService.findUserInfo(userId);
-      StoreDto store = storeService.findStoreInfo(storeId);
-      String storeGugunCode = store.getGugunCode();
-      String userGugunCode = user.getGugunCode();
-      String userDays = user.getDays();
-      LocalDateTime now = LocalDateTime.now();
+	      UserDto user = userService.findUserInfo(userId);
+	      StoreDto store = storeService.findStoreInfo(storeId);
+	      String storeGugunCode = store.getGugunCode();
+	      String userGugunCode = user.getGugunCode();
+	      String userDays = user.getDays();
+	      LocalDateTime now = LocalDateTime.now();
       int nowDay = now.getDayOfWeek().getValue();
       if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
         if (storeGugunCode.equals(userGugunCode)) {
@@ -170,7 +170,6 @@ public class UserController {
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
           } else {
             paymentService.pay(userId, storeId, total, paymentitems);
-
             resultMap.put("message", "결제 완료");
             status = HttpStatus.ACCEPTED;
           }
