@@ -165,7 +165,7 @@ const RegistStore = (props) => {
         { text: "확인", onPress: () => bankNameRef.current.focus() },
       ]);
     }
-    if (!account || account.trim().length < 1) {
+    if (!account || account.trim().length < 1 || isNaN(+account.replace(/-/gi, ""))) {
       return Alert.alert(null, "계좌번호를 입력해 주세요.", [
         { text: "확인", onPress: () => accountRef.current.focus() },
       ]);
@@ -184,7 +184,7 @@ const RegistStore = (props) => {
       storeName: storeName,
       contact: contact,
       bankName: bankName,
-      account: account,
+      account: +account.replace(/-/gi, ""),
       sidoCode: sidoCode,
       gugunCode: gugunCode,
     };
@@ -454,6 +454,7 @@ const RegistStore = (props) => {
           />
           <Text style={styles.inputLabel}>계좌번호</Text>
           <Input
+            maxLength={9}
             keyboardType="numeric"
             placeholder="계좌번호"
             onChangeText={(text) => setaccount(text)}
