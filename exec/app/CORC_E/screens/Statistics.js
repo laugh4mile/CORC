@@ -17,32 +17,33 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const pieWidth = screenWidth * 0.9;
 const pieHeight = screenHeight * 0.23;
 
+const pastelColor = [
+  'FF8B8C',
+  'FDB18B',
+  'FFE08E',
+  'FFFE8E',
+  'FDB18B',
+  'E3FF9E',
+  '8DD0BC',
+  '8DC3C6',
+  'A3C8FB',
+  'FF8B8C',
+  'ADB8F1',
+  'B597E1',
+  'D292E0',
+  'EC8EDF',
+  'F48DB0',
+];
+
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
   backgroundGradientFromOpacity: 0,
   backgroundGradientTo: '#08130D',
   backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+  color: (opacity = 1) => `rgba(256, 255, 146, ${opacity})`,
   strokeWidth: 2, // optional, default 3
   barPercentage: 0.5,
   useShadowColorFromDataset: false, // optional
-};
-
-const chartConfig2 = {
-  backgroundColor: '#e26a00',
-  backgroundGradientFrom: '#fb8c00',
-  backgroundGradientTo: '#ffa726',
-  decimalPlaces: 2, // optional, defaults to 2dp
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  style: {
-    borderRadius: 16,
-  },
-  propsForDots: {
-    r: '6',
-    strokeWidth: '2',
-    stroke: '#ffa726',
-  },
 };
 
 const sort = (array, keyName, subName) => {
@@ -221,18 +222,10 @@ const Statistics = () => {
           ).toString(16);
       }
       for (let index = 0; index < stores.length; index++) {
-        stores[index].color =
-          '#' +
-          Math.round(((index + 1) * 0xffffff) / (stores.length + 2)).toString(
-            16
-          );
+        stores[index].color = '#' + pastelColor[index % pastelColor.length];
       }
       for (let index = 0; index < categories.length; index++) {
-        categories[index].color =
-          '#' +
-          Math.round(
-            ((index + 1) * 0xffffff) / (categories.length + 2)
-          ).toString(16);
+        categories[index].color = '#' + pastelColor[index % pastelColor.length];
       }
     }
     setStoreList(sort(stores, 'priceSum', 'amount'));
