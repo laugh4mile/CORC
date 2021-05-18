@@ -36,7 +36,6 @@ export const registStore = (data) => {
   return async () => {
     try {
       await axios.post(`${SERVER_URL}/store/regist`, data);
-
     } catch (e) {
       let errorStatus = e.response.status;
       if (errorStatus && errorStatus === 401) {
@@ -69,34 +68,36 @@ export const getGugunList = (sidoCode) => {
 
 export const login = (email, password) => {
   return async (dispatch) => {
-    const response = await axios.post(
-      `${SERVER_URL}/login/store?email=${email}&password=${password}`
-    );
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/login/store?email=${email}&password=${password}`
+      );
 
-    if (response.data["message"]) {
-      let message = response.data["message"];
-      throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
+      let userId = response.data["store-storeid"];
+      let token = response.data["auth-token"];
+      let accepted = response.data["store-accepted"];
+
+      let _6months = 60 * 24 * 30 * 6;
+
+      if (accepted === 0) {
+        throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
+      }
+      if (accepted === 1) {
+        throw new Error("가맹점 승인이 완료되지 않았습니다.");
+      }
+      if (accepted === 2) {
+        dispatch(authenticate(userId, token, _6months * 1000));
+      }
+
+      const expirationDate = new Date(new Date().getTime() + _6months * 1000);
+
+      saveDataToStorage(userId, token, expirationDate);
+    } catch (e) {
+      if (e.response.status === 401) {
+        throw new Error(`아이디와 비밀번호를 확인해 주세요!`);
+      }
+      throw new Error("로그인 시도 중 에러가 발생하였습니다.");
     }
-
-    let userId = response.data["store-storeid"];
-    let token = response.data["auth-token"];
-    let accepted = response.data["store-accepted"];
-
-    let _6months = 60 * 24 * 30 * 6;
-
-    if (accepted === 0) {
-      throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!`);
-    }
-    if (accepted === 1) {
-      throw new Error("가맹점 승인이 완료되지 않았습니다.");
-    }
-    if (accepted === 2) {
-      dispatch(authenticate(userId, token, _6months * 1000));
-    }
-
-    const expirationDate = new Date(new Date().getTime() + _6months * 1000);
-
-    saveDataToStorage(userId, token, expirationDate);
   };
 };
 
