@@ -29,3 +29,10 @@
     /* display: flex; */
     width: auto;
 }
+
+.spinner {
+    display: flex;
+    margin-top: 12rem;
+    justify-content: center;
+    align-items: center;
+}
