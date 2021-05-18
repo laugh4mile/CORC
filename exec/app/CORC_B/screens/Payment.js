@@ -281,15 +281,15 @@ const Payment = (props) => {
                 </View>
                 <View style={styles.vacateModalButtons}>
                   <View style={{ flex: 1 }}>
-                    <Button title="확인" onPress={() => reset()} />
-                  </View>
-                  <View style={{ flex: 1 }}>
                     <Button
                       title="취소"
                       onPress={() => setVacateModalVisible(false)}
                       backgroundColor={Colors.cancel.backgroundColor}
                       fontColor={Colors.cancel.fontColor}
                     />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Button title="확인" onPress={() => reset()} />
                   </View>
                 </View>
               </Card>
@@ -443,28 +443,29 @@ const Payment = (props) => {
                   {" 원"}
                 </Text>
               </View>
-              <Button
+              {/* <Button
                 title="결제 완료"
                 onPress={() => {
                   setQRVisible(false);
                   setItems([]);
                 }}
-              />
+              /> */}
               <View style={styles.footerItems}>
                 <Text
                   onPress={() => {
-                    Alert.alert(null, "결제가 취소되었습니다.", [
-                      {
-                        text: "확인",
-                        onPress: () => {
-                          setQRVisible(false);
-                        },
-                      },
-                    ]);
+                    // Alert.alert(null, "결제가 취소되었습니다.", [
+                    //   {
+                    //     text: "확인",
+                    //     onPress: () => {
+                    //       setQRVisible(false);
+                    //     },
+                    //   },
+                    // ]);
+                    setQRVisible(false);
                   }}
                   style={styles.textlink}
                 >
-                  취소
+                  닫기
                 </Text>
               </View>
             </View>
@@ -473,9 +474,12 @@ const Payment = (props) => {
       </View>
 
       <Modal isVisible={isModalVisible}>
-        <Card style={styles.modalBox}>
+        <Card style={{ paddingTop: 10 }}>
           <Input
-            style={{ borderColor: isProductNameValid ? "#dddddd" : "red" }}
+            style={{
+              marginHorizontal: 10,
+              borderColor: isProductNameValid ? "#dddddd" : "red",
+            }}
             placeholder="이름"
             onChangeText={(name) => checkProductName(name)}
             returnKeyType="next"
@@ -486,7 +490,10 @@ const Payment = (props) => {
             ref={productNameRef}
           />
           <Input
-            style={{ borderColor: isPriceValid ? "#dddddd" : "red" }}
+            style={{
+              marginHorizontal: 10,
+              borderColor: isPriceValid ? "#dddddd" : "red",
+            }}
             placeholder="가격"
             onChangeText={(price) => checkPrice(price)}
             keyboardType="numeric"
@@ -498,7 +505,10 @@ const Payment = (props) => {
             ref={priceRef}
           />
           <Input
-            style={{ borderColor: isQuantityValid ? "#dddddd" : "red" }}
+            style={{
+              marginHorizontal: 10,
+              borderColor: isQuantityValid ? "#dddddd" : "red",
+            }}
             placeholder="수량"
             onChangeText={(quantity) => checkQuantity(quantity)}
             keyboardType="numeric"
@@ -508,17 +518,18 @@ const Payment = (props) => {
             ref={quantityRef}
           />
           <View style={styles.addModalButtons}>
-            <View style={{ flex: 1 }}>
-              <Button title="추가하기" onPress={() => addItem()} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button
-                title="취소"
-                onPress={() => cancelAddItem()}
-                backgroundColor={Colors.cancel.backgroundColor}
-                fontColor={Colors.cancel.fontColor}
-              />
-            </View>
+            <Button
+              title="취소"
+              onPress={() => cancelAddItem()}
+              backgroundColor={Colors.cancel.backgroundColor}
+              fontColor={Colors.cancel.fontColor}
+              style={{ flex: 1, borderRadius: 0, borderBottomStartRadius: 12 }}
+            />
+            <Button
+              title="추가하기"
+              onPress={() => addItem()}
+              style={{ flex: 1, borderRadius: 0, borderBottomEndRadius: 12 }}
+            />
           </View>
         </Card>
       </Modal>

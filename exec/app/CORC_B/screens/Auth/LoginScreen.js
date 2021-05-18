@@ -58,7 +58,7 @@ const LoginScreen = (props) => {
       return Alert.alert(null, "비밀번호를 입력해 주세요.");
     }
 
-    let action = authActions.login(userId, password);
+    let action = authActions.login(userId.trim(), password.trim());
     setError(null);
     try {
       await dispatch(action);
@@ -82,6 +82,7 @@ const LoginScreen = (props) => {
           onSubmitEditing={() => {
             passwordRef.current.focus();
           }}
+          keyboardType="email-address"
           blurOnSubmit={false}
           ref={userIdRef}
         />

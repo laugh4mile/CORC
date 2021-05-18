@@ -24,8 +24,6 @@ const Home = (props) => {
   const [userInfo, setUserInfo] = useState();
   const [payment, setPayment] = useState();
 
-  // const SERVER_URL = 'http://192.168.0.2:8765/shinhan';
-
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -52,6 +50,11 @@ const Home = (props) => {
           }
         }
       }
+    }
+    if (first) {
+      newDate = new Date(year, month - 1, day);
+      first = false;
+      return false;
     }
     newDate = new Date(year, month - 1, day);
     return false;
@@ -90,7 +93,6 @@ const Home = (props) => {
       >
         <View
           style={{
-            // flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             paddingTop: 10,
@@ -203,7 +205,7 @@ const Home = (props) => {
             paddingVertical: 10,
           }}
           onPress={() => {
-            props.navigation.navigate('Wallet');
+            props.navigation.navigate('TopNavigator');
           }}
           activeOpacity={0.5}
         >

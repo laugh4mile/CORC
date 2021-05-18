@@ -52,6 +52,9 @@ public class PaymentService {
   private UserService userService;
 
   @Autowired
+  private StoreService storeService;
+
+  @Autowired
   private PaymentitemService paymentitemService;
 
   private final PaymentMapper mapper = Mappers.getMapper(PaymentMapper.class);
@@ -80,25 +83,25 @@ public class PaymentService {
   public boolean confirmPayment(int storeId) {
     List<Payment> payments = paymentRepository.findByStoreId(storeId);
     int balance = 0;
-    for(Payment py : payments) {
-    	if (py.getStatus() == 1) {
-    		PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
-    		paymentDto.setStatus(2);
-    		balance += paymentDto.getTotal();
-    		paymentRepository.save(paymentDto.toEntity());
-    	} else if(py.getStatus() == 2 || py.getStatus() == 0){
-    		continue;
-    	}
+    for (Payment py : payments) {
+      if (py.getStatus() == 1) {
+        PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
+        paymentDto.setStatus(2);
+        balance += paymentDto.getTotal();
+        paymentRepository.save(paymentDto.toEntity());
+      } else if (py.getStatus() == 2 || py.getStatus() == 0) {
+        continue;
+      }
     }
-    
+
     try {
-    	Store store = storeRepository.findByStoreId(storeId);
-    	BlockUserDto blockStore = blockchainService.getUser(store.getEmail()).block();
-    	blockStore.setBalance(blockStore.getBalance() - balance);
-    	blockchainService.setBalance(blockStore).subscribe();
-    	return true;
-    }catch(Exception e){
-    	return false;
+      Store store = storeRepository.findByStoreId(storeId);
+      BlockUserDto blockStore = blockchainService.getUser(store.getEmail()).block();
+      blockStore.setBalance(blockStore.getBalance() - balance);
+      blockchainService.setBalance(blockStore).subscribe();
+      return true;
+    } catch (Exception e) {
+      return false;
     }
 
   }
@@ -332,7 +335,8 @@ public class PaymentService {
     int total = 0;
     LocalDate now = LocalDate.now();
     LocalDateTime startDate = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
-    LocalDateTime endDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.lengthOfMonth(), 23, 59, 59);
+    LocalDateTime endDate = LocalDateTime
+        .of(now.getYear(), now.getMonth(), now.lengthOfMonth(), 23, 59, 59);
     System.out.println(startDate + ", " + endDate);
     List<Integer> totalUsed = paymentRepository.findTotalByStoreId(storeId, startDate, endDate);
     for (int nc : totalUsed) {
@@ -454,31 +458,32 @@ public class PaymentService {
     return 0;
   }
 
-	public Page<PaymentDto> findStorePaymentCustom(int storeId, Pageable pageable, int startDate, int endDate) {
-		int startYear = startDate / 10000;
-		int startMonth = (startDate - startYear * 10000) / 100;
-		int startDay = (startDate - startYear * 10000) % 100;
-		int endYear = endDate / 10000;
-		int endMonth = (endDate - endYear * 10000) / 100;
-		int endDay = (endDate - endYear * 10000) % 100;
-		LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00,00);
-		LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
-		Page<Payment> payments = paymentRepository.findAllByStoreCustom(storeId, pageable, startDateIn, endDateIn);
-		return payments.map(PaymentDto::of);
-	}
+  public Page<PaymentDto> findStorePaymentCustom(int storeId, Pageable pageable, int startDate,
+      int endDate) {
+    int startYear = startDate / 10000;
+    int startMonth = (startDate - startYear * 10000) / 100;
+    int startDay = (startDate - startYear * 10000) % 100;
+    int endYear = endDate / 10000;
+    int endMonth = (endDate - endYear * 10000) / 100;
+    int endDay = (endDate - endYear * 10000) % 100;
+    LocalDateTime startDateIn = LocalDateTime.of(startYear, startMonth, startDay, 00, 00, 00);
+    LocalDateTime endDateIn = LocalDateTime.of(endYear, endMonth, endDay, 23, 59);
+    Page<Payment> payments = paymentRepository
+        .findAllByStoreCustom(storeId, pageable, startDateIn, endDateIn);
+    return payments.map(PaymentDto::of);
+  }
 
   public boolean verifyBlockTransaction(PaymentDto payment) {
     try {
       TransactionDto tx = blockchainService.getTransaction(payment.getTransactionId()).block();
       if (payment.getUser().getEmail().equals(tx.getFrom()) &&
-      payment.getStore().getEmail().equals(tx.getTo()) &&
-      payment.getTotal() == tx.getValue()) {
+          payment.getStore().getEmail().equals(tx.getTo()) &&
+          payment.getTotal() == tx.getValue()) {
         payment.setVerified(true);
       }
 
       return true;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return false;
     }
   }
@@ -505,17 +510,33 @@ public class PaymentService {
   }
 
   public void allowPayment(int paymentId) {
-	Payment payemnt = paymentRepository.findByPaymentId(paymentId);
-	  PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
-      paymentDto.setStatus(2);
-      paymentRepository.save(paymentDto.toEntity());
+    Payment payemnt = paymentRepository.findByPaymentId(paymentId);
+    PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
+    paymentDto.setStatus(2);
+    paymentRepository.save(paymentDto.toEntity());
+
+    StoreDto store = StoreDto.of(payemnt.getStore());
+    BlockUserDto blockUser = blockchainService.getUser(store.getEmail()).block();
+
+    blockchainService.setBalance(BlockUserDto.builder()
+        .userId(store.getEmail())
+        .balance(blockUser.getBalance() - payemnt.getTotal())
+        .build()).subscribe();
   }
 
   public void denyPayment(int paymentId) {
-	Payment payemnt = paymentRepository.findByPaymentId(paymentId);
-	  PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
-      paymentDto.setStatus(0);
-      paymentRepository.save(paymentDto.toEntity());
+    Payment payemnt = paymentRepository.findByPaymentId(paymentId);
+    PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
+    paymentDto.setStatus(0);
+    paymentRepository.save(paymentDto.toEntity());
+
+    StoreDto store = StoreDto.of(payemnt.getStore());
+    BlockUserDto blockUser = blockchainService.getUser(store.getEmail()).block();
+
+    blockchainService.setBalance(BlockUserDto.builder()
+        .userId(store.getEmail())
+        .balance(blockUser.getBalance() - payemnt.getTotal())
+        .build()).subscribe();
   }
 
 
