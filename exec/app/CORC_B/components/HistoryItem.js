@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   moneyFont: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 21,
   },
   dateFont: {
     fontSize: 13.5,
