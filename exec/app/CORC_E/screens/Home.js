@@ -51,6 +51,11 @@ const Home = (props) => {
         }
       }
     }
+    if (first) {
+      newDate = new Date(year, month - 1, day);
+      first = false;
+      return false;
+    }
     newDate = new Date(year, month - 1, day);
     return false;
   };
