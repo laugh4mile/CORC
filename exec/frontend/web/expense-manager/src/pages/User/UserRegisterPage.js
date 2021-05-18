@@ -15,6 +15,9 @@ const UserRegisterPage = () => {
       // 임시 prompt
       alert('유저 등록 완료');
       history.push('/user/list');
+    } else if (status === 'error') {
+      alert('유저 등록에 실패했습니다. 사원번호를 확인해 주세요.');
+      // history.push('/user/list');
     }
   }, [status, history]);
 
