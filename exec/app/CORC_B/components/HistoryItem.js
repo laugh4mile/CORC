@@ -22,11 +22,15 @@ const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 const formatDate = (date) => {
   let _date = new Date(date);
-  let year = _date.getFullYear();
+  let year = _date.getFullYear().toString().slice(2, 4);
   let month = _date.getMonth() + 1;
+  if(month<10) month = "0"+month; 
   let day = _date.getDate();
+  if(day<10) day = "0" + day;
   let hour = _date.getHours();
+  if(hour<10) hour = "0" + hour;
   let min = _date.getMinutes();
+  if(min<10) min = "0" + min;
 
   return `${year}.${month}.${day} (${
     dayOfWeek[_date.getDay()]
@@ -127,7 +131,7 @@ const styles = StyleSheet.create({
   },
   moneyFont: {
     fontWeight: "bold",
-    fontSize: 21,
+    fontSize: 19,
   },
   dateFont: {
     fontSize: 13.5,
