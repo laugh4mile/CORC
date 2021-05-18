@@ -7,6 +7,7 @@ import { addUser } from '../../lib/api-user';
 
 const UserRegisterPage = () => {
   const { sendRequest, status } = useHttp(addUser);
+  // const { sendRequest, status } = useHttp(addUser);
   const history = useHistory();
 
   useEffect(() => {

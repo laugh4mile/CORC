@@ -69,6 +69,7 @@ const RequestedStoreList = (props) => {
 
     setStores(stores);
     setStoreIdx([]);
+    window.location.reload();
     // setCheckItems([]);
   };
 
