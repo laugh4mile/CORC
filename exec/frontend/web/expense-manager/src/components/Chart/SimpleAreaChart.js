@@ -44,14 +44,14 @@ const SimpleAreaChart = (props) => {
         <Area
           type="monotone"
           dataKey="사용된 금액"
-          stroke="#32499A"
+          stroke="#7986FF"
           fill="url(#colorUsed)"
           fillOpacity={0.2}
         />
         <Area
           type="monotone"
           dataKey="정산된 금액"
-          stroke="#7986FF"
+          stroke="#BBCEFF"
           fill="url(#colorPayback)"
           fillOpacity={0.3}
         />

@@ -24,3 +24,13 @@
   display: unset;
   position: unset;
 }
+
+.small {
+  width: auto;
+  margin: 0.5rem 1rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  padding-right: 2rem;
+  justify-content: start;
+  align-items: center;
+}

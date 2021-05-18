@@ -1,5 +1,4 @@
-.item {
-}
+.item {}
 
 .tr {
   display: flex;
@@ -18,6 +17,8 @@
   width: 100%;
   text-align: center;
   margin: 0 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .td-flex {
@@ -50,8 +51,8 @@
 
 .text-sm {
   font-weight: 600;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-normal {
