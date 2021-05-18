@@ -1,115 +1,284 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import useHttp from "../hooks/use-http";
+import {
+  expenses,
+  recentPayment,
+  expenseByMonth,
+  expenseForStatistics,
+} from "../lib/api-dashboard";
+import { getAllRequestedStores } from "../lib/api-store";
 
 import PercentageBar from "../components/Chart/PercentageBar";
 import ActiveShapePieChart from "../components/Chart/ActiveShapePieChart";
 import SimpleAreaChart from "../components/Chart/SimpleAreaChart";
+import VerifiedDataChart from "../components/Chart/VerifiedDataChart";
 
+import PaymentList from "../components/DashBoard/PaymentList";
+import RequestedStoreList from "../components/DashBoard/RequestedStoreList";
+
+import LoadingSpinner from "../components/UI/LoadingSpinner/LoadingSpinner";
 import Card from "../components/UI/Card/Card";
 
 import classes from "./DashBoardPage.module.css";
 
+const axios = require("axios").default;
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
+
 const DashBoardPage = () => {
-  const data_consumedCategory = [
-    { name: "식음료", value: 100000000 },
-    { name: "접대비", value: 12000000 },
-    { name: "오피스 용품", value: 6000000 },
-    { name: "출장비", value: 30000000 },
-  ];
+  const {
+    sendRequest: sendExpenses,
+    status: statusExpenses,
+    data: expensesData,
+    error: errorExpenses,
+  } = useHttp(expenses, true);
 
-  const data_consumedDepartment = [
-    { name: "디지털 전략부", value: 100000000 },
-    { name: "디지털 사업부", value: 12000000 },
-    { name: "디지털R&D센터", value: 6000000 },
-    { name: "빅데이터센터", value: 30000000 },
-    { name: "업무혁신부", value: 30000000 },
-  ];
+  const {
+    sendRequest: sendRequested,
+    status: statusRequested,
+    data: loadedStores,
+    error: errorRequested,
+  } = useHttp(getAllRequestedStores, true);
 
-  const data_monthlyConsumed = [
-    {
-      name: "1",
-      "정산된 금액": 4000,
-      "사용된 금액": 2400,
-      amt: 2400,
-    },
-    {
-      name: "5",
-      "정산된 금액": 3000,
-      "사용된 금액": 1398,
-      amt: 2210,
-    },
-    {
-      name: "10",
-      "정산된 금액": 2000,
-      "사용된 금액": 9800,
-      amt: 2290,
-    },
-    {
-      name: "15",
-      "정산된 금액": 2780,
-      "사용된 금액": 3908,
-      amt: 2000,
-    },
-    {
-      name: "20",
-      "정산된 금액": 1890,
-      "사용된 금액": 4800,
-      amt: 2181,
-    },
-    {
-      name: "25",
-      "정산된 금액": 2390,
-      "사용된 금액": 3800,
-      amt: 2500,
-    },
-    {
-      name: "31",
-      "정산된 금액": 3490,
-      "사용된 금액": 4300,
-      amt: 2100,
-    },
-  ];
+  const {
+    sendRequest: sendPayment,
+    status: statusPayment,
+    data: loadedPayment,
+    error: errorPayment,
+  } = useHttp(recentPayment, true);
 
-  const data_consumedMoney = {
-    used: 100500000,
-    allocated: 200000000,
-    willBePaypacked: 86500000,
+  const {
+    sendRequest: sendByMonth,
+    status: statusByMonth,
+    data: loadedByMonth,
+    error: errorByMonth,
+  } = useHttp(expenseByMonth, true);
+
+  const {
+    sendRequest: sendStatistics,
+    status: statusStatistics,
+    data: loadedStatistics,
+    error: errorStatistics,
+  } = useHttp(expenseForStatistics, true);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 5 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
+
+  const [itemList, setitemList] = useState([]);
+  const [total, settotal] = useState(0);
+  const [userList, setUserList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [monthList, setMonthList] = useState([]);
+
+  const newDate = new Date();
+  const year = newDate.getFullYear();
+
+  useEffect(
+    () => {
+      sendExpenses();
+      sendPayment(pageInfo);
+      sendRequested(pageInfo);
+      sendByMonth(year);
+      sendStatistics();
+      makeChart();
+    },
+    [
+      // sendExpenses,
+      // sendPayment,
+      // sendRequested,
+      // sendByMonth,
+      // sendStatistics,
+      // year,
+      // pageInfo,
+    ]
+  );
+
+  console.log("expensesData", expensesData);
+  console.log("loadedStores", loadedStores);
+  console.log("loadedPayment", loadedPayment);
+  console.log("loadedByMonth", loadedByMonth);
+  console.log("loadedStatistics", loadedStatistics);
+
+  const makeChart = async () => {
+    setIsLoading(true);
+    var response = await axios.get("/board/expenses/statistics");
+    console.log("response", response);
+    setitemList([]);
+    let payments;
+    let totalSum = 0;
+    let users = [];
+    let categories = [];
+
+    if (response.data !== undefined && !response.data.category.empty) {
+      payments = response.data.category;
+
+      for (const payment of payments) {
+        // 매장별 금액 통계
+        let departmentIsContained = false;
+        const currUser = payment.user;
+        for (const user of users) {
+          if (user.name === currUser.department) {
+            user.value += payment.total;
+            departmentIsContained = true;
+            break;
+          }
+        }
+        if (!departmentIsContained) {
+          users.push({
+            name: currUser.department,
+            value: payment.total,
+          });
+        }
+
+        // 카테고리별 금액 통계
+        let categoryIsContained = false;
+        const currStore = payment.store;
+        for (const category of categories) {
+          if (category.name === currStore.category.categoryName) {
+            category.value += payment.total;
+            categoryIsContained = true;
+            break;
+          }
+        }
+        if (!categoryIsContained) {
+          categories.push({
+            name: currStore.category.categoryName,
+            value: payment.total,
+          });
+        }
+      }
+    }
+
+    setUserList(users);
+    setCategoryList(categories);
+    settotal(totalSum);
+
+    setIsLoading(false);
   };
+
+  // const data_consumedCategory = [
+  //   { name: "식음료", value: 100000000 },
+  //   { name: "접대비", value: 12000000 },
+  //   { name: "오피스 용품", value: 6000000 },
+  //   { name: "출장비", value: 30000000 },
+  // ];
+
+  // const data_consumedDepartment = [
+  //   { name: "디지털 전략부", value: 100000000 },
+  //   { name: "디지털 사업부", value: 12000000 },
+  //   { name: "디지털R&D센터", value: 6000000 },
+  //   { name: "빅데이터센터", value: 30000000 },
+  //   { name: "업무혁신부", value: 30000000 },
+  // ];
+
+  // const data_monthlyConsumed = [
+  //   {
+  //     name: "1",
+  //     "사용된 금액": 2400,
+  //     "정산된 금액": 4000,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "5",
+  //     "사용된 금액": 1398,
+  //     "정산된 금액": 3000,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "10",
+  //     "사용된 금액": 9800,
+  //     "정산된 금액": 2000,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "15",
+  //     "사용된 금액": 3908,
+  //     "정산된 금액": 2780,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "20",
+  //     "사용된 금액": 4800,
+  //     "정산된 금액": 1890,
+  //     amt: 2181,
+  //   },
+  //   {
+  //     name: "25",
+  //     "사용된 금액": 3800,
+  //     "정산된 금액": 2390,
+  //     amt: 2500,
+  //   },
+  //   {
+  //     name: "31",
+  //     "사용된 금액": 4300,
+  //     "정산된 금액": 3490,
+  //     amt: 2100,
+  //   },
+  // ];
+
+  // const data_consumedMoney = {
+  //   used: 100500000,
+  //   assignedTotal: 200000000,
+  //   notConfirmed: 86500000,
+  // };
+
+  if (
+    statusExpenses === "pending" ||
+    statusRequested === "pending" ||
+    statusPayment === "pending" ||
+    statusByMonth === "pending" ||
+    statusStatistics === "pending"
+  ) {
+    return (
+      <div className="page">
+        <span className="title">대쉬보드</span>
+        <section className={classes.spinner}>
+          <LoadingSpinner />
+        </section>
+      </div>
+    );
+  }
+
+  const monthData = [];
+
+  for (let i = 1; i <= 12; i++) {
+    monthData.push({
+      name: i,
+      "사용된 금액": loadedByMonth[i][0],
+      "정산된 금액": loadedByMonth[i][1],
+    });
+  }
 
   return (
     <div className="page">
-      {/* <span className="title">대쉬보드</span> */}
       <div className={classes.container}>
         <section className={`${classes.section} ${classes["section-center"]}`}>
           <article className={classes.article}>
             <PercentageBar
-              title={"정산 예정 금액"}
-              value={data_consumedMoney.willBePaypacked}
-              maxValue={data_consumedMoney.used}
-              label={data_consumedMoney.willBePaypacked}
+              title={"사용된 금액"}
+              value={expensesData.used}
+              maxValue={expensesData.assignedTotal}
+              label={expensesData.used}
             />
             <PercentageBar
-              title={"사용된 금액"}
-              value={data_consumedMoney.used}
-              maxValue={data_consumedMoney.allocated}
-              label={data_consumedMoney.used}
-              fill={"#D3DEFF"}
+              title={"정산 예정 금액"}
+              value={expensesData.notConfirmed}
+              maxValue={expensesData.used}
+              label={expensesData.notConfirmed}
+              fill={"#BBCEFF"}
             />
           </article>
-          <SimpleAreaChart data={data_monthlyConsumed} />
+          <SimpleAreaChart data={monthData} />
+
           <article className={classes.article}>
-            <Card></Card>
-            <Card></Card>
+            <RequestedStoreList stores={loadedStores.content} />
+            <PaymentList payments={loadedPayment.content} />
           </article>
         </section>
         <section className={`${classes.section} ${classes["section-right"]}`}>
-          <ActiveShapePieChart
-            title={"소비 품목 현황"}
-            data={data_consumedCategory}
-          />
-          <ActiveShapePieChart
-            title={"부서별 소비 현황"}
-            data={data_consumedDepartment}
-          />
+          <VerifiedDataChart />
+          <ActiveShapePieChart title={"소비 품목 현황"} data={categoryList} />
+          <ActiveShapePieChart title={"부서별 소비 현황"} data={userList} />
         </section>
       </div>
     </div>

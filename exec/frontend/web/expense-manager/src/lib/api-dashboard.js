@@ -4,8 +4,7 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 export async function expenses() {
   try {
     const rs = await axios.get("/board/expenses");
-    const data = rs.data;
-    return data;
+    return rs.data;
   } catch (err) {
     throw new Error(err || "전체 사용 금액을 불러 올 수 없습니다.");
   }
@@ -25,7 +24,9 @@ export async function expenseByMonth(year) {
 
 export async function recentPayment({ page, size }) {
   try {
-    const rs = await axios.get(`/board/payment/recent?page=${page}&size=${size}`);
+    const rs = await axios.get(
+      `/board/payment/recent?page=${page}&size=${size}`
+    );
     const data = rs.data.payment;
     console.log("payment data", data);
     return data;
@@ -37,9 +38,7 @@ export async function recentPayment({ page, size }) {
 export async function expenseForStatistics() {
   try {
     const rs = await axios.get("/board/expenses/statistics");
-    const data = rs.data;
-    console.log(data);
-    return data;
+    return rs.data;
   } catch (err) {
     throw new Error(err || "전체 사용 금액을 불러 올 수 없습니다.");
   }

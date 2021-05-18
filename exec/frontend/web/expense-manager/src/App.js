@@ -5,7 +5,7 @@ import AuthContext from "./store/auth-context";
 import Layout from "./components/Layout/Layout";
 
 import AuthPage from "./pages/AuthPage";
-// import DashBoardPage from './pages/DashBoard/DashBoardPage';
+// import DashBoardPage from "./pages/DashBoard/DashBoardPage";
 import DashBoardPage from "./pages/DashBoardPage";
 // User
 import UserRegisterPage from "./pages/User/UserRegisterPage";
