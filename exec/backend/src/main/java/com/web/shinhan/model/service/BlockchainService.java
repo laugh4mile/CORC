@@ -148,7 +148,7 @@ public class BlockchainService {
         if (payment.getTransactionId() == null) {
           throw new VerifyDataException("transaction does not exist");
         }
-        getTransaction(payment.getTransactionId());
+        getTransaction(payment.getTransactionId()).block();
         verified++;
       } catch (Exception e) {
         failedList.add(payment);
