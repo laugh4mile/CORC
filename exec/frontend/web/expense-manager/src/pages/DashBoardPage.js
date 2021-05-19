@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import useHttp from "../hooks/use-http";
-import {
-  expenses,
-  recentPayment,
-  expenseByMonth,
-  expenseForStatistics,
-} from "../lib/api-dashboard";
+import { expenses, recentPayment, expenseByMonth, expenseForStatistics } from "../lib/api-dashboard";
 import { getAllRequestedStores } from "../lib/api-store";
+
+import PeerStatus from "../components/DashBoard/PeerStatus";
 
 import PercentageBar from "../components/Chart/PercentageBar";
 import ActiveShapePieChart from "../components/Chart/ActiveShapePieChart";
@@ -26,12 +23,7 @@ const axios = require("axios").default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
 const DashBoardPage = () => {
-  const {
-    sendRequest: sendExpenses,
-    status: statusExpenses,
-    data: expensesData,
-    error: errorExpenses,
-  } = useHttp(expenses, true);
+  const { sendRequest: sendExpenses, status: statusExpenses, data: expensesData, error: errorExpenses } = useHttp(expenses, true);
 
   const {
     sendRequest: sendRequested,
@@ -40,19 +32,9 @@ const DashBoardPage = () => {
     error: errorRequested,
   } = useHttp(getAllRequestedStores, true);
 
-  const {
-    sendRequest: sendPayment,
-    status: statusPayment,
-    data: loadedPayment,
-    error: errorPayment,
-  } = useHttp(recentPayment, true);
+  const { sendRequest: sendPayment, status: statusPayment, data: loadedPayment, error: errorPayment } = useHttp(recentPayment, true);
 
-  const {
-    sendRequest: sendByMonth,
-    status: statusByMonth,
-    data: loadedByMonth,
-    error: errorByMonth,
-  } = useHttp(expenseByMonth, true);
+  const { sendRequest: sendByMonth, status: statusByMonth, data: loadedByMonth, error: errorByMonth } = useHttp(expenseByMonth, true);
 
   const {
     sendRequest: sendStatistics,
@@ -251,6 +233,7 @@ const DashBoardPage = () => {
 
   return (
     <div className="page">
+      <PeerStatus></PeerStatus>
       <div className={classes.container}>
         <section className={`${classes.section} ${classes["section-center"]}`}>
           <article className={classes.article}>

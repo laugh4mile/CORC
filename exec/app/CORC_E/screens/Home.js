@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,16 +6,16 @@ import {
   Platform,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import Constants from 'expo-constants';
-import { useSelector } from 'react-redux';
-import Card from '../components/Card';
-import axios from 'axios';
-import Payment from '../components/Payment';
-import PaymentHistoryIcon from '../components/icons/PaymentHistoryIcon';
-import MoneyIcon from '../components/icons/MoneyIcon';
-import Colors from '../constants/Colors';
-import SERVER_URL from '../env';
+} from "react-native";
+import Constants from "expo-constants";
+import { useSelector } from "react-redux";
+import Card from "../components/Card";
+import axios from "axios";
+import Payment from "../components/Payment";
+import PaymentHistoryIcon from "../components/icons/PaymentHistoryIcon";
+import MoneyIcon from "../components/icons/MoneyIcon";
+import Colors from "../constants/Colors";
+import SERVER_URL from "../env";
 
 const Home = (props) => {
   const userId = useSelector((state) => state.auth.userId);
@@ -25,7 +25,7 @@ const Home = (props) => {
   const [payment, setPayment] = useState();
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   var first = true;
@@ -63,12 +63,12 @@ const Home = (props) => {
   useEffect(() => {
     (async () => {
       let response = await axios.get(
-        SERVER_URL + '/admin/user/info?userId=' + userId
+        SERVER_URL + "/admin/user/info?userId=" + userId
       );
       setUserInfo(response.data);
 
       let response2 = await axios.get(
-        SERVER_URL + '/user/payment?userId=' + userId
+        SERVER_URL + "/user/payment?userId=" + userId
       );
       setPayment(response2.data);
       setIsLoading(false);
@@ -93,14 +93,14 @@ const Home = (props) => {
       >
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
+            flexDirection: "row",
+            alignItems: "center",
             paddingTop: 10,
             paddingLeft: 20,
           }}
         >
-          <MoneyIcon color={'#414251'} size={25} />
-          <Text style={{ color: 'gray', fontSize: 13, marginLeft: 6 }}>
+          <MoneyIcon color={"#414251"} size={25} />
+          <Text style={{ color: "gray", fontSize: 13, marginLeft: 6 }}>
             남은 한도 / 총 한도
           </Text>
         </View>
@@ -108,18 +108,18 @@ const Home = (props) => {
         <View
           style={{
             flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 35, color: '#414251', marginRight: 10 }}>
+          <Text style={{ fontSize: 35, color: "#414251", marginRight: 10 }}>
             {numberWithCommas(userInfo.info.balance)}
           </Text>
           <Text
             style={{
               fontSize: 24,
-              color: '#414251',
+              color: "#414251",
             }}
           >
             원
@@ -128,12 +128,12 @@ const Home = (props) => {
 
         <View
           style={{
-            alignItems: 'flex-end',
+            alignItems: "flex-end",
             paddingRight: 25,
             paddingBottom: 10,
           }}
         >
-          <Text style={{ color: '#414251' }}>
+          <Text style={{ color: "#414251" }}>
             / {numberWithCommas(userInfo.info.cardLimit)} 원
           </Text>
         </View>
@@ -141,19 +141,27 @@ const Home = (props) => {
       <View
         style={{
           flex: 0.7,
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-          paddingBottom: '3%',
+          flexDirection: "row",
+          alignItems: "flex-end",
+          paddingBottom: "3%",
+          paddingLeft: 8,
         }}
       >
-        <PaymentHistoryIcon color={'#414251'} size="30" />
-        <Text style={{ fontSize: 24, marginLeft: 10, color: '#414251' }}>
+        <PaymentHistoryIcon color={"#414251"} size="26" />
+        <Text
+          style={{
+            fontSize: 24,
+            marginLeft: 10,
+            fontWeight: "bold",
+            color: "#414251",
+          }}
+        >
           최근 이용 내역
         </Text>
       </View>
       <Card
         style={{
-          marginBottom: '10%',
+          marginBottom: "10%",
           flex: 3.5,
         }}
       >
@@ -164,21 +172,21 @@ const Home = (props) => {
             marginTop: 10,
           }}
         >
-          <View style={{ flex: 1, alignItems: 'stretch' }}>
+          <View style={{ flex: 1, alignItems: "stretch" }}>
             {payment.paymentList.content.map((payment, index) => (
               <View key={payment.paymentId}>
                 {!match(payment.date) && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 13, color: '#414251' }}>
-                        {+payment.date.substring(5, 7)}월{' '}
+                      <Text style={{ fontSize: 13, color: "#414251" }}>
+                        {+payment.date.substring(5, 7)}월{" "}
                         {+payment.date.substring(8, 10)}일
                       </Text>
                     </View>
                     <View
                       style={{
                         flex: 3,
-                        borderBottomColor: '#A09E9E',
+                        borderBottomColor: "#A09E9E",
                         borderBottomWidth: StyleSheet.hairlineWidth,
                       }}
                     />
@@ -198,14 +206,14 @@ const Home = (props) => {
 
         <TouchableOpacity
           style={{
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             borderTopWidth: StyleSheet.hairlineWidth,
-            borderTopColor: '#737373',
+            borderTopColor: "#737373",
             paddingVertical: 10,
           }}
           onPress={() => {
-            props.navigation.navigate('TopNavigator');
+            props.navigation.navigate("TopNavigator");
           }}
           activeOpacity={0.5}
         >
@@ -213,7 +221,7 @@ const Home = (props) => {
             style={{
               color: Colors.primary.backgroundColor,
               fontSize: 15,
-              fontWeight: 'bold',
+              fontWeight: "bold",
             }}
           >
             상세 내역 보러 가기
@@ -228,17 +236,18 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
-    paddingHorizontal: '10%',
+    paddingTop: Constants.statusBarHeight,
+    paddingHorizontal: "10%",
+    backgroundColor: "white",
   },
   contents: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '15%',
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "15%",
   },
   intro: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

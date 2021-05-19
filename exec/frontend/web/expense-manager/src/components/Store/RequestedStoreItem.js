@@ -62,16 +62,18 @@ const RequestedStoreItem = (props) => {
         </td>
         <td
           style={{ width: '60%' }}
-          className={classes.link}
+          className={`${classes.td} ${classes["text-center"]}   ${classes.link}`}
+          
           onClick={trClickHandler}
         >
           {props.crNum}
         </td>
-        <td>{props.storeName}</td>
+        <td className={`${classes.td} ${classes["text-center"]} `}>
+        {props.storeName}</td>
         <td style={{ width: '60%' }}>
           {props.sido.sidoName} {props.gugun.gugunName}
         </td>
-        <td style={{ width: '80%' }}>
+        <td style={{ width: '80%' }} className={`${classes.td} ${classes["text-center"]} `}>
           {classificationName(props.category.categoryClassification)}
         </td>
         <td style={{ width: '40%' }}>{props.requestDate.slice(0, 10)}</td>

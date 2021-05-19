@@ -5,6 +5,7 @@ import com.web.shinhan.entity.Store;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.exception.VerifyDataException;
 import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.PeerStatusDto;
 import com.web.shinhan.model.TransactionDto;
 import com.web.shinhan.model.VerityResult;
 import com.web.shinhan.repository.PaymentRepository;
@@ -147,7 +148,7 @@ public class BlockchainService {
         if (payment.getTransactionId() == null) {
           throw new VerifyDataException("transaction does not exist");
         }
-        getTransaction(payment.getTransactionId());
+        getTransaction(payment.getTransactionId()).block();
         verified++;
       } catch (Exception e) {
         failedList.add(payment);
@@ -155,5 +156,12 @@ public class BlockchainService {
     }
 
     return new VerityResult<>(verified, total, failedList);
+  }
+
+  public Mono<PeerStatusDto[]> getPeersStatus() {
+    return webClient.get()
+        .uri("/health-check")
+        .retrieve()
+        .bodyToMono(PeerStatusDto[].class);
   }
 }
