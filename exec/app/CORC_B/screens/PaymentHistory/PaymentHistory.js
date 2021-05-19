@@ -75,7 +75,7 @@ const PaymentHistory = (props) => {
     });
     return () => {
       setDays(7);
-    }
+    };
   }, []);
 
   // 당일, 1주일, 1개월 버튼 클릭했을 때
@@ -90,17 +90,11 @@ const PaymentHistory = (props) => {
     isSent && getData();
   }, [isSent]);
 
-  useEffect(() => {
-    console.log("length: ", paymentList.length);
-  }, [paymentList]);
-
   const getData = async () => {
     const startDate =
       days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
     const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
     currentDate = new Date(1900, 1, 1);
-
-    console.log("startDate, endDate, page [", startDate, endDate, page, "]");
 
     const response = await axios.get(
       `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
