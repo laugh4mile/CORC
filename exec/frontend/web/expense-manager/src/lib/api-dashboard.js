@@ -18,7 +18,7 @@ export async function expenseByMonth(year) {
     console.log("expenseByMonth data", data);
     return data;
   } catch (err) {
-    throw new Error(err || '월별 사용 금액을 불러 올 수 없습니다.');
+    throw new Error(err || "월별 사용 금액을 불러 올 수 없습니다.");
   }
 }
 
@@ -27,18 +27,16 @@ export async function expenseByDay(year) {
     const rs = await axios.get(`/board/expenses/day?year=${year}`);
     const data = rs.data;
 
-    console.log('expenseByDay data', data);
+    console.log("expenseByDay data", data);
     return data;
   } catch (err) {
-    throw new Error(err || '일별 사용 금액을 불러 올 수 없습니다.');
+    throw new Error(err || "일별 사용 금액을 불러 올 수 없습니다.");
   }
 }
 
 export async function recentPayment({ page, size }) {
   try {
-    const rs = await axios.get(
-      `/board/payment/recent?page=${page}&size=${size}`
-    );
+    const rs = await axios.get(`/board/payment/recent?page=${page}&size=${size}`);
     const data = rs.data.payment;
     console.log("payment data", data);
     return data;
@@ -81,6 +79,17 @@ export async function getVerifiedStore() {
 export async function getVerifiedPayment() {
   try {
     const rs = await axios.get(`/board/payment/verified`);
+    const data = rs.data;
+
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
+
+export async function getPeersStatus() {
+  try {
+    const rs = await axios.get(`/blockchain/peer-status`);
     const data = rs.data;
 
     return data;
