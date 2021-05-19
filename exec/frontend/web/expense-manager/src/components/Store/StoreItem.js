@@ -44,12 +44,12 @@ const StoreItem = (props) => {
         </td>
         <td
           style={{ width: "60%" }}
-          className={classes.td}
+          className={`${classes.td} ${classes["text-center"]}   ${classes.link}`}
           onClick={trClickHandler}
         >
           {props.crNum}
         </td>
-        <td className={`${classes.td} ${classes["text-left"]} ${classes.link}`}>
+        <td className={`${classes.td} ${classes["text-center"]} `}>
           {props.storeName}
         </td>
         <td style={{ width: "40%" }} className={classes.td}>
