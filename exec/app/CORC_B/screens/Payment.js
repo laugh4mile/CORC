@@ -209,7 +209,7 @@ const Payment = (props) => {
       orderList: items,
       total: total,
     };
-    console.log(JSON.stringify(data));
+
     return <QRCode value={JSON.stringify(data)} size={size} />;
   };
 

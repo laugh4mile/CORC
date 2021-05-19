@@ -156,16 +156,22 @@ const RegistStore = (props) => {
       ]);
     }
     if (!password || password.trim().length < 6) {
-      return Alert.alert(null, "비밀번호가 너무 짧습니다.\n다시 입력해 주세요.", [
-        { text: "확인", onPress: () => passwordRef.current.focus() },
-      ]);
+      return Alert.alert(
+        null,
+        "비밀번호가 너무 짧습니다.\n다시 입력해 주세요.",
+        [{ text: "확인", onPress: () => passwordRef.current.focus() }]
+      );
     }
     if (!bankName || bankName.trim().length < 1) {
       return Alert.alert(null, "은행명을 입력해 주세요.", [
         { text: "확인", onPress: () => bankNameRef.current.focus() },
       ]);
     }
-    if (!account || account.trim().length < 1 || isNaN(+account.replace(/-/gi, ""))) {
+    if (
+      !account ||
+      account.trim().length < 1 ||
+      isNaN(+account.replace(/-/gi, ""))
+    ) {
       return Alert.alert(null, "계좌번호를 입력해 주세요.", [
         { text: "확인", onPress: () => accountRef.current.focus() },
       ]);
@@ -287,7 +293,7 @@ const RegistStore = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <ScrollView style={{ flex: 6 }}>
+        <ScrollView style={{ paddingHorizontal: "10%" }}>
           <Text style={styles.inputLabel}>사업자 등록번호</Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Input
@@ -401,7 +407,9 @@ const RegistStore = (props) => {
               blurOnSubmit={false}
               ref={emailRef}
             >
-              {isEmailUsable && <Icon name={"check"} color={"green"} size={imgSize}/>}
+              {isEmailUsable && (
+                <Icon name={"check"} color={"green"} size={imgSize} />
+              )}
             </Input>
             {/* <FontAwesome.Button
               name="search"
@@ -494,16 +502,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingHorizontal: "10%",
-  },
-  header: {
-    flex: 1,
-    marginTop: 10,
-  },
-  headerView: { flex: 1, justifyContent: "center", alignItems: "center" },
-  headerText: {
-    fontSize: 30,
-    fontWeight: "bold",
   },
   form: {
     flex: 6,
@@ -531,9 +529,11 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     textAlign: "left",
+    paddingHorizontal: "10%",
   },
   footer: {
     flex: 1,
     justifyContent: "center",
+    paddingHorizontal: "10%",
   },
 });
