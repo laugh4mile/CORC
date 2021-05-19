@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Platform,
   View,
   TouchableOpacity,
   Text,
-} from 'react-native';
-import Constants from 'expo-constants';
-import Colors from '../constants/Colors';
+} from "react-native";
+import Constants from "expo-constants";
+import Colors from "../constants/Colors";
 
-const tabLabel = ['상세 이용 내역', '통계'];
+const tabLabel = ["상세 이용 내역", "통계"];
 const focusedColor = (focused) =>
-  focused ? Colors.primary.backgroundColor : '#a5a5a8';
+  focused ? Colors.primary.backgroundColor : "#a5a5a8";
 
 const TabBar = ({ state, navigation }) => {
   return (
@@ -23,7 +23,7 @@ const TabBar = ({ state, navigation }) => {
 
           const onPress = () => {
             const event = navigation.emit({
-              type: 'tabPress',
+              type: "tabPress",
               target: route.key,
               canPreventDefault: true,
             });
@@ -61,25 +61,28 @@ export default TabBar;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 3,
-    backgroundColor: 'white',
-    paddingTop: Platform.OS === `ios` ? 0 : Constants.statusBarHeight,
+    backgroundColor: "white",
+    paddingTop: Constants.statusBarHeight,
   },
   tabWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   tabButton: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
-    borderTopWidth: 3,
-    borderBottomWidth: 3.3,
-    color: 'white',
+    alignItems: "center",
+    justifyContent: "center",
+    height: 44,
+    marginTop: 10,
+    borderTopWidth: 3.5,
+    borderBottomWidth: 3.5,
+    color: "white",
   },
   tabText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     letterSpacing: 3,
+    fontSize: 18,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });
