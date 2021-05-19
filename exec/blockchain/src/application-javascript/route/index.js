@@ -8,6 +8,10 @@
 const express = require('express');
 const router = express.Router();
 const { getResult } = require('../util/MyUtil');
+const axios = require('axios').default;
+
+// peer list
+const peerList = ['peer0.org1.example.com', 'peer0.org2.example.com'];
 
 // chaincode
 const { createUser, deleteUser, getTransaction, getUser, setBalance, transferFrom } = require('../service.js');
@@ -241,6 +245,36 @@ router.get('/transaction/:txId', async (req, res) => {
   } catch (error) {
     return res.status(400).json(getResult(false, error));
   }
+});
+
+/**
+ * @swagger
+ *  /health-check:
+ *    get:
+ *      tags:
+ *      - APIs
+ *      description: 피어 상태를 반환한다.
+ *      summary: Get peers status
+ *      produces:
+ *      - application/json
+ *      responses:
+ *        200:
+ *          description: Successful operation
+ *        400:
+ *          description: Invalid params
+ */
+router.get('/health-check', async (req, res) => {
+  let rs = [];
+  for (peer of peerList) {
+    try {
+      const peerResponse = await axios.get(`http://${peer}/healthz`);
+      rs = [...rs, { peer, ...peerResponse.data }];
+    } catch (error) {
+      rs = [...rs, { peer, status: 'Service Unavailable', time: new Date().toJSON() }];
+    }
+  }
+
+  return res.status(200).json(rs);
 });
 
 exports.indexRouter = router;
