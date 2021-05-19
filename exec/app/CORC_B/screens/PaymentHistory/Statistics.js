@@ -15,8 +15,10 @@ import Card from "../../components/Card";
 import Colors from "../../constants/Colors";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-const pieWidth = screenWidth * 0.9;
+const pieWidth = screenWidth * 0.8;
 const pieHeight = screenHeight * 0.23;
+
+const pastelColor = ["#C8B4BA", "#F3DDB3", "#C1CD97", "#E18D96", "#909090"];
 
 const chartConfig = {
   backgroundGradientFrom: "#1E2923",
@@ -27,23 +29,6 @@ const chartConfig = {
   strokeWidth: 2, // optional, default 3
   barPercentage: 0.5,
   useShadowColorFromDataset: false, // optional
-};
-
-const chartConfig2 = {
-  backgroundColor: "#e26a00",
-  backgroundGradientFrom: "#fb8c00",
-  backgroundGradientTo: "#ffa726",
-  decimalPlaces: 2, // optional, defaults to 2dp
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  style: {
-    borderRadius: 16,
-  },
-  propsForDots: {
-    r: "6",
-    strokeWidth: "2",
-    stroke: "#ffa726",
-  },
 };
 
 const sort = (array, keyName, subName) => {
@@ -110,6 +95,14 @@ const formatDate = (date, type) => {
 const formatMoney = (number) =>
   number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : null;
 
+const cutText = (text) => {
+  if (text.length > 5) {
+    const result = text.substring(0, 5) + "...";
+    return result;
+  }
+  return text;
+};
+
 const Statistics = () => {
   const userId = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(true);
@@ -128,11 +121,12 @@ const Statistics = () => {
   }, [startDate]);
 
   useEffect(() => {
+    setstartDate(7);
     return () => {
-      setitemList([defaultData]);
-    }
-  }, [])
-  
+      setitemList([]);
+    };
+  }, []);
+
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get(
@@ -157,7 +151,7 @@ const Statistics = () => {
           var isContained = false;
           const item = items[j];
           for (let k = 0; k < copiedItemList.length; k++) {
-            if (copiedItemList[k].name == item.productName) {
+            if (copiedItemList[k].name == cutText(item.productName)) {
               copiedItemList[k].amount += item.amount;
               copiedItemList[k].priceSum += item.amount * item.price;
               isContained = true;
@@ -166,7 +160,7 @@ const Statistics = () => {
           }
           if (!isContained) {
             copiedItemList.push({
-              name: item.productName,
+              name: cutText(item.productName),
               amount: item.amount,
               priceSum: item.amount * item.price,
               legendFontColor: "#050505",
@@ -177,11 +171,7 @@ const Statistics = () => {
       }
 
       for (let index = 0; index < copiedItemList.length; index++) {
-        copiedItemList[index].color =
-          "#" +
-          Math.round(
-            ((index + 1) * 0xffffff) / (copiedItemList.length + 2)
-          ).toString(16);
+        copiedItemList[index].color = pastelColor[index % pastelColor.length];
       }
     }
     setitemList(sort(copiedItemList, "amount", "priceSum"));
@@ -237,9 +227,11 @@ const Statistics = () => {
               center={[10, 0]}
               absolute
             />
-            <Text style={styles.basisText}>[판매 수량 기준]</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.basisText}>[판매 수량 기준]</Text>
+            </View>
           </Card>
-          <Card style={styles.pieChart}>
+          <Card style={{ ...styles.pieChart, flex: 14.1 }}>
             <PieChart
               style={{ marginTop: "10%" }}
               data={itemList}
@@ -249,15 +241,24 @@ const Statistics = () => {
               accessor={"priceSum"}
               backgroundColor={"transparent"}
               center={[10, 0]}
-              absolute
             />
-            <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
+            <View
+              style={{
+                alignItems: "flex-end",
+                paddingRight: screenWidth*0.055,
+                marginBottom: screenHeight*0.02,
+              }}
+            >
+              <Text style={styles.totalText}>
+                총{" "}
+                <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text>{" "}
+                원
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
+            </View>
           </Card>
-          <View style={styles.totalView}>
-            <Text style={styles.totalText}>
-              <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text> 원
-            </Text>
-          </View>
         </>
       ) : (
         <View style={styles.noContent}>
@@ -323,12 +324,11 @@ const styles = StyleSheet.create({
   },
   pieChart: {
     flex: 12,
-    alignItems: "center",
     marginBottom: "7%",
     justifyContent: "flex-start",
   },
   basisText: {
-    fontSize: screenHeight * 0.015,
+    fontSize: screenWidth * 0.033,
     fontWeight: "900",
   },
   totalView: {
@@ -338,10 +338,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   totalText: {
-    fontSize: 30,
+    fontSize: 17,
   },
   totalMoneyText: {
-    fontSize: 35,
+    fontSize: 21,
     fontWeight: "bold",
   },
   noContent: {
