@@ -32,7 +32,7 @@ export default function TabNavigation() {
             tabBarIcon: ({ focused }) => (
               <MainIcon color={focusedColor(focused)} size="60%" />
             ),
-            unmountOnBlur: Platform.OS === 'ios' ? false : true,
+            unmountOnBlur: true,
           }}
         />
         <MainTab.Screen
@@ -53,7 +53,7 @@ export default function TabNavigation() {
             tabBarIcon: ({ focused }) => (
               <PaymentHistoryIcon color={focusedColor(focused)} size="70%" />
             ),
-            unmountOnBlur: Platform.OS === 'ios' ? false : true,
+            unmountOnBlur: true,
           }}
         />
         <MainTab.Screen
