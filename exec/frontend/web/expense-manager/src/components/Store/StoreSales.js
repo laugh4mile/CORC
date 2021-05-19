@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import StoreSalesItem from "../Payment/PaymentItem";
+import StoreSalesItem from "./SalesItem";
 import classes from "./List.module.css";
 
 const StoreSales = (props) => {
@@ -15,10 +15,7 @@ const StoreSales = (props) => {
     <Fragment>
       <table>
         <thead>
-          <tr className={classes.tr}>
-            <th style={{ width: "10%" }}>
-              <input type="checkbox" name="status" />
-            </th>
+          <tr className={classes.tr}>           
             <th>가맹점명</th>
             <th style={{ width: "40%" }}>사용자명</th>
             <th style={{ width: "50%" }}>결제 금액</th>

@@ -65,23 +65,7 @@ const PaymentItem = (props) => {
         className={`${classes.tr}  ${
           props.verified ? null : classes['verify-fail']
         }`}
-      >
-        <td style={{ width: '10%' }} className={classes.td}>
-          <input
-            type="checkbox"
-            value={props.paymentId}
-            name="paymentId"
-            onChange={(e) =>
-              props.handleSingleCheck(
-                e.target.checked,
-                props.paymentId,
-                props.index
-              )
-            }
-            // checkItems에 data.id가 있으면 체크 아니면 체크 해제
-            checked={props.checkItems.includes(props.paymentId) ? true : false}
-          />
-        </td>
+      >    
         <td
           className={`${classes.td} ${classes['text-center']} ${classes.link}`}
           onClick={trClickHandler}
