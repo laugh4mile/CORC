@@ -127,7 +127,7 @@ const SalesDetailPage = () => {
         {logStyle && loadedPayment.content.length !== 0 && (
           <Page
             totalElements={loadedPayment.totalElements}
-            blockSize={4}
+            blockSize={5}
             number={loadedPayment.number}
             size={loadedPayment.size}
             onClick={setPageInfo}
