@@ -125,16 +125,18 @@ const Main = (props) => {
       <Card style={styles.recentCard}>
         <View style={styles.recentCardHeader}>
           <View style={styles.recentCardHeaderIcon}>
-            <PaymentHistoryIcon color={"#b7b7b7"} size="80%" />
+            <PaymentHistoryIcon color={"#3f3f42"} size="80%" />
           </View>
           <View style={{ flex: 8, paddingLeft: 4 }}>
-            <Text style={{ fontWeight: "bold" }}>최근 판매 내역</Text>
+            <Text style={{ fontWeight: "bold", color: "#3f3f42" }}>
+              최근 판매 내역
+            </Text>
           </View>
         </View>
         <View style={styles.recentList}>
           <ScrollView style={{ paddingHorizontal: 10 }}>
             {paymentList.empty ? (
-              <Text>거래 내역이 없습니다.</Text>
+              <Text style={styles.emptyListTest}>거래 내역이 없습니다.</Text>
             ) : (
               paymentList.content.slice(0, 5).map((payment, index) => (
                 <View key={payment.paymentId.toString()}>
@@ -234,6 +236,11 @@ const styles = StyleSheet.create({
   recentList: {
     flex: 6,
     paddingBottom: 3,
+  },
+  emptyListTest: {
+    marginTop: 10,
+    textAlign: "center",
+    color: "gray",
   },
   dateSeparator: {
     flexDirection: "row",
