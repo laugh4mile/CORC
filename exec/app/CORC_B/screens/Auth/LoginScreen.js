@@ -18,8 +18,6 @@ const LoginScreen = (props) => {
   const [idValid, setIdValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
-  const [modalVisible, setmodalVisible] = useState(false);
-
   const userIdRef = useRef();
   const passwordRef = useRef();
   
@@ -108,12 +106,6 @@ const LoginScreen = (props) => {
           fontColor={Colors.primary.fontColor}
         />
         <View style={styles.footerItems}>
-          <Text
-            onPress={() => Alert.alert("비밀번호 찾기", "관리자에게 문의하십시오.", [{text: "확인"}])}
-            style={styles.textlink}
-          >
-            비밀번호 찾기
-          </Text>
           <Text
             onPress={() => props.navigation.navigate("RegistStore")}
             style={styles.textlink}
