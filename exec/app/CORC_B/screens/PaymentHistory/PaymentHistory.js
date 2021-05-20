@@ -83,7 +83,7 @@ const PaymentHistory = (props) => {
     const startDate =
       days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
     const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
-    currentDate = new Date();
+    currentDate = new Date(1900, 0, 1);
 
     const response = await axios.get(
       `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
@@ -127,6 +127,7 @@ const PaymentHistory = (props) => {
         { text: "확인" },
       ]);
     }
+    sethasMore(true);
     setisSent(true);
   };
 
@@ -150,11 +151,14 @@ const PaymentHistory = (props) => {
 
   const handleButton = (button) => {
     buttonList.map((btn) => (btn.selected = btn.key === button.key));
-    setpage(0);
-    setPaymentList([]);
-    setstart(dateFrom(30));
-    setend(new Date());
-    setDays(button.value);
+    if (button.value !== days) {
+      setpage(0);
+      setPaymentList([]);
+      setstart(dateFrom(30));
+      setend(new Date());
+      sethasMore(true);
+      setDays(button.value);
+    }
   };
 
   const onChangeStart = (event, selectedDate) => {
@@ -325,7 +329,7 @@ const PaymentHistory = (props) => {
               return;
             }
             if (hasMore) {
-              getData();
+            getData();
             }
           }}
           ItemSeparatorComponent={() => <View style={{ marginBottom: 3 }} />}
