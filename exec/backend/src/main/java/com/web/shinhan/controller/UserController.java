@@ -163,6 +163,7 @@ public class UserController {
 	      LocalDateTime now = LocalDateTime.now();
       int nowDay = now.getDayOfWeek().getValue();
       if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
+       if (store.getAccepted() == 2 && user.getActive == 1){
         if (storeGugunCode.equals(userGugunCode)) {
           if (!userService.pay(userId, total)) {
             status = HttpStatus.UNAUTHORIZED;
@@ -179,6 +180,10 @@ public class UserController {
         }
       } else {
         resultMap.put("message", "사용 불가 요일");
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+      } else {
+        resultMap.put("message", "사용 불가 사용자/가맹점");
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
       }
       } else {
