@@ -1,28 +1,16 @@
 package com.web.shinhan.model.service;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.Paymentitem;
-import com.web.shinhan.entity.User;
-import com.web.shinhan.model.PaymentDto;
 import com.web.shinhan.model.PaymentitemDto;
-import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.PaymentitemMapper;
-import com.web.shinhan.repository.PaymentRepository;
 import com.web.shinhan.repository.PaymentitemRepository;
 
 @Service
@@ -51,10 +39,7 @@ public class PaymentitemService {
     paymentitem.setProductName(productName);
     paymentitem.setPrice(price);
     paymentitem.setAmount(amount);
-    System.out.println(paymentitem);
     paymentitemRepository.save(paymentitem.toEntity());
-//		return 
-//		int paymentitemId = paymentitemRepository.findPaymentitemIdBy
   }
 
 }

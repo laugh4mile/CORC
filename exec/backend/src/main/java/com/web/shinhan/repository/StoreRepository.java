@@ -8,21 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.web.shinhan.entity.Store;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Integer>,
-    PagingAndSortingRepository<Store, Integer>,
-    QueryByExampleExecutor<Store> {
+    PagingAndSortingRepository<Store, Integer>, QueryByExampleExecutor<Store> {
 
-  @Query(value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, s.testCode, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId) where s.accepted = 2",
+  @Query(
+      value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, s.testCode, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId) where s.accepted = 2",
       countQuery = "select count(*) from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId)",
       nativeQuery = true)
   List<Store> findAll();
 
-  //	@Query(value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId)", nativeQuery = true)
-  @Query(value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, s.testCode, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId) where s.accepted = 2",
+  @Query(
+      value = "select s.storeId, s.crNum, s.categoryCode, s.email, s.password, s.storeName, s.contact, s.bankName, s.account, s.sidoCode, s.gugunCode, s.requestDate, s.accepted, s.testCode, temp.total from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId) where s.accepted = 2",
       countQuery = "select count(*) from store s left join (select sum(total) as total, storeId from payment where status = 1 group by storeId) as temp using(storeId)",
       nativeQuery = true)
   Page<Store> findAll(Pageable pageable);

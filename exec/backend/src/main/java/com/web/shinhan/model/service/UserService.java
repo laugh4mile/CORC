@@ -1,8 +1,6 @@
 package com.web.shinhan.model.service;
 
-import com.web.shinhan.model.BlockUserDto;
 import java.util.List;
-
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.web.shinhan.entity.Admin;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.AdminDto;
+import com.web.shinhan.model.BlockUserDto;
 import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.mapper.UserMapper;
 import com.web.shinhan.repository.AdminRepository;
@@ -99,16 +97,16 @@ public class UserService {
     userDto.setDays(newDto.getDays());
     userDto.setSidoCode(newDto.getSidoCode());
     userDto.setGugunCode(newDto.getGugunCode());
-    
-    if(userDto.getBalance() >= newDto.getCardLimit()) {
-    	userDto.setCardLimit(newDto.getCardLimit());
-    	userDto.setBalance(newDto.getCardLimit());
+
+    if (userDto.getBalance() >= newDto.getCardLimit()) {
+      userDto.setCardLimit(newDto.getCardLimit());
+      userDto.setBalance(newDto.getCardLimit());
     } else {
-    	userDto.setCardLimit(newDto.getCardLimit());
-        userDto.setBalance(userDto.getBalance() + (newDto.getCardLimit() - userDto.getCardLimit()));
-    	userDto.setCardLimit(newDto.getCardLimit());
+      userDto.setCardLimit(newDto.getCardLimit());
+      userDto.setBalance(userDto.getBalance() + (newDto.getCardLimit() - userDto.getCardLimit()));
+      userDto.setCardLimit(newDto.getCardLimit());
     }
-    
+
     userDto.setActive(1);
     userRepository.save(userDto.toEntity());
 
@@ -153,37 +151,37 @@ public class UserService {
   @Transactional
   public int banUser(int userId) {
     User user = userRepository.findByUserId(userId);
-//    if (user.getActive() != 2) {
-      UserDto userDto = mapper.INSTANCE.userToDto(user);
-      userDto.setActive(2);
-      userRepository.save(userDto.toEntity());
-      return 1;
-//    }
-//    return 0;
+    // if (user.getActive() != 2) {
+    UserDto userDto = mapper.INSTANCE.userToDto(user);
+    userDto.setActive(2);
+    userRepository.save(userDto.toEntity());
+    return 1;
+    // }
+    // return 0;
   }
 
   @Transactional
   public int deleteUser(int userId) {
     User user = userRepository.findByUserId(userId);
-//    if (user.getActive() != 0) {
-      UserDto userDto = mapper.INSTANCE.userToDto(user);
-      userDto.setActive(0);
-      userRepository.save(userDto.toEntity());
-      return 1;
-//    }
-//    return 0;
+    // if (user.getActive() != 0) {
+    UserDto userDto = mapper.INSTANCE.userToDto(user);
+    userDto.setActive(0);
+    userRepository.save(userDto.toEntity());
+    return 1;
+    // }
+    // return 0;
   }
 
   @Transactional
   public int activateUser(int userId) {
     User user = userRepository.findByUserId(userId);
-//    if (user.getActive() != 1) {
-      UserDto userDto = mapper.INSTANCE.userToDto(user);
-      userDto.setActive(1);
-      userRepository.save(userDto.toEntity());
-      return 1;
-//    }
-//    return 0;
+    // if (user.getActive() != 1) {
+    UserDto userDto = mapper.INSTANCE.userToDto(user);
+    userDto.setActive(1);
+    userRepository.save(userDto.toEntity());
+    return 1;
+    // }
+    // return 0;
   }
 
   public boolean login(UserDto user) {
@@ -210,8 +208,8 @@ public class UserService {
     if (passwordEncoder.matches(admin.getPassword(), encodedPassword)
         && adminET.getEmail().equals(admin.getEmail())) {
       admin.setPassword(encodedPassword);
-      boolean result = adminRepository
-          .existsByEmailAndPassword(admin.getEmail(), admin.getPassword());
+      boolean result =
+          adminRepository.existsByEmailAndPassword(admin.getEmail(), admin.getPassword());
       return result;
     } else {
       return false;
@@ -241,16 +239,11 @@ public class UserService {
     }
   }
 
-  public int countUser() {
-    int count = (int) userRepository.count();
-    return 0;
-  }
-
   public boolean verifyBlockUser(UserDto user) {
     try {
       BlockUserDto blockUser = blockchainService.getUser(user.getEmail()).block();
-      if (user.getEmail().equals(blockUser.getUserId()) &&
-          user.getBalance() == blockUser.getBalance()) {
+      if (user.getEmail().equals(blockUser.getUserId())
+          && user.getBalance() == blockUser.getBalance()) {
         user.setVerified(true);
       }
 
@@ -261,7 +254,8 @@ public class UserService {
   }
 
   public void setBlockUserBalance(UserDto user) {
-    BlockUserDto blockUser = BlockUserDto.builder()
+    BlockUserDto blockUser =
+        BlockUserDto.builder()
         .userId(user.getEmail())
         .balance(user.getBalance())
         .build();
@@ -295,6 +289,5 @@ public class UserService {
     }
     return false;
   }
-
 
 }

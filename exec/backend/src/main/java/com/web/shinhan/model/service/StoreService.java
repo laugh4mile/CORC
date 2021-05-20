@@ -1,8 +1,6 @@
 package com.web.shinhan.model.service;
 
-import com.web.shinhan.model.BlockUserDto;
 import java.time.LocalDateTime;
-
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,11 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.web.shinhan.entity.Store;
+import com.web.shinhan.model.BlockUserDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.mapper.StoreMapper;
-import com.web.shinhan.repository.PaymentRepository;
 import com.web.shinhan.repository.StoreRepository;
 import reactor.core.publisher.Mono;
 
@@ -26,9 +23,6 @@ public class StoreService {
 
   @Autowired
   private StoreRepository storeRepository;
-
-  @Autowired
-  private PaymentRepository paymentRepository;
 
   @Autowired
   private PaymentService paymentService;
@@ -113,17 +107,17 @@ public class StoreService {
   @Transactional
   public void allowStoreApplication(int storeId) {
     Store store = storeRepository.findByStoreId(storeId);
-      StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
-      storeDto.setAccepted(2);
-      storeRepository.save(storeDto.toEntity());
+    StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
+    storeDto.setAccepted(2);
+    storeRepository.save(storeDto.toEntity());
   }
 
   @Transactional
   public void denyStoreApplication(int storeId) {
     Store store = storeRepository.findByStoreId(storeId);
-      StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
-      storeDto.setAccepted(0);
-      storeRepository.save(storeDto.toEntity());
+    StoreDto storeDto = mapper.INSTANCE.storeToDto(store);
+    storeDto.setAccepted(0);
+    storeRepository.save(storeDto.toEntity());
   }
 
   public boolean login(StoreDto storeDto) {
@@ -132,8 +126,8 @@ public class StoreService {
     if (passwordEncoder.matches(storeDto.getPassword(), encodedPassword)
         && storeDto.getEmail().equals(dbStore.getEmail())) {
       storeDto.setPassword(encodedPassword);
-      boolean result = storeRepository
-          .existsByEmailAndPassword(storeDto.getEmail(), storeDto.getPassword());
+      boolean result =
+          storeRepository.existsByEmailAndPassword(storeDto.getEmail(), storeDto.getPassword());
       return result;
     } else {
       return false;
@@ -151,29 +145,22 @@ public class StoreService {
     return storeRepository.existsByCrNum(crNum);
   }
 
-  public int countStore() {
-    int count = (int) storeRepository.count();
-    return count;
-  }
-
   public boolean verifyBlockStore(StoreDto user) {
     try {
       BlockUserDto blockUser = blockchainService.getUser(user.getEmail()).block();
       int balance = paymentService.findNotConfirmed(user.getStoreId());
-      if (user.getEmail().equals(blockUser.getUserId()) &&
-          balance == blockUser.getBalance()) {
+      if (user.getEmail().equals(blockUser.getUserId()) && balance == blockUser.getBalance()) {
         user.setVerified(true);
       }
-
       return true;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return false;
     }
   }
 
   public void setBlockUserBalance(StoreDto store, int balance) {
-    BlockUserDto blockUser = BlockUserDto.builder()
+    BlockUserDto blockUser =
+        BlockUserDto.builder()
         .userId(store.getEmail())
         .balance(balance)
         .build();
@@ -181,7 +168,8 @@ public class StoreService {
   }
 
   public void createBlockUser(StoreDto store) {
-    BlockUserDto blockUser = BlockUserDto.builder()
+    BlockUserDto blockUser =
+        BlockUserDto.builder()
         .userId(store.getEmail())
         .type("Store")
         .balance(0)
