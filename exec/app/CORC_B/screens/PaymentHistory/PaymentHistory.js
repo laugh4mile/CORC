@@ -150,8 +150,8 @@ const PaymentHistory = (props) => {
   };
 
   const handleButton = (button) => {
-    buttonList.map((btn) => (btn.selected = btn.key === button.key));
     if (button.value !== days) {
+      buttonList.map((btn) => (btn.selected = btn.key === button.key));
       setpage(0);
       setPaymentList([]);
       setstart(dateFrom(30));
