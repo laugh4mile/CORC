@@ -131,11 +131,11 @@ public class BlockchainService {
     for (Store store : storeList) {
       try {
         BlockUserDto blockStore = getUser(store.getEmail()).block();
+        int dbBalance = store.getTotal() == null ? 0 : store.getTotal().intValue();
+        int blockBalance = blockStore.getBalance().intValue();
 
-        if (store.getTotal() != blockStore.getBalance()) {
-          if (store.getTotal() != null || blockStore.getBalance() != 0) {
-            throw new VerifyDataException("Store data validation failed.");
-          }
+        if (dbBalance != blockBalance) {
+          throw new VerifyDataException("Store data validation failed.");
         }
         verified++;
       } catch (Exception e) {
