@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import useHttp from "../../hooks/use-http";
-import { getSingleUser, getUserPaymentDetails, modifyUser } from "../../lib/api-user";
+import {
+  getSingleUser,
+  getUserPaymentDetails,
+  modifyUser,
+} from "../../lib/api-user";
 
 import UserInfo from "../../components/User/UserInfo";
 import PaymentList from "../../components/User/PaymentList";
@@ -37,7 +41,12 @@ const UserDetailPage = () => {
 
   const { userId } = location.state;
 
-  const { sendRequest: sendUserInfoRequest, status: userInfoStatus, data: loadedUser, error: userInfoError } = useHttp(getSingleUser, true);
+  const {
+    sendRequest: sendUserInfoRequest,
+    status: userInfoStatus,
+    data: loadedUser,
+    error: userInfoError,
+  } = useHttp(getSingleUser, true);
 
   const {
     sendRequest: sendUserLogRequest,
@@ -46,7 +55,8 @@ const UserDetailPage = () => {
     error: userLogError,
   } = useHttp(getUserPaymentDetails, true);
 
-  const { sendRequest: sendModifyStore, status: modifyStatus } = useHttp(modifyUser);
+  const { sendRequest: sendModifyStore, status: modifyStatus } =
+    useHttp(modifyUser);
 
   useEffect(() => {
     sendUserInfoRequest(userId);
@@ -59,10 +69,12 @@ const UserDetailPage = () => {
     }
   }, [modifyStatus, history]);
 
-  if (userInfoStatus === "pending" && userLogStatus === "pending") {
+  if (userInfoStatus === "pending" || userLogStatus === "pending") {
     return (
-      <div>
-        <LoadingSpinner />
+      <div className="page">
+        <section className={classes.spinner}>
+          <LoadingSpinner />
+        </section>
       </div>
     );
   }
@@ -126,10 +138,16 @@ const UserDetailPage = () => {
         목록으로
       </span>
       <article className={classes.tabs}>
-        <span className={`${classes.tab} ${infoActiveStyle()}`} onClick={infoClickHandler}>
+        <span
+          className={`${classes.tab} ${infoActiveStyle()}`}
+          onClick={infoClickHandler}
+        >
           사용자 정보
         </span>
-        <span className={`${classes.tab} ${logActiveStyle()}`} onClick={logClickHandler}>
+        <span
+          className={`${classes.tab} ${logActiveStyle()}`}
+          onClick={logClickHandler}
+        >
           사용자 로그
         </span>
       </article>
