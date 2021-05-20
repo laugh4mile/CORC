@@ -48,12 +48,6 @@ const Main = (props) => {
     }, [])
   );
 
-  React.useEffect(() => {
-    return () => {
-      DeviceEventEmitter.emit("detailFromMain");
-    };
-  }, []);
-
   const getData = async () => {
     setIsLoading(true);
     let response = await axios.get(
