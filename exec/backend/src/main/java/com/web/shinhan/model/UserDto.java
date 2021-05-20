@@ -1,14 +1,9 @@
 package com.web.shinhan.model;
 
 import java.time.LocalDateTime;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import com.web.shinhan.entity.Gugun;
 import com.web.shinhan.entity.Sido;
 import com.web.shinhan.entity.User;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -72,23 +67,50 @@ public class UserDto {
   }
 
   public User toEntity() {
-    return User.builder().userId(userId).employeeNum(employeeNum).email(email).userName(userName)
+    return User.builder()
+        .userId(userId)
+        .employeeNum(employeeNum)
+        .email(email)
+        .userName(userName)
         .password(password)
-        .department(department).position(position).contact(contact).days(days).sidoCode(sidoCode)
-        .gugunCode(gugunCode).balance(balance).cardLimit(cardLimit).active(active)
+        .department(department)
+        .position(position)
+        .contact(contact)
+        .days(days)
+        .sidoCode(sidoCode)
+        .gugunCode(gugunCode)
+        .balance(balance)
+        .cardLimit(cardLimit)
+        .active(active)
         .accessTime(accessTime)
-        .limitTime(limitTime).sido(sido).gugun(gugun).testCode(testCode).build();
+        .limitTime(limitTime)
+        .sido(sido)
+        .gugun(gugun)
+        .testCode(testCode).build();
   }
 
   public static UserDto of(User user) {
-    return UserDto.builder().userId(user.getUserId()).employeeNum(user.getEmployeeNum())
+    return UserDto.builder()
+        .userId(user.getUserId())
+        .employeeNum(user.getEmployeeNum())
         .email(user.getEmail())
-        .userName(user.getUserName()).password(user.getPassword()).department(user.getDepartment())
-        .position(user.getPosition()).contact(user.getContact()).days(user.getDays())
-        .sidoCode(user.getSidoCode()).gugunCode(user.getGugunCode()).balance(user.getBalance())
-        .cardLimit(user.getCardLimit()).active(user.getActive()).accessTime(user.getAccessTime())
-        .limitTime(user.getLimitTime()).sido(user.getSido()).gugun(user.getGugun())
-        .testCode(user.getTestCode()).build();
+        .userName(user.getUserName())
+        .password(user.getPassword())
+        .department(user.getDepartment())
+        .position(user.getPosition())
+        .contact(user.getContact())
+        .days(user.getDays())
+        .sidoCode(user.getSidoCode())
+        .gugunCode(user.getGugunCode())
+        .balance(user.getBalance())
+        .cardLimit(user.getCardLimit())
+        .active(user.getActive())
+        .accessTime(user.getAccessTime())
+        .limitTime(user.getLimitTime())
+        .sido(user.getSido())
+        .gugun(user.getGugun())
+        .testCode(user.getTestCode())
+        .build();
   }
 
 }

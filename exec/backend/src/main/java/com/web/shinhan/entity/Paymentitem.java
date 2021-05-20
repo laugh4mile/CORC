@@ -1,10 +1,12 @@
 package com.web.shinhan.entity;
 
-import javax.persistence.*;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -25,14 +27,6 @@ public class Paymentitem {
   private String productName;
   private int price;
   private int amount;
-
-//	@OneToMany(mappedBy = "paymentitem")
-////	@JoinTable(name = "paymentitem_product", // 조인테이블명
-////			joinColumns = @JoinColumn(name = "productId") // 외래키
-////			inverseJoinColumns = @JoinColumn(name = "productId") // 반대 엔티티의 외래키
-////	)
-//	private Set<Product> product = new HashSet<>();
-//	= new ArrayList<>();
 
   @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)

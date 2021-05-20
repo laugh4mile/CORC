@@ -2,13 +2,12 @@ package com.web.shinhan.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -51,10 +50,9 @@ public class User {
 
   @Builder
   public User(int userId, int employeeNum, String email, String userName, String password,
-      String department,
-      String position, String contact, String days, String sidoCode, String gugunCode, int balance,
-      int cardLimit,
-      int active, LocalDateTime accessTime, LocalDateTime limitTime, Sido sido, Gugun gugun, int testCode) {
+      String department, String position, String contact, String days, String sidoCode,
+      String gugunCode, int balance, int cardLimit, int active, LocalDateTime accessTime,
+      LocalDateTime limitTime, Sido sido, Gugun gugun, int testCode) {
     this.userId = userId;
     this.employeeNum = employeeNum;
     this.email = email;
@@ -73,7 +71,6 @@ public class User {
     this.limitTime = limitTime;
     this.sido = sido;
     this.gugun = gugun;
-
     this.testCode = testCode;
   }
 

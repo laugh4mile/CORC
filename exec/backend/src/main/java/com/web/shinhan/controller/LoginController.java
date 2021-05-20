@@ -3,10 +3,6 @@ package com.web.shinhan.controller;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.web.shinhan.model.AdminDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.UserDto;
-import com.web.shinhan.model.service.ETCService;
 import com.web.shinhan.model.service.JwtService;
 import com.web.shinhan.model.service.StoreService;
 import com.web.shinhan.model.service.UserService;
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController

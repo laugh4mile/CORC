@@ -1,10 +1,9 @@
 package com.web.shinhan.entity;
 
-import javax.persistence.*;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +26,6 @@ public class Admin {
     this.adminId = adminId;
     this.email = email;
     this.password = password;
-  }
-
-  @Override
-  public String toString() {
-    return "Admin [adminId=" + adminId + ", email=" + email + ", password=" + password + "]";
   }
 
 }

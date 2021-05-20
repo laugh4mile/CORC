@@ -24,7 +24,11 @@ public class AdminDto {
   }
 
   public Admin toEntity() {
-    return Admin.builder().adminId(adminId).email(email).password(password).build();
+    return Admin.builder()
+        .adminId(adminId)
+        .email(email)
+        .password(password)
+        .build();
   }
 
 }

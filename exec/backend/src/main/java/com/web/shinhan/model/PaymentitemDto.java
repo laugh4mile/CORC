@@ -1,8 +1,6 @@
 package com.web.shinhan.model;
 
-import com.web.shinhan.entity.Payment;
 import com.web.shinhan.entity.Paymentitem;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -30,15 +28,23 @@ public class PaymentitemDto {
   }
 
   public Paymentitem toEntity() {
-    return Paymentitem.builder().paymentItemId(paymentItemId).paymentId(paymentId)
+    return Paymentitem.builder()
+        .paymentItemId(paymentItemId)
+        .paymentId(paymentId)
         .productName(productName)
-        .price(price).amount(amount).build();
+        .price(price)
+        .amount(amount)
+        .build();
   }
 
   public static PaymentitemDto of(Paymentitem paymentitem) {
-    return PaymentitemDto.builder().paymentItemId(paymentitem.getPaymentItemId())
-        .productName(paymentitem.getProductName()).paymentId(paymentitem.getPaymentId())
-        .price(paymentitem.getPrice()).amount(paymentitem.getAmount()).build();
+    return PaymentitemDto.builder()
+        .paymentItemId(paymentitem.getPaymentItemId())
+        .productName(paymentitem.getProductName())
+        .paymentId(paymentitem.getPaymentId())
+        .price(paymentitem.getPrice())
+        .amount(paymentitem.getAmount())
+        .build();
   }
 
 }

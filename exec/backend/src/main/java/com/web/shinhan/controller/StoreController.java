@@ -3,7 +3,6 @@ package com.web.shinhan.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.web.shinhan.entity.Payment;
 import com.web.shinhan.model.GugunDto;
 import com.web.shinhan.model.PaymentDto;
-import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.SidoDto;
 import com.web.shinhan.model.StoreDto;
-import com.web.shinhan.model.UserDto;
 import com.web.shinhan.model.service.AreaService;
 import com.web.shinhan.model.service.PaymentService;
 import com.web.shinhan.model.service.PaymentitemService;
 import com.web.shinhan.model.service.StoreService;
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -57,8 +51,7 @@ public class StoreController {
   @ApiOperation(value = "가맹점 판매 내역", notes = "가맹점의 판매 내역을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment")
   public ResponseEntity<Map<String, Object>> findStorePayment(@RequestParam int storeId,
-      Pageable pageable)
-      throws Exception {
+      Pageable pageable) throws Exception {
     logger.info("findUserPayment - 호출");
 
     Map<String, Object> resultMap = new HashMap<>();
@@ -182,8 +175,7 @@ public class StoreController {
   @ApiOperation(value = "영수증", notes = "영수증을 가지고 온다.", response = HashMap.class)
   @GetMapping("/payment/single")
   public ResponseEntity<Map<String, Object>> showPayment(@RequestParam int storeId,
-      @RequestParam int paymentId)
-      throws Exception {
+      @RequestParam int paymentId) throws Exception {
     logger.info("showPayment - 호출");
 
     Map<String, Object> resultMap = new HashMap<>();
@@ -203,32 +195,32 @@ public class StoreController {
     return new ResponseEntity<Map<String, Object>>(resultMap, status);
   }
 
-	@ApiOperation(value = "가맹점 판매 상세 내역", notes = "가맹점의 판매 상세 내역을 가지고 온다.", response = HashMap.class)
-	@GetMapping("/payment/custom")
-	public ResponseEntity<Map<String, Object>> findStorePaymentCustom(@RequestParam int storeId,
-			@RequestParam int startDate, @RequestParam int endDate, @RequestParam(required = false) boolean forStatistics,
-			Pageable pageable) throws Exception {
-		logger.info("findStorePaymentCustom - 호출");
-		Map<String, Object> resultMap = new HashMap<>();
-		Page<PaymentDto> page = null;
-		HttpStatus status = HttpStatus.ACCEPTED;
-		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-				Sort.by(Sort.Direction.DESC, "date"));
-		if (forStatistics) {
-			pageable = Pageable.unpaged();
-		}
+  @ApiOperation(value = "가맹점 판매 상세 내역", notes = "가맹점의 판매 상세 내역을 가지고 온다.", response = HashMap.class)
+  @GetMapping("/payment/custom")
+  public ResponseEntity<Map<String, Object>> findStorePaymentCustom(@RequestParam int storeId,
+      @RequestParam int startDate, @RequestParam int endDate,
+      @RequestParam(required = false) boolean forStatistics, Pageable pageable) throws Exception {
+    logger.info("findStorePaymentCustom - 호출");
+    Map<String, Object> resultMap = new HashMap<>();
+    Page<PaymentDto> page = null;
+    HttpStatus status = HttpStatus.ACCEPTED;
+    pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+        Sort.by(Sort.Direction.DESC, "date"));
+    if (forStatistics) {
+      pageable = Pageable.unpaged();
+    }
 
-		try {
-			resultMap.put("info", storeService.findStoreInfo(storeId));
-			page = paymentService.findStorePaymentCustom(storeId, pageable, startDate, endDate);
-			resultMap.put("paymentList", page);
-			status = HttpStatus.ACCEPTED;
-		} catch (RuntimeException e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+    try {
+      resultMap.put("info", storeService.findStoreInfo(storeId));
+      page = paymentService.findStorePaymentCustom(storeId, pageable, startDate, endDate);
+      resultMap.put("paymentList", page);
+      status = HttpStatus.ACCEPTED;
+    } catch (RuntimeException e) {
+      resultMap.put("message", e.getMessage());
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+    return new ResponseEntity<Map<String, Object>>(resultMap, status);
+  }
 
 }
