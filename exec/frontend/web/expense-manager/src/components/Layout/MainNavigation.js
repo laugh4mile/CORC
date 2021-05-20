@@ -63,19 +63,19 @@ const MainNavigation = () => {
           <span>판매 내역</span>
         </NavLink>
       </nav>
-      <nav className={classes.nav}>
+      {/* <nav className={classes.nav}>
         <span className={classes.title}>통계</span>
         <NavLink to="/statistics" activeClassName={classes.active}>
           <StatisticsIcon className={classes.icon} />
           <span>통계</span>
         </NavLink>
-      </nav>
+      </nav> */}
       <div className={classes.divider}></div>
       <nav className={classes.nav}>
-        <NavLink to="/settings" activeClassName={classes.active}>
+        {/* <NavLink to="/settings" activeClassName={classes.active}>
           <SettingsIcon className={classes.icon} />
           <span>설정</span>
-        </NavLink>
+        </NavLink> */}
         <div className={classes["nav-item"]} onClick={logoutHandler}>
           <SignOutIcon className={classes.icon} />
           <span>로그아웃</span>
