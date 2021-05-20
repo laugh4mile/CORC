@@ -19,6 +19,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentDto {
 
+  public static class Status {
+    public static final int DENIEND = 0;
+    public static final int CREATED = 1;
+    public static final int ALLOWED = 2;
+  }
+
   private int paymentId;
   private int userId;
   private int storeId;
