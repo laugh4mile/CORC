@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getVerifiedUser,
-  getVerifiedStore,
-  getVerifiedPayment,
-} from "../../lib/api-dashboard";
+import { getVerifiedUser, getVerifiedStore, getVerifiedPayment } from "../../lib/api-dashboard";
 
 import Card from "../UI/Card/Card";
 
@@ -20,11 +16,7 @@ const VerifiedDataChart = () => {
   });
 
   const isSafe = () => {
-    return (
-      data.user.verified == data.user.total &&
-      data.store.verified == data.store.total &&
-      data.payment.verified == data.payment.verified
-    );
+    return data.user.verified == data.user.total && data.store.verified == data.store.total && data.payment.verified == data.payment.total;
   };
 
   const setVerifiedData = async () => {
@@ -42,17 +34,9 @@ const VerifiedDataChart = () => {
   return (
     <Card small>
       <section style={{ display: "flex" }}>
-        <img
-          src={isSafe() ? stateNormal : stateDanger}
-          className={classes.icon}
-        ></img>
+        <img src={isSafe() ? stateNormal : stateDanger} className={classes.icon}></img>
         <article className={classes.content}>
-          <span>
-            검증되지 않은 데이터:{" "}
-            {data.user.failedList.length +
-              data.store.failedList.length +
-              data.payment.failedList.length}
-          </span>
+          <span>검증되지 않은 데이터: {data.user.failedList.length + data.store.failedList.length + data.payment.failedList.length}</span>
           <span>미검증 사용자: {data.user.failedList.length}</span>
           <span>미검증 가맹점: {data.store.failedList.length}</span>
           <span>미검증 결제: {data.payment.failedList.length}</span>
