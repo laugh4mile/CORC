@@ -9,7 +9,7 @@ import * as authActions from '../store/actions/auth';
 import Card from '../components/Card';
 import SERVER_URL from '../env';
 
-const Settings = () => {
+const Settings = (props) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const userId = useSelector((state) => state.auth.userId);

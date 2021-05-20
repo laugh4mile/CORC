@@ -95,14 +95,6 @@ const LoginScreen = (props) => {
           backgroundColor={Colors.primary.backgroundColor}
           fontColor={Colors.primary.fontColor}
         />
-        <View style={styles.footerItems}>
-          <Text
-            onPress={() => props.navigation.navigate('FindPassword')}
-            style={styles.textlink}
-          >
-            비밀번호 찾기
-          </Text>
-        </View>
       </View>
     </View>
   );

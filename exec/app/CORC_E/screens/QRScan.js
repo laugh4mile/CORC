@@ -16,7 +16,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import axios from 'axios';
 import SERVER_URL from '../env';
 
-export default function QRScan() {
+const QRScan = (props) => {
   const userId = useSelector((state) => state.auth.userId);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -234,7 +234,10 @@ export default function QRScan() {
                   <View style={{ flex: 1, width: '100%' }}>
                     <Pressable
                       style={[styles.alertButton, styles.alertButtonClose]}
-                      onPress={() => setAlertModalVisible(!alertModalVisible)}
+                      onPress={() => {
+                        setAlertModalVisible(!alertModalVisible);
+                        props.navigation.navigate('Home');
+                      }}
                     >
                       <Text style={styles.alertTextStyle}>닫기</Text>
                     </Pressable>
@@ -247,8 +250,8 @@ export default function QRScan() {
       </BarCodeScanner>
     </View>
   );
-}
-
+};
+export default QRScan;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
