@@ -68,10 +68,10 @@ export async function getAllRequestedStores({ page, size }) {
   }
 }
 
-export async function getStorePayment(storeId, page, size, sort = { sortBy: "paymentId", isDesc: true }) {
+export async function getStorePayment({ storeId, pageInfo, sort = { sortBy: "paymentId", isDesc: true } }) {
   try {
     const rs = await axios.get(
-      `/admin/store/payment?storeId=${storeId}&page=${page}&size=${size}` +
+      `/admin/store/payment?storeId=${storeId}&page=${pageInfo.page}&size=${pageInfo.size}` +
         (sort ? `&sort=${sort.sortBy},${sort.isDesc ? "desc" : "asc"}` : "")
     );
     const data = rs.data.paymentList;

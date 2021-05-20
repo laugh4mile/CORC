@@ -47,7 +47,7 @@ const SalesDetailPage = () => {
 
   useEffect(() => {
     sendSingleStore(storeId);
-    sendStorePayment(storeId, pageInfo);
+    sendStorePayment({ storeId, pageInfo });
   }, [sendSingleStore, sendStorePayment, storeId, pageInfo]);
 
   useEffect(() => {
