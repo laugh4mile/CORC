@@ -44,7 +44,7 @@ const PaymentItem = (props) => {
           {props.date.slice(0, 10)}
         </td>
         <td style={{ width: "60%" }} className={`${classes.td} ${classes["font-bold"]} ${classes["align-right"]}`}>
-          {formatMoney(totalPrice())}
+          {formatMoney(props.total)}
         </td>
       </tr>
     </Fragment>
