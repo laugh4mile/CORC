@@ -5,7 +5,6 @@ import AuthContext from "./store/auth-context";
 import Layout from "./components/Layout/Layout";
 
 import AuthPage from "./pages/AuthPage";
-// import DashBoardPage from "./pages/DashBoard/DashBoardPage";
 import DashBoardPage from "./pages/DashBoardPage";
 // User
 import UserRegisterPage from "./pages/User/UserRegisterPage";
@@ -76,11 +75,13 @@ const App = () => {
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/statistics" exact>
-          {authCtx.isLoggedIn && <StatisticsPage />}
+          {/* {authCtx.isLoggedIn && <StatisticsPage />} */}
+          {authCtx.isLoggedIn && <Redirect to="/" />}
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/settings" exact>
-          {authCtx.isLoggedIn && <SettingsPage />}
+          {/* {authCtx.isLoggedIn && <SettingsPage />} */}
+          {authCtx.isLoggedIn && <Redirect to="/" />}
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="*">

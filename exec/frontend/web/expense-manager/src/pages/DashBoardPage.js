@@ -102,16 +102,9 @@ const DashBoardPage = () => {
     }
   }, []);
 
-  console.log("expensesData", expensesData);
-  console.log("loadedStores", loadedStores);
-  console.log("loadedPayment", loadedPayment);
-  console.log("loadedByMonth", loadedByMonth);
-  console.log("loadedStatistics", loadedStatistics);
-
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get("/board/expenses/statistics");
-    console.log("response", response);
     setitemList([]);
     let payments;
     let totalSum = 0;
@@ -174,7 +167,7 @@ const DashBoardPage = () => {
   ) {
     return (
       <div className="page">
-        <span className="title">대쉬보드</span>
+        {/* <span className="title">대쉬보드</span> */}
         <section className={classes.spinner}>
           <LoadingSpinner />
         </section>

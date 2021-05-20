@@ -68,14 +68,12 @@
 }
 
 .offline {
-    color: #ff6161;
+    color: #DC493A;
 }
 
 .online {
-    color: #4CD45D;
+    color: #3EC300;
 }
-
-
 
 /* For desktop: */
 .col-1 {

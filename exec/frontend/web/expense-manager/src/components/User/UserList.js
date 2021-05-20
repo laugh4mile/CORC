@@ -1,16 +1,16 @@
-import { Fragment, useEffect, useState } from 'react';
-// import { useHistory, useLocation } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import Button from '../../components/UI/Button/Button';
-import Card from '../../components/UI/Card/Card';
-import { userStatus, modifyCardLimit, resetBalance } from '../../lib/api-user';
-import UserItem from './UserItem';
-import useHttp from '../../hooks/use-http';
+import Button from "../../components/UI/Button/Button";
+import Card from "../../components/UI/Card/Card";
+import { userStatus, modifyCardLimit, resetBalance } from "../../lib/api-user";
+import UserItem from "./UserItem";
+import useHttp from "../../hooks/use-http";
 
-import Modal from '../UI/Modal/Modal';
-import Backdrop from '../UI/Backdrop/Backdrop';
-import CardLimit from '../UI/CardLimit/CardLimit';
-import classes from './List.module.css';
+import Modal from "../UI/Modal/Modal";
+import Backdrop from "../UI/Backdrop/Backdrop";
+import CardLimit from "../UI/CardLimit/CardLimit";
+import classes from "./List.module.css";
 
 const sortUsers = (users, ascending) => {
   return users.sort((userA, userB) => {
@@ -57,7 +57,6 @@ const UserList = (props) => {
 
   const handleAllCheck = (checked, index) => {
     if (checked) {
-      console.log('checked');
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -81,13 +80,10 @@ const UserList = (props) => {
   };
 
   const submitHandler = (event) => {
-    // event.preventDefault();
-    console.log('event.target.value', event.target.value);
     addUserHandler(event.target.value, checkItems);
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
-    // setCheckItems([]);
   };
 
   const cardLimitHandler = (limit, userIds) => {
@@ -95,14 +91,11 @@ const UserList = (props) => {
   };
 
   const submitCardLimitHandler = (event) => {
-    // event.preventDefault();
-    // console.log('event', event);
     cardLimitHandler(event.target.value, checkItems);
 
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
-    // setCheckItems([]);
   };
 
   const resetHandler = (userIds) => {
@@ -110,17 +103,11 @@ const UserList = (props) => {
   };
 
   const submitResetHandler = (event) => {
-    // event.preventDefault();
-    // console.log('event', event);
     resetHandler(checkItems);
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
   };
-
-  console.log('checkItems', checkItems);
-  console.log('userIdx', userIdx);
-  console.log('props.page', props.page);
 
   return (
     <Fragment>
@@ -129,21 +116,21 @@ const UserList = (props) => {
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
       <div className={classes.section}>
-        <Button small allow fit name="allow" value="1" onClick={submitHandler}>
+        <Button small sub fit name="allow" value="1" onClick={submitHandler}>
           활성
         </Button>
-        <Button small deny fit name="deny" value="2" onClick={submitHandler}>
+        <Button small sub fit name="deny" value="2" onClick={submitHandler}>
           정지
         </Button>
-        <Button small deny fit name="deny" value="0" onClick={submitHandler}>
+        <Button small sub fit name="deny" value="0" onClick={submitHandler}>
           삭제
         </Button>
-        <Button small allow fit name="allow" value="3" onClick={showModal}>
+        <Button small sub fit name="allow" value="3" onClick={showModal}>
           한도 수정
         </Button>
         <Button
           small
-          allow
+          sub
           fit
           name="allow"
           value=""
@@ -151,19 +138,23 @@ const UserList = (props) => {
         >
           잔액 초기화
         </Button>
+        <article style={{ marginLeft: "0.5rem", width: "fit-content" }}>
+          <Link className={classes.linkBtn} to="/user/register">
+            사용자 등록
+          </Link>
+        </article>
       </div>
       <Card type="nofit">
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: '10%' }}>
+              <th style={{ width: "10%" }}>
                 <input
                   type="checkbox"
                   name="status"
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  // checked={checkItems.length === props.page ? true : false}
                   checked={
                     props.page === 0
                       ? false

@@ -144,6 +144,7 @@ public class UserController {
       for (PaymentitemDto paymentitem : paymentitems) {
         itemsTotal += paymentitem.getPrice() * paymentitem.getAmount();
       }
+<<<<<<< HEAD
       if (itemsTotal == total) {
         UserDto user = userService.findUserInfo(userId);
         StoreDto store = storeService.findStoreInfo(storeId);
@@ -163,6 +164,23 @@ public class UserController {
               resultMap.put("message", "결제 완료");
               status = HttpStatus.ACCEPTED;
             }
+=======
+      if(itemsTotal == total) {
+	      UserDto user = userService.findUserInfo(userId);
+	      StoreDto store = storeService.findStoreInfo(storeId);
+	      String storeGugunCode = store.getGugunCode();
+	      String userGugunCode = user.getGugunCode();
+	      String userDays = user.getDays();
+	      LocalDateTime now = LocalDateTime.now();
+      int nowDay = now.getDayOfWeek().getValue();
+      if (userDays.substring(nowDay - 1, nowDay).equals("1")) {
+       if (store.getAccepted() == 2 && user.getActive == 1){
+        if (storeGugunCode.equals(userGugunCode)) {
+          if (!userService.pay(userId, total)) {
+            status = HttpStatus.UNAUTHORIZED;
+            resultMap.put("message", "잔고 부족");
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+>>>>>>> branch 'develop' of https://lab.ssafy.com/s04-final/s04p31a301.git
           } else {
             resultMap.put("message", "사용 불가 지역");
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
@@ -175,6 +193,17 @@ public class UserController {
         resultMap.put("message", "결제 내역 총합과 상품 목록 총합 불일치");
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
       }
+<<<<<<< HEAD
+=======
+      } else {
+        resultMap.put("message", "사용 불가 사용자/가맹점");
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);
+      }
+      } else {
+    	resultMap.put("message", "결제 내역 총합과 상품 목록 총합 불일치");
+    	return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.UNAUTHORIZED);    	  
+      }
+>>>>>>> branch 'develop' of https://lab.ssafy.com/s04-final/s04p31a301.git
     } catch (RuntimeException e) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
     }

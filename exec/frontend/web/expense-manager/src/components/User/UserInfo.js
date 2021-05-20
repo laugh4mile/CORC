@@ -51,6 +51,10 @@ const UserInfo = (props) => {
     { id: 10, value: '인사부' },
     { id: 20, value: '총무부' },
     { id: 30, value: '디지털 개발부' },
+    { id: 40, value: '기획부' },
+    { id: 50, value: '사업부' },
+    { id: 60, value: '생산부' },
+    { id: 70, value: '영업부' },
   ];
 
   const changeHandler = (event) => {
@@ -93,7 +97,6 @@ const UserInfo = (props) => {
         else enteredDays.push(value);
         enteredDays.sort();
         setDays(enteredDays);
-        console.log(enteredDays);
         break;
       default:
         break;
@@ -125,9 +128,6 @@ const UserInfo = (props) => {
       cardLimit: enteredLimit,
     };
 
-    console.log('userData', userData);
-    console.log('props', props);
-
     props.onModifyUser(userData);
   };
 
@@ -135,9 +135,7 @@ const UserInfo = (props) => {
     setIsEntering(false);
   };
 
-  const formFocusedHandler = () => {
-    // setIsEntering(true);
-  };
+  const formFocusedHandler = () => {};
 
   useEffect(() => {
     getCities()
@@ -254,9 +252,15 @@ const UserInfo = (props) => {
                     onChange={changeHandler}
                   >
                     <option value="">직위</option>
-                    <option value="수석">수석</option>
-                    <option value="선임">선임</option>
                     <option value="주임">주임</option>
+                    <option value="선임">선임</option>
+                    <option value="수석">수석</option>
+                    <option value="행원">행원</option>
+                    <option value="대리">대리</option>
+                    <option value="과장">과장</option>
+                    <option value="차장">차장</option>
+                    <option value="MA">MA</option>
+                    <option value="MB">MB</option>
                   </select>
                 </div>
               </div>
@@ -318,7 +322,6 @@ const UserInfo = (props) => {
                       <input
                         className={`${classes.checkboxStyles}`}
                         type="checkbox"
-                        // id="day"
                         name="day"
                         value={day.id}
                         defaultChecked={days[index].checked}

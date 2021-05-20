@@ -39,3 +39,10 @@
     color: #696A6E;
     background-color: #ffffff;
 }
+
+.spinner {
+    display: flex;
+    margin-top: 24rem;
+    justify-content: center;
+    align-items: center;
+}

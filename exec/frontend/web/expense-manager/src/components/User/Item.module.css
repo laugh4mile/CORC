@@ -1,5 +1,4 @@
-.item {
-}
+.item {}
 
 .tr {
   display: flex;
@@ -83,15 +82,15 @@
 }
 
 .deleted {
-  color: #ff6161;
+  color: #DC493A;
 }
 
 .active {
-  color: #44c167;
+  color: #3EC300;
 }
 
 .inactive {
-  color: #ffdb5a;
+  color: #FFC933;
 }
 
 .verify-fail {

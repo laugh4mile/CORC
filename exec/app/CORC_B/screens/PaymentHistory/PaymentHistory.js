@@ -8,7 +8,7 @@ import {
   Platform,
   Alert,
   FlatList,
-  DeviceEventEmitter,
+  ActivityIndicator,
 } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -16,13 +16,12 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
-import HistoryItem from "../../components/HistoryItem";
+import PaymentItem from "../../components/PaymentItem";
 import Colors from "../../constants/Colors";
 import PaymentHistoryIcon from "../../navigations/icons/PaymentHistoryIcon";
 import { SERVER_URL } from "../../env";
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
-const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 var buttonList = [
   { key: 1, label: "당일", value: 1, selected: false },
@@ -30,13 +29,6 @@ var buttonList = [
   { key: 3, label: "1개월", value: 30, selected: false },
   { key: 4, label: "조건 검색", value: -1, selected: false },
 ];
-
-const getMMDD_DT = (date) => {
-  let _date = new Date(date);
-  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
-    dayOfWeek[_date.getDay()]
-  })`;
-};
 
 const dateStrToNum = (date) => {
   let year = date.getFullYear();
@@ -70,12 +62,7 @@ const PaymentHistory = (props) => {
   const [hasMore, sethasMore] = useState(false);
 
   useEffect(() => {
-    DeviceEventEmitter.addListener("detailFromMain", () => {
-      handleButton(buttonList[1]); // initialize to one week selected button
-    });
-    return () => {
-      setDays(7);
-    };
+    handleButton(buttonList[1]); // initialize to one week selected button
   }, []);
 
   // 당일, 1주일, 1개월 버튼 클릭했을 때
@@ -91,10 +78,12 @@ const PaymentHistory = (props) => {
   }, [isSent]);
 
   const getData = async () => {
+    setIsLoading(true);
+
     const startDate =
       days === -1 ? dateStrToNum(start) : dateStrToNum(dateFrom(days));
     const endDate = days === -1 ? dateStrToNum(end) : dateStrToNum(new Date());
-    currentDate = new Date(1900, 1, 1);
+    currentDate = new Date();
 
     const response = await axios.get(
       `${SERVER_URL}/store/payment/custom?storeId=${userId}&startDate=${startDate}&endDate=${endDate}&size=${size}&page=${page}`
@@ -103,12 +92,11 @@ const PaymentHistory = (props) => {
     let payments = response.data.paymentList.content;
 
     setPaymentList([...paymentList, ...payments]);
-    // setPaymentList(isLoading ? paymentList : [...paymentList, ...payments]);
     setpage(page + 1);
     sethasMore(response.data.paymentList.last === false);
 
-    setIsLoading(false);
     setisSent(false);
+    setIsLoading(false);
   };
 
   const formatDate = (date, type) => {
@@ -183,24 +171,47 @@ const PaymentHistory = (props) => {
 
   const renderList = ({ item }) => {
     return (
-      // <View>
-      //   {!matchedDate(item.date) && (
-      //     <View style={styles.dateSeparatorBox}>
-      //       <View style={styles.dateView}>
-      //         <Text style={styles.dateText}>{getMMDD_DT(item.date)}</Text>
-      //       </View>
-      //       <View style={styles.dateSeparator} />
-      //     </View>
-      //   )}
-      <HistoryItem payment={item} />
-      // </View>
+      <View>
+        {!matchedDate(item.date) && (
+          <View style={styles.dateSeparatorBox}>
+            <View style={styles.dateView}>
+              <Text style={styles.dateText}>
+                {+item.date.substring(5, 7)}
+                {"월 "}
+                {+item.date.substring(8, 10)}
+                {"일"}
+              </Text>
+            </View>
+            <View style={styles.dateSeparator} />
+          </View>
+        )}
+        <PaymentItem payment={item} />
+      </View>
     );
   };
 
-  const handleRefresh = () => {
-    setIsLoading(true);
-    setpage(0);
-    getData();
+  const renderEnd = () => {
+    if (isLoading) {
+      return <ActivityIndicator color={Colors.primary.backgroundColor} />;
+    }
+    if (days === -1) {
+      if (paymentList.length > 0) {
+        return (
+          <Text style={styles.listFooter}>더 이상 조회할 내역이 없습니다.</Text>
+        );
+      }
+      return (
+        <Text style={styles.listFooter}>
+          조회할 날짜를 선택하여 조회하기 버튼을 눌러주세요.
+        </Text>
+      );
+    }
+    if (paymentList.length > 0) {
+      return (
+        <Text style={styles.listFooter}>더 이상 조회할 내역이 없습니다.</Text>
+      );
+    }
+    return <Text style={styles.listFooter}>조회할 내역이 없습니다.</Text>;
   };
 
   return (
@@ -310,14 +321,17 @@ const PaymentHistory = (props) => {
           style={styles.resultScroll}
           keyExtractor={(item, index) => item.paymentId.toString()}
           onEndReached={() => {
+            if (isLoading) {
+              return;
+            }
             if (hasMore) {
               getData();
             }
           }}
           ItemSeparatorComponent={() => <View style={{ marginBottom: 3 }} />}
           onEndReachedThreshold={0.3}
-          // refreshing={isLoading}
-          // onRefresh={handleRefresh}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListFooterComponent={renderEnd}
         />
       </Card>
     </View>
@@ -420,5 +434,11 @@ const styles = StyleSheet.create({
     flex: 2.5,
     borderBottomColor: "#A09E9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  listFooter: {
+    marginTop: 10,
+    textAlign: "center",
+    fontSize: 14,
+    color: "gray",
   },
 });

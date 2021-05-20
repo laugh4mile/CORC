@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, Text, Image, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, Alert, Modal } from "react-native";
 import { useDispatch } from 'react-redux';
 
 import Button from "../../components/Button";
@@ -106,12 +106,6 @@ const LoginScreen = (props) => {
           fontColor={Colors.primary.fontColor}
         />
         <View style={styles.footerItems}>
-          <Text
-            onPress={() => props.navigation.navigate("FindPassword")}
-            style={styles.textlink}
-          >
-            비밀번호 찾기
-          </Text>
           <Text
             onPress={() => props.navigation.navigate("RegistStore")}
             style={styles.textlink}

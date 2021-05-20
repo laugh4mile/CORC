@@ -41,9 +41,30 @@ const RegisterForm = (props) => {
   ];
 
   const departments = [
-    { id: 10, value: '인사부' },
-    { id: 20, value: '총무부' },
-    { id: 30, value: '디지털 개발부' },
+    { id: 10, value: '전략기획팀' },
+    { id: 20, value: 'ESG기획팀' },
+    { id: 30, value: '재무팀' },
+    { id: 40, value: '회계팀' },
+    { id: 50, value: 'IR팀' },
+    { id: 60, value: '경영관리팀' },
+    { id: 70, value: '신한리더십센터' },
+    { id: 80, value: '경영지원팀' },
+    { id: 90, value: 'ICT기획팀' },
+    { id: 11, value: '디지털기획팀' },
+    { id: 21, value: '브랜드홍보본부' },
+    { id: 31, value: '리스크관리팀' },
+    { id: 41, value: '모형검증팀' },
+    { id: 51, value: '여신감리팀' },
+    { id: 61, value: '준법지원팀' },
+    { id: 71, value: '매크로금융팀' },
+    { id: 81, value: '마켓인텔리전스팀' },
+    { id: 91, value: 'GIB사업부' },
+    { id: 12, value: 'GMS기획실' },
+    { id: 22, value: '글로벌기획실' },
+    { id: 32, value: 'WM기획실' },
+    { id: 42, value: '퇴직연금기획실' },
+    { id: 52, value: '감사팀' },
+    { id: 62, value: '이사회사무국' },
   ];
 
   const changeHandler = (event) => {
@@ -117,14 +138,10 @@ const RegisterForm = (props) => {
       cardLimit: enteredLimit,
     };
 
-    console.log(userData);
-    console.log('props', props);
     props.onAddUser(userData);
   };
 
-  const formFocusedHandler = () => {
-    // setIsEntering(true);
-  };
+  const formFocusedHandler = () => {};
 
   useEffect(() => {
     getCities()
@@ -238,9 +255,15 @@ const RegisterForm = (props) => {
                     onChange={changeHandler}
                   >
                     <option value="">직위</option>
-                    <option value="수석">수석</option>
-                    <option value="선임">선임</option>
                     <option value="주임">주임</option>
+                    <option value="선임">선임</option>
+                    <option value="수석">수석</option>
+                    <option value="행원">행원</option>
+                    <option value="대리">대리</option>
+                    <option value="과장">과장</option>
+                    <option value="차장">차장</option>
+                    <option value="MA">MA</option>
+                    <option value="MB">MB</option>
                   </select>
                 </div>
               </div>
@@ -302,7 +325,6 @@ const RegisterForm = (props) => {
                       <input
                         className={classes.checkboxStyles}
                         type="checkbox"
-                        // id="day"
                         name="day"
                         value={day.id}
                         onChange={changeHandler}
