@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, Text, Image, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, Alert, Modal } from "react-native";
 import { useDispatch } from 'react-redux';
 
 import Button from "../../components/Button";
@@ -17,6 +17,8 @@ const LoginScreen = (props) => {
 
   const [idValid, setIdValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+
+  const [modalVisible, setmodalVisible] = useState(false);
 
   const userIdRef = useRef();
   const passwordRef = useRef();
@@ -107,7 +109,7 @@ const LoginScreen = (props) => {
         />
         <View style={styles.footerItems}>
           <Text
-            onPress={() => props.navigation.navigate("FindPassword")}
+            onPress={() => Alert.alert("비밀번호 찾기", "관리자에게 문의하십시오.", [{text: "확인"}])}
             style={styles.textlink}
           >
             비밀번호 찾기
