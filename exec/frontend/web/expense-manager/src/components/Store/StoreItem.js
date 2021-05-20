@@ -5,12 +5,6 @@ import classes from "./Item.module.css";
 const StoreItem = (props) => {
   const history = useHistory();
 
-  // const isAccepted = (accepted) => {
-  //   if (accepted === 0) return "삭제";
-  //   else if (accepted === 1) return "대기";
-  //   else return "활성";
-  // };
-
   const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
   const trClickHandler = () =>
@@ -25,43 +19,28 @@ const StoreItem = (props) => {
 
   return (
     <tbody>
-      <tr
-        className={`${classes.tr} ${
-          props.verified ? null : classes["verify-fail"]
-        }`}
-      >
+      <tr className={`${classes.tr} ${props.verified ? null : classes["verify-fail"]}`}>
         <td style={{ width: "10%" }}>
           <input
             type="checkbox"
             value={props.storeId}
             name="storeId"
-            onChange={(e) =>
-              props.handleSingleCheck(e.target.checked, props.storeId)
-            }
+            onChange={(e) => props.handleSingleCheck(e.target.checked, props.storeId)}
             // checkItems에 data.id가 있으면 체크 아니면 체크 해제
             checked={props.checkItems.includes(props.storeId) ? true : false}
           />
         </td>
-        <td
-          style={{ width: "60%" }}
-          className={`${classes.td} ${classes["text-center"]}   ${classes.link}`}
-          onClick={trClickHandler}
-        >
+        <td style={{ width: "60%" }} className={`${classes.td} ${classes["text-center"]}   ${classes.link}`} onClick={trClickHandler}>
           {props.crNum}
         </td>
-        <td className={`${classes.td} ${classes["text-center"]} `}>
-          {props.storeName}
-        </td>
+        <td className={`${classes.td} ${classes["text-center"]} `}>{props.storeName}</td>
         <td style={{ width: "40%" }} className={classes.td}>
           {props.categoryCode}
         </td>
         <td style={{ width: "60%" }} className={classes.td}>
           {props.sido.sidoName} {props.gugun.gugunName}
         </td>
-        <td
-          style={{ width: "60%" }}
-          className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}
-        >
+        <td style={{ width: "60%" }} className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}>
           {formatMoney(props.total)}
         </td>
         {/* <td>{isAccepted(props.accepted)}</td> */}

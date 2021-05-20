@@ -4,16 +4,7 @@ import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import { Row, Col, Card, CardHeader, CardBody, Container } from "reactstrap";
 import useHttp from "../../hooks/use-http";
 import { getColor } from "../../utils/colors";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 import ActiveShapePieChart from "../../components/Chart/ActiveShapePieChart";
 import PaymentList from "../../components/DashBoard/PaymentList";
@@ -22,27 +13,16 @@ import Expenses from "../../components/DashBoard/Expenses";
 import TotalExpenses from "../../components/DashBoard/TotalExpenses";
 import VerifiedDataChart from "../../components/Chart/VerifiedDataChart";
 import { getAllRequestedStores } from "../../lib/api-store";
-import {
-  expenses,
-  recentPayment,
-  expenseByMonth,
-  expenseForStatistics,
-} from "../../lib/api-dashboard";
+import { expenses, recentPayment, expenseByMonth, expenseForStatistics } from "../../lib/api-dashboard";
 
 import CCard from "../../components/UI/DBCard/Card";
 import classes from "./list.module.css";
 
 const axios = require("axios").default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
-// import Page from '../../components/Pagenation';
 
 const DashBoardPage = () => {
-  const {
-    sendRequest: sendExpenses,
-    status: statusExpenses,
-    data: getInfo,
-    error: errorExpenses,
-  } = useHttp(expenses, true);
+  const { sendRequest: sendExpenses, status: statusExpenses, data: getInfo, error: errorExpenses } = useHttp(expenses, true);
 
   const {
     sendRequest: sendRequested,
@@ -51,19 +31,9 @@ const DashBoardPage = () => {
     error: errorRequested,
   } = useHttp(getAllRequestedStores, true);
 
-  const {
-    sendRequest: sendPayment,
-    status: statusPayment,
-    data: loadedPayment,
-    error: errorPayment,
-  } = useHttp(recentPayment, true);
+  const { sendRequest: sendPayment, status: statusPayment, data: loadedPayment, error: errorPayment } = useHttp(recentPayment, true);
 
-  const {
-    sendRequest: sendByMonth,
-    status: statusByMonth,
-    data: loadedByMonth,
-    error: errorByMonth,
-  } = useHttp(expenseByMonth, true);
+  const { sendRequest: sendByMonth, status: statusByMonth, data: loadedByMonth, error: errorByMonth } = useHttp(expenseByMonth, true);
 
   const {
     sendRequest: sendStatistics,
@@ -90,15 +60,7 @@ const DashBoardPage = () => {
     sendRequested(pageInfo);
     sendByMonth(year);
     sendStatistics();
-  }, [
-    sendExpenses,
-    sendPayment,
-    sendRequested,
-    sendByMonth,
-    sendStatistics,
-    year,
-    pageInfo,
-  ]);
+  }, [sendExpenses, sendPayment, sendRequested, sendByMonth, sendStatistics, year, pageInfo]);
 
   useEffect(() => {
     makeChart();
@@ -161,21 +123,6 @@ const DashBoardPage = () => {
     setIsLoading(false);
   };
 
-  // const MONTHS = [
-  //   'January',
-  //   'February',
-  //   'March',
-  //   'April',
-  //   'May',
-  //   'June',
-  //   'July',
-  //   'August',
-  //   'September',
-  //   'October',
-  //   'November',
-  //   'December',
-  // ];
-
   if (
     statusExpenses === "pending" &&
     statusRequested === "pending" &&
@@ -226,9 +173,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          가맹점 신청 목록을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>가맹점 신청 목록을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -237,9 +182,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          최근 결제 내역을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>최근 결제 내역을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -248,9 +191,7 @@ const DashBoardPage = () => {
     return (
       <div className="page">
         <span className="title">대쉬보드</span>
-        <span className={classes.inform}>
-          월간 소비량을 불러올 수 없습니다.
-        </span>
+        <span className={classes.inform}>월간 소비량을 불러올 수 없습니다.</span>
       </div>
     );
   }
@@ -264,26 +205,7 @@ const DashBoardPage = () => {
     );
   }
 
-  console.log("getInfo", getInfo);
-  console.log("loadedStores", loadedStores);
-  console.log("loadedPayment", loadedPayment);
-  console.log("loadedByMonth", loadedByMonth);
-  console.log("loadedStatistics", loadedStatistics);
-
-  const MONTHS = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-  ];
+  const MONTHS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
   const monthData = [];
 
@@ -294,35 +216,6 @@ const DashBoardPage = () => {
       "정산된 금액": loadedByMonth[i][1],
     });
   }
-
-  console.log("monthData", monthData);
-
-  // if (loadedByMonth !== undefined && !loadedByMonth.empty) {
-  //   var months = loadedByMonth;
-
-  //   for (let i = 0; i < months.length; i++) {}
-  // }
-
-  // const data = [
-  //   {
-  //     name: MONTHS,
-  //     사용한금액: monthData,
-  //   },
-  // ];
-
-  // const data = [
-  //   {
-  //     name: 'Page A',
-  //     사용한금액: 4000,
-  //     정산예정금액: 2400,
-  //     amt: 2400,
-  //   },
-  // ];
-  // categories.push({
-  //   name: item3.category.categoryName,
-  //   value: payments[i].total,
-  // });
-  // setCategoryList(categories, 'value');
 
   const genLineData = (moreData = {}) => {
     return {
@@ -465,12 +358,7 @@ const DashBoardPage = () => {
               <YAxis label="원" />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="사용된 금액"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
+              <Line type="monotone" dataKey="사용된 금액" stroke="#8884d8" activeDot={{ r: 8 }} />
               <Line type="monotone" dataKey="정산된 금액" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>

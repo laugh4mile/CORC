@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 
 import useHttp from "../hooks/use-http";
-import {
-  expenses,
-  recentPayment,
-  expenseByMonth,
-  expenseForStatistics,
-} from "../lib/api-dashboard";
+import { expenses, recentPayment, expenseByMonth, expenseForStatistics } from "../lib/api-dashboard";
 import { getAllRequestedStores } from "../lib/api-store";
 
 import PeerStatus from "../components/Chart/PeerStatus";
@@ -27,12 +22,7 @@ const axios = require("axios").default;
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
 const DashBoardPage = () => {
-  const {
-    sendRequest: sendExpenses,
-    status: statusExpenses,
-    data: expensesData,
-    error: errorExpenses,
-  } = useHttp(expenses, true);
+  const { sendRequest: sendExpenses, status: statusExpenses, data: expensesData, error: errorExpenses } = useHttp(expenses, true);
 
   const {
     sendRequest: sendRequested,
@@ -41,19 +31,9 @@ const DashBoardPage = () => {
     error: errorRequested,
   } = useHttp(getAllRequestedStores, true);
 
-  const {
-    sendRequest: sendPayment,
-    status: statusPayment,
-    data: loadedPayment,
-    error: errorPayment,
-  } = useHttp(recentPayment, true);
+  const { sendRequest: sendPayment, status: statusPayment, data: loadedPayment, error: errorPayment } = useHttp(recentPayment, true);
 
-  const {
-    sendRequest: sendByMonth,
-    status: statusByMonth,
-    data: loadedByMonth,
-    error: errorByMonth,
-  } = useHttp(expenseByMonth, true);
+  const { sendRequest: sendByMonth, status: statusByMonth, data: loadedByMonth, error: errorByMonth } = useHttp(expenseByMonth, true);
 
   const {
     sendRequest: sendStatistics,
@@ -80,15 +60,7 @@ const DashBoardPage = () => {
     sendRequested(pageInfo);
     sendByMonth(year);
     sendStatistics();
-  }, [
-    sendExpenses,
-    sendPayment,
-    sendRequested,
-    sendByMonth,
-    sendStatistics,
-    year,
-    pageInfo,
-  ]);
+  }, [sendExpenses, sendPayment, sendRequested, sendByMonth, sendStatistics, year, pageInfo]);
 
   useEffect(() => {
     makeChart();
@@ -102,16 +74,9 @@ const DashBoardPage = () => {
     }
   }, []);
 
-  console.log("expensesData", expensesData);
-  console.log("loadedStores", loadedStores);
-  console.log("loadedPayment", loadedPayment);
-  console.log("loadedByMonth", loadedByMonth);
-  console.log("loadedStatistics", loadedStatistics);
-
   const makeChart = async () => {
     setIsLoading(true);
     var response = await axios.get("/board/expenses/statistics");
-    console.log("response", response);
     setitemList([]);
     let payments;
     let totalSum = 0;
@@ -192,16 +157,12 @@ const DashBoardPage = () => {
     });
   }
 
-  const convertRemToPixels = (rem) =>
-    rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const convertRemToPixels = (rem) => rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
   return (
     <div className="page">
       <div className={classes.container}>
-        <section
-          className={`${classes.section} ${classes["section-center"]}`}
-          ref={sectionCenterRef}
-        >
+        <section className={`${classes.section} ${classes["section-center"]}`} ref={sectionCenterRef}>
           <article className={classes.article}>
             <PercentageBar
               title={"사용된 금액"}
@@ -218,11 +179,7 @@ const DashBoardPage = () => {
             />
           </article>
           <article>
-            <SimpleAreaChart
-              data={monthData}
-              width={convertRemToPixels(42)}
-              height={convertRemToPixels(20)}
-            />
+            <SimpleAreaChart data={monthData} width={convertRemToPixels(42)} height={convertRemToPixels(20)} />
           </article>
           <article className={classes.article}>
             <RequestedStoreList stores={loadedStores.content} />

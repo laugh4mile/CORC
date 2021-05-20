@@ -1,12 +1,12 @@
-import { Fragment, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Fragment, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import Modal from '../UI/Modal/Modal';
-import Backdrop from '../UI/Backdrop/Backdrop';
-import Receipt from '../UI/Receipt/Receipt';
-import { ReactComponent as ReceiptIcon } from '../../assets/receipt.svg';
+import Modal from "../UI/Modal/Modal";
+import Backdrop from "../UI/Backdrop/Backdrop";
+import Receipt from "../UI/Receipt/Receipt";
+import { ReactComponent as ReceiptIcon } from "../../assets/receipt.svg";
 
-import classes from './Item.module.css';
+import classes from "./Item.module.css";
 
 const PaymentItem = (props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -24,15 +24,14 @@ const PaymentItem = (props) => {
   const history = useHistory();
 
   const isAccepted = (accepted) => {
-    if (accepted === 0) return '거절';
-    else if (accepted === 1) return '대기';
-    else return '승인';
+    if (accepted === 0) return "거절";
+    else if (accepted === 1) return "대기";
+    else return "승인";
   };
 
-  const formatMoney = (number) => new Intl.NumberFormat().format(number) + '원';
+  const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
   const activeStyle = (status) => {
-    console.log('status', status);
     if (status === 0) return classes.deleted;
     else if (status === 1) return classes.inactive;
     else return classes.active;
@@ -51,25 +50,11 @@ const PaymentItem = (props) => {
   return (
     <Fragment>
       <tr className={classes.tr}>
-        <td
-          className={`${classes.td} ${classes['text-sm']} ${classes['font-normal']}`}
-        >
-          {props.store.storeName}
-        </td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes["font-normal"]}`}>{props.store.storeName}</td>
         <td className={`${classes.td}`}>{props.user.userName}</td>
         <td className={`${classes.td}`}>{props.user.department}</td>
-        <td
-          // style={{ width: '60%' }}
-          className={`${classes.td} ${classes['text-sm']} ${classes.date}`}
-        >
-          {props.date.slice(0, 10)}
-        </td>
-        <td
-          // style={{ width: '60%' }}
-          className={`${classes.td} ${classes['text-sm']} ${classes['align-right']}`}
-        >
-          {formatMoney(props.total)}
-        </td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes.date}`}>{props.date.slice(0, 10)}</td>
+        <td className={`${classes.td} ${classes["text-sm"]} ${classes["align-right"]}`}>{formatMoney(props.total)}</td>
       </tr>
     </Fragment>
   );

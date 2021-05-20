@@ -1,15 +1,14 @@
-import { Fragment } from 'react';
-import React, { useEffect, useState } from 'react';
-// import { useHistory, useLocation } from "react-router-dom";
+import { Fragment } from "react";
+import React, { useEffect, useState } from "react";
 
-import { storeApplication, confirmPayment } from '../../lib/api-store';
-import useHttp from '../../hooks/use-http';
+import { storeApplication, confirmPayment } from "../../lib/api-store";
+import useHttp from "../../hooks/use-http";
 
-import StoreItem from './StoreItem';
-import Card from '../../components/UI/Card/Card';
-import Button from '../../components/UI/Button/Button';
+import StoreItem from "./StoreItem";
+import Card from "../../components/UI/Card/Card";
+import Button from "../../components/UI/Button/Button";
 
-import classes from './List.module.css';
+import classes from "./List.module.css";
 
 const StoreList = (props) => {
   const { sendRequest, status } = useHttp(confirmPayment);
@@ -31,7 +30,6 @@ const StoreList = (props) => {
 
   const handleAllCheck = (checked) => {
     if (checked) {
-      console.log('wow');
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -45,8 +43,6 @@ const StoreList = (props) => {
   };
 
   const submitHandler = (event) => {
-    // event.preventDefault();
-    console.log('checkItems', checkItems);
     addUserHandler(checkItems);
   };
 
@@ -68,7 +64,7 @@ const StoreList = (props) => {
           <table>
             <thead>
               <tr className={classes.tr}>
-                <th style={{ width: '10%' }}>
+                <th style={{ width: "10%" }}>
                   <input
                     type="checkbox"
                     name="status"
@@ -78,20 +74,15 @@ const StoreList = (props) => {
                     checked={checkItems.length === props.page ? true : false}
                   />
                 </th>
-                <th style={{ width: '60%' }}>사업자 등록 번호</th>
+                <th style={{ width: "60%" }}>사업자 등록 번호</th>
                 <th>가맹점명</th>
-                <th style={{ width: '40%' }}>업종코드</th>
-                <th style={{ width: '60%' }}>지역</th>
-                <th style={{ width: '60%' }}>미정산 금액</th>
+                <th style={{ width: "40%" }}>업종코드</th>
+                <th style={{ width: "60%" }}>지역</th>
+                <th style={{ width: "60%" }}>미정산 금액</th>
               </tr>
             </thead>
             {props.stores.map((store) => (
-              <StoreItem
-                key={store.storeId}
-                {...store}
-                handleSingleCheck={handleSingleCheck}
-                checkItems={checkItems}
-              />
+              <StoreItem key={store.storeId} {...store} handleSingleCheck={handleSingleCheck} checkItems={checkItems} />
             ))}
           </table>
         </Card>

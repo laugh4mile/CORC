@@ -23,7 +23,7 @@ const PaymentList = (props) => {
           </thead>
           <tbody>
             {props.payments.map((payment) => (
-              <PaymentItem key={payment.userId} {...payment} />
+              <PaymentItem key={payment.paymentId} {...payment} />
             ))}
           </tbody>
         </table>
