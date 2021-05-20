@@ -1,9 +1,11 @@
 # 코르크 (CorC)
-`자율프로젝트` `기업연계`
+`자율프로젝트` `기업연계` `블록체인`
 
 ## 프로젝트 소개
 
 블록체인 기반의 경비 관리 시스템 구축 프로젝트입니다. 정합성 검증을 위해 블록체인에 데이터를 추가 작성합니다. 기존의 법인카드 사용, 영수증 제출, 검증 프로세스를 개선하여 결제 시 실시간 검증되는 시스템 구축을 목표로 합니다.
+
+<br>
 
 ## 구현 기능
 - 경비관리 시스템(Web)
@@ -19,6 +21,7 @@
     - 이용내역 조회 기능
     - 결제 기능
 
+<br>
 
 ## 작업 룰
 
@@ -54,6 +57,8 @@ feat: 로그인 기능 구현 / fix: 회원가입 수정
 - develop : 개발용 최상위 branch
 - feature : 기능별 branch
 
+<br>
+
 ## 팀원 소개
 
 - **이혜진** - *PM, Frontend*
@@ -62,19 +67,89 @@ feat: 로그인 기능 구현 / fix: 회원가입 수정
 - **정지환** - *Blockchain*
 - **주정훈** - *Backend, Server*
   
-## Backend
+<br>
 
+## 🚀 기술 스택
+
+### Programming Languages
+<img alt="HTML5" src="https://img.shields.io/badge/html5%20-%23E34F26.svg?&style=for-the-badge&logo=html5&logoColor=white"/>
+<img alt="CSS3" src="https://img.shields.io/badge/css3%20-%231572B6.svg?&style=for-the-badge&logo=css3&logoColor=white"/>
+<img alt="JavaScript" src="https://img.shields.io/badge/javascript%20-%23323330.svg?&style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/>
+<img alt="Java" src="https://img.shields.io/badge/java-%23ED8B00.svg?&style=for-the-badge&logo=java&logoColor=white"/>
+<img alt="Go" src="https://img.shields.io/badge/go-%2300ADD8.svg?&style=for-the-badge&logo=go&logoColor=white"/>
+
+### Framework
 <img alt="Spring" src="https://img.shields.io/badge/spring%20-%236DB33F.svg?&style=for-the-badge&logo=spring&logoColor=white"/>
-
 <img alt="Maven" src="https://img.shields.io/badge/maven%20-%2335495e.svg?&style=for-the-badge&logo=maven&logoColor=%234FC08D"/>
-
 <img alt="JPA" src="https://img.shields.io/badge/jpa%20-%23009639.svg?&style=for-the-badge&logo=jpa&logoColor=white"/>
+<img alt="React" src="https://img.shields.io/badge/react-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
+<img alt="React Native" src="https://img.shields.io/badge/react_native-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
+<img alt="Express.js" src="https://img.shields.io/badge/express.js-%23404d59.svg?&style=for-the-badge"/>
 
+### Design
+<img alt="Figma" src="https://img.shields.io/badge/figma%20-%23F24E1E.svg?&style=for-the-badge&logo=figma&logoColor=white"/> <img alt="Adobe Illustrator" src="https://img.shields.io/badge/adobe%20illustrator%20-%23FF9A00.svg?&style=for-the-badge&logo=adobe%20illustrator&logoColor=white"/>
+
+### Hosting/SaaS
+<img alt="AWS" src="https://img.shields.io/badge/AWS%20-%23FF9900.svg?&style=for-the-badge&logo=amazon-aws&logoColor=white"/>
+
+### Servers
+<img alt="Nginx" src="https://img.shields.io/badge/nginx%20-%23009639.svg?&style=for-the-badge&logo=nginx&logoColor=white"/>
+
+### Databases
+<img alt="MySQL" src="https://img.shields.io/badge/mysql-%2300f.svg?&style=for-the-badge&logo=mysql&logoColor=white"/>
+
+### DevOps
+<img alt="Docker" src="https://img.shields.io/badge/Docker-%232496ed.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
+
+<br>
+<br>
+
+### 프로젝트 실행하기
+
+#### Backend
 
 ```shell
-cd backend
+cd exec/backend
 ./mvnw clean package
 cd target
 java -jar (생성된 jar 파일)
 ```
 
+#### Frontend
+
+```shell
+cd exec/frontend/web/expense-manager
+npm install
+npm start
+```
+
+#### Mobile Apps - CORC 임직원, CORC 가맹점용
+
+```bash
+# Expo CLI 설치
+npm install --global expo-cli
+
+# CORC_E
+cd exec/app/CORC_E
+# CORC_B
+cd exec/app/CORC_B
+
+npm install
+```
+
+```js
+// App.js, app.json 등의 파일이 존재하는 CORC_E, CORC_B의 루트 디렉토리에 `env.js`파일을 생성 후, 편집합니다.
+// `env.js` 파일이 존재한다면, 그 파일을 수정합니다.
+export const SERVER_URL = "YOUR_BACKEND_SERVER_API_URL";
+```
+
+```bash
+## 앱을 실행하기 위한 사전작업으로,
+## 핸드폰에 `Expo App`을 설치하거나
+## PC에 에뮬레이터 설치 후, 에뮬레이터에 `Expo App`을 설치해야 합니다.
+
+# Run
+npm start
+# or
+yarn start
+```
