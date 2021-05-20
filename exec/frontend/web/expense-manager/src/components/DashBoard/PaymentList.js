@@ -10,6 +10,7 @@ const PaymentList = (props) => {
   return (
     <Fragment>
       <Card small>
+        <span className={classes.title}>실시간 결제 현황</span>
         <table>
           <thead>
             <tr className={classes.tr}>

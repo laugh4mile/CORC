@@ -15,3 +15,10 @@
 .tr .checkbox {
   width: 10rem;
 }
+
+.title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}

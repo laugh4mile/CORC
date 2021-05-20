@@ -12,7 +12,7 @@ const PercentageBar = (props) => {
   const formatMoney = (number) => new Intl.NumberFormat().format(number);
 
   return (
-    <Card unset>
+    <div className={classes.card}>
       <section className={classes["chart-bar"]}>
         <span className={classes.title}>{props.title}</span>
         <div className={classes["chart-bar__inner"]}>
@@ -29,7 +29,7 @@ const PercentageBar = (props) => {
           <span className={classes.won}>원</span>
         </span>
       </section>
-    </Card>
+    </div>
   );
 };
 

@@ -8,16 +8,21 @@ import {
   Legend,
 } from "recharts";
 
-import Card from "../../components/UI/Card/Card";
+import classes from "./Chart.module.css";
+import Card from "../UI/Card/Card";
 
 import "./Chart.css";
 
 const SimpleAreaChart = (props) => {
   return (
-    <Card unset>
+    // <section className={`${classes.card} ${classes.AreaChart}`}>
+    <Card small>
+      <span className={`${classes.title} ${classes["title-margin"]}`}>
+        월간 소비량 (원/월)
+      </span>
       <AreaChart
-        width={700}
-        height={250}
+        width={props.width}
+        height={props.height}
         data={props.data}
         margin={{
           top: 10,
@@ -40,7 +45,7 @@ const SimpleAreaChart = (props) => {
         <XAxis dataKey="name" interval={0} />
         <YAxis />
         <Tooltip />
-        <Legend />
+        {/* <Legend /> */}
         <Area
           type="monotone"
           dataKey="사용된 금액"
@@ -56,6 +61,22 @@ const SimpleAreaChart = (props) => {
           fillOpacity={0.3}
         />
       </AreaChart>
+      <section className={classes.legend}>
+        <article
+          className={classes["legend-item"]}
+          style={{ color: "#7986FF" }}
+        >
+          <span className={classes["legend-icon"]}>●</span>
+          <span className={classes["legend-item-text"]}>사용된 금액</span>
+        </article>
+        <article
+          className={classes["legend-item"]}
+          style={{ color: "#BBCEFF" }}
+        >
+          <span className={classes["legend-icon"]}>●</span>
+          <span className={classes["legend-item-text"]}>정산된 금액</span>
+        </article>
+      </section>
     </Card>
   );
 };
