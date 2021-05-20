@@ -40,8 +40,8 @@ const VerifiedDataChart = () => {
   }, []);
 
   return (
-    <Card small>
-      <section style={{ display: "flex" }}>
+    <Card full>
+      <section className={classes.section}>
         <img
           src={isSafe() ? stateNormal : stateDanger}
           className={classes.icon}

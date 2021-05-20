@@ -10,6 +10,7 @@ const RequestedStoreList = (props) => {
   return (
     <Fragment>
       <Card small>
+        <span className={classes.title}>가맹점 신청 현황</span>
         <table>
           <thead>
             <tr className={classes.tr}>
