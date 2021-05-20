@@ -10,7 +10,7 @@ import classes from "./list.module.css";
 
 const PaymentPage = () => {
   const { sendRequest, status, data: loadedPayments, error } = useHttp(getAllPayment, true);
-  const [pageInfo, setPageInfo] = useState({ page: 0, size: 3 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {
     sendRequest(pageInfo);
@@ -52,7 +52,7 @@ const PaymentPage = () => {
         <PaymentList payments={loadedPayments.content} />
         <Page
           totalElements={loadedPayments.totalElements}
-          blockSize={4}
+          blockSize={5}
           number={loadedPayments.number}
           size={loadedPayments.size}
           onClick={setPageInfo}
