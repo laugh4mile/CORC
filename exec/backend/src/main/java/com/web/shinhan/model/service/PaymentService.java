@@ -3,6 +3,7 @@ package com.web.shinhan.model.service;
 import com.web.shinhan.entity.Store;
 import com.web.shinhan.entity.User;
 import com.web.shinhan.model.BlockUserDto;
+import com.web.shinhan.model.PaymentDto.Status;
 import com.web.shinhan.model.PaymentitemDto;
 import com.web.shinhan.model.StoreDto;
 import com.web.shinhan.model.TransactionDto;
@@ -13,8 +14,12 @@ import com.web.shinhan.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import java.util.Map;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -84,12 +89,12 @@ public class PaymentService {
     List<Payment> payments = paymentRepository.findByStoreId(storeId);
     int balance = 0;
     for (Payment py : payments) {
-      if (py.getStatus() == 1) {
+      if (py.getStatus() == Status.CREATED) {
         PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(py);
-        paymentDto.setStatus(2);
+        paymentDto.setStatus(Status.ALLOWED);
         balance += paymentDto.getTotal();
         paymentRepository.save(paymentDto.toEntity());
-      } else if (py.getStatus() == 2 || py.getStatus() == 0) {
+      } else if (py.getStatus() == Status.ALLOWED || py.getStatus() == Status.DENIEND) {
         continue;
       }
     }
@@ -412,7 +417,7 @@ public class PaymentService {
     paymentDto.setUserId(userId);
     paymentDto.setStoreId(storeId);
     paymentDto.setTotal(bill);
-    paymentDto.setStatus(1);
+    paymentDto.setStatus(Status.CREATED);
     Payment payment = paymentDto.toEntity();
     paymentRepository.save(payment);
 
@@ -509,35 +514,29 @@ public class PaymentService {
     });
   }
 
-  public void allowPayment(int paymentId) {
-    Payment payemnt = paymentRepository.findByPaymentId(paymentId);
-    PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
-    paymentDto.setStatus(2);
-    paymentRepository.save(paymentDto.toEntity());
+  public void multiPayment(List<Integer> paymentIds, int status) {
+    List<Payment> paymentList = paymentRepository.findAllById(paymentIds);
+    HashMap<Integer, Integer> pm = new HashMap<>(paymentList.size());
+    for (Payment p: paymentList) {
+      if(p.getStatus() != Status.CREATED) continue;
 
-    StoreDto store = StoreDto.of(payemnt.getStore());
-    BlockUserDto blockUser = blockchainService.getUser(store.getEmail()).block();
+      PaymentDto paymentDto = PaymentDto.of(p);
+      paymentDto.setStatus(status);
+      paymentRepository.save(paymentDto.toEntity());
 
-    blockchainService.setBalance(BlockUserDto.builder()
+      Integer key = p.getStoreId();
+      pm.merge(key, p.getTotal(), Integer::sum);
+    }
+
+    for (Map.Entry<Integer, Integer> entry : pm.entrySet()) {
+      Store store = storeRepository.findByStoreId(entry.getKey());
+      BlockUserDto blockUser = blockchainService.getUser(store.getEmail()).block();
+
+      blockchainService.setBalance(BlockUserDto.builder()
         .userId(store.getEmail())
-        .balance(blockUser.getBalance() - payemnt.getTotal())
+        .balance(blockUser.getBalance() - entry.getValue())
         .build()).subscribe();
+    }
   }
-
-  public void denyPayment(int paymentId) {
-    Payment payemnt = paymentRepository.findByPaymentId(paymentId);
-    PaymentDto paymentDto = mapper.INSTANCE.paymentToDto(payemnt);
-    paymentDto.setStatus(0);
-    paymentRepository.save(paymentDto.toEntity());
-
-    StoreDto store = StoreDto.of(payemnt.getStore());
-    BlockUserDto blockUser = blockchainService.getUser(store.getEmail()).block();
-
-    blockchainService.setBalance(BlockUserDto.builder()
-        .userId(store.getEmail())
-        .balance(blockUser.getBalance() - payemnt.getTotal())
-        .build()).subscribe();
-  }
-
 
 }
