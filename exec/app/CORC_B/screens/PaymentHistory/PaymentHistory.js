@@ -78,7 +78,6 @@ const PaymentHistory = (props) => {
   }, [isSent]);
 
   const getData = async () => {
-    console.log("getData");
     setIsLoading(true);
 
     const startDate =
@@ -91,7 +90,6 @@ const PaymentHistory = (props) => {
     );
 
     let payments = response.data.paymentList.content;
-    console.log(startDate, endDate, payments.length);
 
     setPaymentList([...paymentList, ...payments]);
     setpage(page + 1);
@@ -122,7 +120,6 @@ const PaymentHistory = (props) => {
 
   // 조회하기 버튼
   const lookUpHandler = () => {
-    console.log("조회하기");
     setPaymentList([]);
     setpage(0);
     if (start > end) {
@@ -152,7 +149,6 @@ const PaymentHistory = (props) => {
   };
 
   const handleButton = (button) => {
-    console.log("검색 조건 바꿈");
     buttonList.map((btn) => (btn.selected = btn.key === button.key));
     setpage(0);
     setPaymentList([]);
@@ -325,7 +321,6 @@ const PaymentHistory = (props) => {
           style={styles.resultScroll}
           keyExtractor={(item, index) => item.paymentId.toString()}
           onEndReached={() => {
-            console.log("끝에 닿아서 무한 스크롤 호출");
             if (isLoading) {
               return;
             }
