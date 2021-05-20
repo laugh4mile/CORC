@@ -94,6 +94,10 @@ const SalesDetailPage = () => {
     );
   }
 
+  if (!loadedPayment) {
+    return <div className="page"></div>;
+  }
+
   if (paymentError === "completed" && (!loadedPayment.content || loadedPayment.content.length === 0)) {
     return (
       <div className="page">
