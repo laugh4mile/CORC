@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "CORC_E",
-    "slug": "CORC_E",
+    "name": "코르크",
+    "slug": "코르크",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/user_1024.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,16 +20,16 @@
       "supportsTablet": true
     },
     "android": {
-      "icon": "./assets/icon_round.png",
-      "versionCode" : 1,
+      "icon": "./assets/user_R_1024.png",
+      "versionCode" : 3,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/user_R_1024.png",
         "backgroundColor": "#0478C5"
       },
       "package": "com.ssafy.CORC_E"
     },
     "web": {
-      "favicon": "./assets/icon.png"
+      "favicon": "./assets/user_1024.png"
     }
   }
 }

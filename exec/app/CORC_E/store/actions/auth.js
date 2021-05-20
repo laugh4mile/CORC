@@ -43,18 +43,14 @@ export const signup = (email, password) => {
       }
       throw new Error(message);
     }
-
-    console.log('response');
   };
 };
 
 export const login = (email, password) => {
-  console.log(email, password);
   return async (dispatch) => {
     const response = await axios.post(
       `${SERVER_URL}/login/user?email=${email}&password=${password}`
     );
-    console.log('response');
     if (response.data['message']) {
       let message = response.data['message'];
       throw new Error(`${message}\n아이디와 비밀번호를 확인해 주세요!!`);
