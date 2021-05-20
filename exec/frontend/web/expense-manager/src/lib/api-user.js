@@ -80,10 +80,12 @@ export async function resetBalance(userIds) {
   }
 }
 
-export async function getUserPaymentDetails(userId, pageInfo, sort = { sortBy: "paymentId", isDesc: true }) {
+export async function getUserPaymentDetails({ userId, pageInfo, sort = { sortBy: "paymentId", isDesc: true } }) {
   try {
+    console.log(pageInfo);
     const rs = await axios.get(
-      `/admin/user/payment?userId=${userId}` + (sort ? `&sort=${sort.sortBy},${sort.isDesc ? "desc" : "asc"}` : "")
+      `/admin/user/payment?userId=${userId}&size=${pageInfo.size}&page=${pageInfo.page}` +
+        (sort ? `&sort=${sort.sortBy},${sort.isDesc ? "desc" : "asc"}` : "")
     );
     const data = rs.data.paymentList;
 

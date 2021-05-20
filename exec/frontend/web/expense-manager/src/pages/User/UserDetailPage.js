@@ -50,7 +50,7 @@ const UserDetailPage = () => {
 
   useEffect(() => {
     sendUserInfoRequest(userId);
-    sendUserLogRequest(userId, pageInfo);
+    sendUserLogRequest({ userId, pageInfo });
   }, [sendUserInfoRequest, sendUserLogRequest, userId, pageInfo]);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const UserDetailPage = () => {
       {logStyle && loadedLogs.content.length !== 0 && (
         <Page
           totalElements={loadedLogs.totalElements}
-          blockSize={4}
+          blockSize={5}
           number={loadedLogs.number}
           size={loadedLogs.size}
           onClick={setPageInfo}
