@@ -49,13 +49,13 @@
 }
 
 .deleted {
-    color: #FF6161;
+    color: #DC493A;
 }
 
 .active {
-    color: #44C167;
+    color: #3EC300;
 }
 
 .inactive {
-    color: #FFDB5A;
+    color: #FFC933;
 }

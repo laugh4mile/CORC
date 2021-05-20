@@ -81,8 +81,9 @@
   font-weight: normal;
 }
 
+
 .deleted {
-  color: #ff6161;
+  color: #DC493A;
 }
 
 .active {
@@ -90,7 +91,7 @@
 }
 
 .inactive {
-  color: #ffdb5a;
+  color: #FFC933;
 }
 
 .verify-fail {
