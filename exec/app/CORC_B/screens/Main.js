@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
-  DeviceEventEmitter,
   ScrollView,
 } from "react-native";
 import { useSelector } from "react-redux";
@@ -166,7 +165,6 @@ const Main = (props) => {
         <TouchableOpacity
           style={styles.goDetail}
           onPress={() => {
-            DeviceEventEmitter.emit("detailFromMain");
             props.navigation.navigate("History", { screen: "PaymentHistory" });
           }}
           activeOpacity={1}
