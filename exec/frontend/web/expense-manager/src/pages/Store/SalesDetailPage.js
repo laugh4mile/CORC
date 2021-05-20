@@ -94,6 +94,10 @@ const SalesDetailPage = () => {
     );
   }
 
+  if (!loadedPayment) {
+    return <div className="page"></div>;
+  }
+
   if (paymentError === "completed" && (!loadedPayment.content || loadedPayment.content.length === 0)) {
     return (
       <div className="page">
@@ -127,7 +131,7 @@ const SalesDetailPage = () => {
         {logStyle && loadedPayment.content.length !== 0 && (
           <Page
             totalElements={loadedPayment.totalElements}
-            blockSize={4}
+            blockSize={5}
             number={loadedPayment.number}
             size={loadedPayment.size}
             onClick={setPageInfo}
