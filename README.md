@@ -126,15 +126,15 @@ npm install
 npm start
 ```
 
-### Mobile Apps - CORC 임직원, CORC 가맹점용
+### Mobile Apps
 
 ```bash
 # Expo CLI 설치
 npm install --global expo-cli
 
-# CORC_E
+# CORC 임직원용
 cd exec/app/CORC_E
-# CORC_B
+# CORC 가맹점용
 cd exec/app/CORC_B
 
 npm install
