@@ -108,7 +108,10 @@ public class BlockchainService {
 
     for (User user : userList) {
       try {
-        getUser(user.getEmail()).block();
+        BlockUserDto blockUser = getUser(user.getEmail()).block();
+        if (user.getBalance() != blockUser.getBalance()) {
+          throw new VerifyDataException("User data validation failed.");
+        }
         verified++;
       } catch (Exception e) {
         failedList.add(user);
@@ -126,7 +129,13 @@ public class BlockchainService {
 
     for (Store store : storeList) {
       try {
-        getUser(store.getEmail()).block();
+        BlockUserDto blockStore = getUser(store.getEmail()).block();
+
+        if (store.getTotal() != blockStore.getBalance()) {
+          if (store.getTotal() != null || blockStore.getBalance() != 0) {
+            throw new VerifyDataException("Store data validation failed.");
+          }
+        }
         verified++;
       } catch (Exception e) {
         failedList.add(store);
@@ -147,7 +156,13 @@ public class BlockchainService {
         if (payment.getTransactionId() == null) {
           throw new VerifyDataException("transaction does not exist");
         }
-        getTransaction(payment.getTransactionId()).block();
+        TransactionDto tx = getTransaction(payment.getTransactionId()).block();
+        if (!payment.getUser().getEmail().equals(tx.getFrom()) ||
+            !payment.getStore().getEmail().equals(tx.getTo()) ||
+            payment.getTotal() != tx.getValue()
+        ) {
+          throw new VerifyDataException("Transaction data validation failed.");
+        }
         verified++;
       } catch (Exception e) {
         failedList.add(payment);
