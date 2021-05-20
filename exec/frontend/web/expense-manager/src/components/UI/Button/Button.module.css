@@ -22,15 +22,6 @@
     background-color: #32499a;
 }
 
-.sub {
-    color: #7986FF;
-    background-color: #E8F1FF;
-}
-
-.sub:hover {
-    background-color: #D3DEFF;
-}
-
 .button-small {
     text-decoration: none;
     line-height: 1.75rem;
@@ -53,6 +44,15 @@
 
 .button-small:hover {
     background-color: #32499a;
+}
+
+.sub {
+    color: #7986FF;
+    background-color: #E8F1FF;
+}
+
+.sub:hover {
+    background-color: #D3DEFF;
 }
 
 .margin-fit {

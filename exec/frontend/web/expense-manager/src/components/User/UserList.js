@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import Button from "../../components/UI/Button/Button";
 import Card from "../../components/UI/Card/Card";
@@ -22,9 +23,12 @@ const sortUsers = (users, ascending) => {
 };
 
 const UserList = (props) => {
-  const { sendRequest: sendStatus, status: userStatusStatus } = useHttp(userStatus);
-  const { sendRequest: sendCardLimit, status: cardLimitStatus } = useHttp(modifyCardLimit);
-  const { sendRequest: resetRequest, status: resetStatus } = useHttp(resetBalance);
+  const { sendRequest: sendStatus, status: userStatusStatus } =
+    useHttp(userStatus);
+  const { sendRequest: sendCardLimit, status: cardLimitStatus } =
+    useHttp(modifyCardLimit);
+  const { sendRequest: resetRequest, status: resetStatus } =
+    useHttp(resetBalance);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [checkItems, setCheckItems] = useState([]);
@@ -112,21 +116,33 @@ const UserList = (props) => {
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
       <div className={classes.section}>
-        <Button small allow fit name="allow" value="1" onClick={submitHandler}>
+        <Button small sub fit name="allow" value="1" onClick={submitHandler}>
           활성
         </Button>
-        <Button small deny fit name="deny" value="2" onClick={submitHandler}>
+        <Button small sub fit name="deny" value="2" onClick={submitHandler}>
           정지
         </Button>
-        <Button small deny fit name="deny" value="0" onClick={submitHandler}>
+        <Button small sub fit name="deny" value="0" onClick={submitHandler}>
           삭제
         </Button>
-        <Button small allow fit name="allow" value="3" onClick={showModal}>
+        <Button small sub fit name="allow" value="3" onClick={showModal}>
           한도 수정
         </Button>
-        <Button small allow fit name="allow" value="" onClick={submitResetHandler}>
+        <Button
+          small
+          sub
+          fit
+          name="allow"
+          value=""
+          onClick={submitResetHandler}
+        >
           잔액 초기화
         </Button>
+        <article style={{ marginLeft: "0.5rem", width: "fit-content" }}>
+          <Link className={classes.linkBtn} to="/user/register">
+            사용자 등록
+          </Link>
+        </article>
       </div>
       <Card type="nofit">
         <table>
@@ -139,7 +155,13 @@ const UserList = (props) => {
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  checked={props.page === 0 ? false : checkItems.length === props.page ? true : false}
+                  checked={
+                    props.page === 0
+                      ? false
+                      : checkItems.length === props.page
+                      ? true
+                      : false
+                  }
                 />
               </th>
               <th>사번</th>
@@ -154,7 +176,13 @@ const UserList = (props) => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <UserItem key={user.userId} {...user} index={index} handleSingleCheck={handleSingleCheck} checkItems={checkItems} />
+              <UserItem
+                key={user.userId}
+                {...user}
+                index={index}
+                handleSingleCheck={handleSingleCheck}
+                checkItems={checkItems}
+              />
             ))}
           </tbody>
         </table>

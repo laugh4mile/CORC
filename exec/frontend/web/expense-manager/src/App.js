@@ -75,11 +75,13 @@ const App = () => {
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/statistics" exact>
-          {authCtx.isLoggedIn && <StatisticsPage />}
+          {/* {authCtx.isLoggedIn && <StatisticsPage />} */}
+          {authCtx.isLoggedIn && <Redirect to="/" />}
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="/settings" exact>
-          {authCtx.isLoggedIn && <SettingsPage />}
+          {/* {authCtx.isLoggedIn && <SettingsPage />} */}
+          {authCtx.isLoggedIn && <Redirect to="/" />}
           {!authCtx.isLoggedIn && <Redirect to="/" />}
         </Route>
         <Route path="*">
