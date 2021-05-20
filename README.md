@@ -98,15 +98,18 @@ feat: 로그인 기능 구현 / fix: 회원가입 수정
 ### Databases
 <img alt="MySQL" src="https://img.shields.io/badge/mysql-%2300f.svg?&style=for-the-badge&logo=mysql&logoColor=white"/>
 
+### Blockchain
+<img alt="Fabric" src="https://img.shields.io/badge/fabric%20-%23f0554a.svg?&style=for-the-badge&logo=hyperledger&logoColor=white"/>
+
 ### DevOps
 <img alt="Docker" src="https://img.shields.io/badge/Docker-%232496ed.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
 
 <br>
 <br>
 
-### 프로젝트 실행하기
+## 프로젝트 실행하기
 
-#### Backend
+### Backend
 
 ```shell
 cd exec/backend
@@ -115,7 +118,7 @@ cd target
 java -jar (생성된 jar 파일)
 ```
 
-#### Frontend
+### Frontend
 
 ```shell
 cd exec/frontend/web/expense-manager
@@ -123,15 +126,15 @@ npm install
 npm start
 ```
 
-#### Mobile Apps - CORC 임직원, CORC 가맹점용
+### Mobile Apps
 
 ```bash
 # Expo CLI 설치
 npm install --global expo-cli
 
-# CORC_E
+# CORC 임직원용
 cd exec/app/CORC_E
-# CORC_B
+# CORC 가맹점용
 cd exec/app/CORC_B
 
 npm install
