@@ -382,23 +382,15 @@ public class AdminController {
   
   @ApiOperation(value = "정산", notes = "선택된 가맹점의 미정산 금액을 정산한다.", response = Boolean.class)
   @PutMapping("/payment/status")
-  public ResponseEntity<Boolean> paymentStatus(@RequestBody int[] paymentIds, @RequestParam int paymentStatus) {
+  public ResponseEntity<Boolean> paymentStatus(@RequestBody List<Integer> paymentIds, @RequestParam int paymentStatus) {
     logger.info("paymentStatus - 호출 ");
 
     HttpStatus status = HttpStatus.ACCEPTED;
     boolean flag = false;
     
     try {
-    	if(paymentIds.length != 0) {
-         if (paymentStatus == 2) {
-          for (int paymentId : paymentIds) {
-            paymentService.allowPayment(paymentId);
-          }
-         } else if (paymentStatus == 0) {
-          for (int paymentId : paymentIds) {
-            paymentService.denyPayment(paymentId);
-          }
-         }
+    	if(paymentIds.size() != 0) {
+    	  paymentService.multiPayment(paymentIds, paymentStatus);
     	} else {
     		return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
     	}

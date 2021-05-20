@@ -30,19 +30,10 @@ const getCurrentMonth = () => {
   return year + "." + month;
 };
 
-const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-
 const formatMoney = (number) =>
   number !== null && +number >= 0
     ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     : null;
-
-const getMMDD_DT = (date) => {
-  let _date = new Date(date);
-  return `${_date.getMonth() + 1}월 ${_date.getDate()}일 (${
-    dayOfWeek[_date.getDay()]
-  })`;
-};
 
 const Main = (props) => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -56,12 +47,12 @@ const Main = (props) => {
       getData();
     }, [])
   );
-  
-  React.useEffect((()=>{
+
+  React.useEffect(() => {
     return () => {
       DeviceEventEmitter.emit("detailFromMain");
-    }
-  }),[])
+    };
+  }, []);
 
   const getData = async () => {
     setIsLoading(true);
@@ -85,12 +76,12 @@ const Main = (props) => {
     const month = +date.slice(5, 7) - 1;
     const day = +date.slice(8, 10);
 
-    if (year == currentDate.getFullYear()) {
-      if (month == currentDate.getMonth()) {
-        if (day == currentDate.getDate()) {
-          return true;
-        }
-      }
+    if (
+      year == currentDate.getFullYear() &&
+      month == currentDate.getMonth() &&
+      day == currentDate.getDate()
+    ) {
+      return true;
     }
     currentDate = new Date(year, month, day);
     return false;
@@ -148,7 +139,7 @@ const Main = (props) => {
           </View>
         </View>
         <View style={styles.recentList}>
-          <ScrollView style={{paddingHorizontal: 10}}>
+          <ScrollView style={{ paddingHorizontal: 10 }}>
             {paymentList.empty ? (
               <Text>거래 내역이 없습니다.</Text>
             ) : (
@@ -157,16 +148,19 @@ const Main = (props) => {
                   {!checkDate(payment.date) && (
                     <View
                       style={{
-                        ...styles.dateSeperator,
+                        ...styles.dateSeparator,
                         marginTop: index !== 0 ? "2%" : 0,
                       }}
                     >
                       <View style={{ flex: 1 }}>
-                        <Text style={styles.dateSeperatorText}>
-                          {getMMDD_DT(payment.date)}
+                        <Text style={styles.dateSeparatorText}>
+                          {+payment.date.substring(5, 7)}
+                          {"월 "}
+                          {+payment.date.substring(8, 10)}
+                          {"일"}
                         </Text>
                       </View>
-                      <View style={styles.dateSeperatorLine} />
+                      <View style={styles.dateSeparatorLine} />
                     </View>
                   )}
                   <PaymentItem payment={payment} />
@@ -216,8 +210,8 @@ const styles = StyleSheet.create({
   paymentCard: {
     marginHorizontal: 0,
     marginTop: 10,
-    marginBottom: "10%",
-    flex: 2.2,
+    marginBottom: "7%",
+    flex: 2.5,
   },
   paymentTotal: {
     flex: 1,
@@ -232,7 +226,7 @@ const styles = StyleSheet.create({
   recentCard: {
     marginHorizontal: "0%",
     marginTop: "10%",
-    marginBottom: "20%",
+    marginBottom: "15%",
     flex: 5,
   },
   recentCardHeader: {
@@ -247,28 +241,28 @@ const styles = StyleSheet.create({
   },
   recentList: {
     flex: 6,
-    // paddingHorizontal: 10,
     paddingBottom: 3,
   },
-  dateSeperator: {
+  dateSeparator: {
     flexDirection: "row",
     alignItems: "center",
   },
-  dateSeperatorText: {
+  dateSeparatorText: {
     fontSize: width * 0.033,
     color: "#414251",
   },
-  dateSeperatorLine: {
-    flex: 2.5,
+  dateSeparatorLine: {
+    flex: 3,
     backgroundColor: "#A09E9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: "#b0b0b0",
   },
   goDetail: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: "#737373",
+    borderColor: "#a7a7a7",
   },
   goDetailText: {
     color: Colors.primary.backgroundColor,

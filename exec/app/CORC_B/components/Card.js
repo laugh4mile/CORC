@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
       height: 10,
     },
     // android
-    elevation: 15,
+    elevation: 10,
   },
 });

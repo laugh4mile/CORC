@@ -32,7 +32,6 @@ const Settings = () => {
     let response = await axios.get(
       SERVER_URL + "/store/payment?storeId=" + userId
     );
-    console.log(response.data.info);
     setStoreInfo(response.data.info);
     setIsLoading(false);
   };

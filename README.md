@@ -61,3 +61,20 @@ feat: 로그인 기능 구현 / fix: 회원가입 수정
 - **윤현수** - *Frontend, Backend*
 - **정지환** - *Blockchain*
 - **주정훈** - *Backend, Server*
+  
+## Backend
+
+<img alt="Spring" src="https://img.shields.io/badge/spring%20-%236DB33F.svg?&style=for-the-badge&logo=spring&logoColor=white"/>
+
+<img alt="Maven" src="https://img.shields.io/badge/maven%20-%2335495e.svg?&style=for-the-badge&logo=maven&logoColor=%234FC08D"/>
+
+<img alt="JPA" src="https://img.shields.io/badge/jpa%20-%23009639.svg?&style=for-the-badge&logo=jpa&logoColor=white"/>
+
+
+```shell
+cd backend
+./mvnw clean package
+cd target
+java -jar (생성된 jar 파일)
+```
+

@@ -23,7 +23,7 @@ const VerifiedDataChart = () => {
     return (
       data.user.verified == data.user.total &&
       data.store.verified == data.store.total &&
-      data.payment.verified == data.payment.verified
+      data.payment.verified == data.payment.total
     );
   };
 

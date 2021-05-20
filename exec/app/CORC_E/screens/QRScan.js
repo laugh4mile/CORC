@@ -7,6 +7,7 @@ import {
   Modal,
   Pressable,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -54,15 +55,22 @@ export default function QRScan() {
   };
   //
   const pay = async () => {
-    let response = await axios.post(
-      `${SERVER_URL}/user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
-        paymentData.storeid
-      }`,
-      paymentData.orderList
-    );
-    setModalVisible(false);
-    setAlertModalVisible(true);
-    setMessage(response.data.message);
+    try {
+      let response = await axios.post(
+        `${SERVER_URL}/user/pay?total=${+paymentData.total}&userId=${userId}&storeId=${
+          paymentData.storeid
+        }`,
+        paymentData.orderList
+      );
+      setModalVisible(false);
+      setAlertModalVisible(true);
+      setMessage(response.data.message);
+    } catch (error) {
+      setModalVisible(false);
+      Alert.alert('결제 실패!', '서비스를 사용할수 없는 가맹점입니다.', [
+        { text: '확인' },
+      ]);
+    }
   };
 
   useEffect(() => {
@@ -80,10 +88,17 @@ export default function QRScan() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setModalVisible(true);
-    const temp = JSON.parse(data);
-    console.log(temp);
-    setPaymentData(temp);
+    if (data.substring(2, 9) == 'storeid') {
+      setModalVisible(true);
+      const temp = JSON.parse(data);
+      setPaymentData(temp);
+    } else {
+      Alert.alert(
+        'QR 코드 인식 실패!',
+        '가맹점의 QR 코드가 맞는지 확인해 주세요.',
+        [{ text: '확인' }]
+      );
+    }
   };
 
   if (hasPermission === null) {
@@ -109,7 +124,7 @@ export default function QRScan() {
               <Text style={styles.reScanText}>다시 스캔</Text>
             </Pressable>
           )}
-          {scanned && ( // 모달
+          {modalVisible && ( // 모달
             <Modal
               animationType="slide"
               transparent={true}
