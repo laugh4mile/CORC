@@ -152,6 +152,13 @@ function Payment({ date, store, total, categoryCode, paymentitem }) {
               color="#414251"
             />
           )}
+          {getIconName(categoryCode).family == 'MaterialIcons' && (
+            <MaterialIcons
+              name={getIconName(categoryCode).iconName}
+              size={24}
+              color="#414251"
+            />
+          )}
         </View>
         <View style={{ flex: 2 }}>
           <Pressable onPress={() => setModalVisible(true)}>
