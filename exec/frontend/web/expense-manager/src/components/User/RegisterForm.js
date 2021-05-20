@@ -238,9 +238,15 @@ const RegisterForm = (props) => {
                     onChange={changeHandler}
                   >
                     <option value="">직위</option>
-                    <option value="수석">수석</option>
-                    <option value="선임">선임</option>
                     <option value="주임">주임</option>
+                    <option value="선임">선임</option>
+                    <option value="수석">수석</option>
+                    <option value="행원">행원</option>
+                    <option value="대리">대리</option>
+                    <option value="과장">과장</option>
+                    <option value="차장">차장</option>
+                    <option value="MA">MA</option>
+                    <option value="MB">MB</option>
                   </select>
                 </div>
               </div>
