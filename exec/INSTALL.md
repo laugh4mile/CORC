@@ -309,3 +309,8 @@ npm start
 # or
 yarn start
 ```
+
+```bash
+# CORC 임직원용 apk 다운로드 링크
+https://expo.io/artifacts/3d9bf803-b7cd-4353-9a95-6c36341b2e4e
+```
