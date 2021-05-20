@@ -30,7 +30,7 @@ const StoreItem = (props) => {
           props.verified ? null : classes["verify-fail"]
         }`}
       >
-        <td style={{ width: "10%" }}>
+        <td style={{ width: "10%" }} className={classes.td}>
           <input
             type="checkbox"
             value={props.storeId}

@@ -1,5 +1,4 @@
-.item {
-}
+.item {}
 
 .tr {
   display: flex;
@@ -87,7 +86,7 @@
 }
 
 .active {
-  color: #44c167;
+  color: #3EC300;
 }
 
 .inactive {
