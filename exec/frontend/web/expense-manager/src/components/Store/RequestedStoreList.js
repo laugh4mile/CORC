@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState } from "react";
-// import { useHistory, useLocation } from "react-router-dom";
 
 import Button from "../../components/UI/Button/Button";
 import Card from "../../components/UI/Card/Card";
@@ -34,7 +33,6 @@ const RequestedStoreList = (props) => {
 
   const handleAllCheck = (checked, index) => {
     if (checked) {
-      console.log("checked");
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -58,8 +56,6 @@ const RequestedStoreList = (props) => {
   };
 
   const submitHandler = (event) => {
-    // event.preventDefault();
-    // console.log('event', event);
     addUserHandler(event.target.value, checkItems);
 
     setStoreIdx(storeIdx.reverse());
@@ -70,14 +66,7 @@ const RequestedStoreList = (props) => {
     setStores(stores);
     setStoreIdx([]);
     window.location.reload();
-    // setCheckItems([]);
   };
-
-  console.log("checkItems", checkItems);
-  console.log("storeIdx", storeIdx);
-
-  // checked
-  // 제거
 
   return (
     <Fragment>
@@ -100,14 +89,7 @@ const RequestedStoreList = (props) => {
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  // checked={checkItems.length === props.page ? true : false}
-                  checked={
-                    props.page === 0
-                      ? false
-                      : checkItems.length === props.page
-                      ? true
-                      : false
-                  }
+                  checked={props.page === 0 ? false : checkItems.length === props.page ? true : false}
                 />
               </th>
               <th style={{ width: "60%" }}>사업자 등록 번호</th>

@@ -31,19 +31,14 @@ const AuthForm = () => {
 
     login(email, password)
       .then((data) => {
-        // console.log("data", data);
-        console.log("token", !!data["auth-token"]);
         setIsLoading(false);
         if (!!!data["auth-token"]) {
           alert("로그인 실패");
           return;
         }
         authCtx.login(data["auth-token"]);
-        console.log(authCtx.isLoggedIn);
-        // history.replace("/");
       })
       .catch((err) => {
-        console.log(err);
         alert("로그인 실패");
       });
     setIsLoading(false);
@@ -59,29 +54,11 @@ const AuthForm = () => {
       </div>
       <Card>
         <form className={classes.form} onSubmit={submitHandler}>
-          <Input
-            type="email"
-            id="email"
-            // ref={emailInputRef}
-            value={email}
-            onChange={emailChangeHandler}
-            label="아이디"
-            required
-          />
-          <Input
-            type="password"
-            id="password"
-            // ref={passwordInputRef}
-            value={password}
-            onChange={passwordChangeHandler}
-            label="비밀번호"
-            required
-          />
+          <Input type="email" id="email" value={email} onChange={emailChangeHandler} label="아이디" required />
+          <Input type="password" id="password" value={password} onChange={passwordChangeHandler} label="비밀번호" required />
           <div className={classes.actions}>
             {!isLoading && <Button>로그인</Button>}
-            {isLoading && (
-              <span className={classes["text-sm"]}>로그인 중...</span>
-            )}
+            {isLoading && <span className={classes["text-sm"]}>로그인 중...</span>}
           </div>
         </form>
       </Card>
