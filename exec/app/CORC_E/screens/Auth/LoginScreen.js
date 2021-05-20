@@ -23,7 +23,9 @@ const LoginScreen = (props) => {
   useEffect(() => {
     let mounted = true;
     if (error) {
-      Alert.alert('Error Occurred!', error, [{ text: 'Okay' }]);
+      Alert.alert('로그인 실패!', '아이디와 비밀번호를 확인해 주세요!', [
+        { text: '확인' },
+      ]);
     }
 
     return () => (mounted = false);
@@ -48,7 +50,6 @@ const LoginScreen = (props) => {
   };
 
   const login = async () => {
-    console.log('login');
     if (!idValid) {
       return Alert.alert(null, '아이디를 입력해 주세요.');
     }

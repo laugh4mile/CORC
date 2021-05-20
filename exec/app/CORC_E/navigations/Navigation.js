@@ -14,18 +14,14 @@ const Navigation = (props) => {
       let userData = await AsyncStorage.getItem('userData');
       let data = JSON.parse(userData);
       saveUserInfo(data);
-    } catch (error) {
-      console.log('Something went wrong', error);
-    }
+    } catch (error) {}
   };
 
   const saveUserInfo = async (data) => {
     let action = authActions.autologin(data);
     try {
       await dispatch(action);
-    } catch (e) {
-      console.log(e.message);
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {
