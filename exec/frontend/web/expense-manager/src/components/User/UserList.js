@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { useHistory, useLocation } from "react-router-dom";
 
 import Button from "../../components/UI/Button/Button";
 import Card from "../../components/UI/Card/Card";
@@ -58,7 +57,6 @@ const UserList = (props) => {
 
   const handleAllCheck = (checked, index) => {
     if (checked) {
-      console.log("checked");
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
@@ -82,13 +80,10 @@ const UserList = (props) => {
   };
 
   const submitHandler = (event) => {
-    // event.preventDefault();
-    console.log("event.target.value", event.target.value);
     addUserHandler(event.target.value, checkItems);
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
-    // setCheckItems([]);
   };
 
   const cardLimitHandler = (limit, userIds) => {
@@ -96,14 +91,11 @@ const UserList = (props) => {
   };
 
   const submitCardLimitHandler = (event) => {
-    // event.preventDefault();
-    // console.log('event', event);
     cardLimitHandler(event.target.value, checkItems);
 
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
-    // setCheckItems([]);
   };
 
   const resetHandler = (userIds) => {
@@ -111,17 +103,11 @@ const UserList = (props) => {
   };
 
   const submitResetHandler = (event) => {
-    // event.preventDefault();
-    // console.log('event', event);
     resetHandler(checkItems);
     setUsers(users);
     setUserIdx([]);
     window.location.reload();
   };
-
-  console.log("checkItems", checkItems);
-  console.log("userIdx", userIdx);
-  console.log("props.page", props.page);
 
   return (
     <Fragment>
@@ -169,7 +155,6 @@ const UserList = (props) => {
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  // checked={checkItems.length === props.page ? true : false}
                   checked={
                     props.page === 0
                       ? false

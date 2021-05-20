@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "코르크 for Business",
-    "slug": "CORC_F",
+    "name": "코르크 Business",
+    "slug": "CORC_B",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/corcb_squared.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,9 +20,12 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ssafy.CORC_B",
+      "versionCode": 1,
+      "icon": "./assets/corcb_rounded.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/corcb_rounded.png",
+        "backgroundColor": "#7986FF"
       }
     },
     "web": {

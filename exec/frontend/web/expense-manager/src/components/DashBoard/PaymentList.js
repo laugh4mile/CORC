@@ -1,12 +1,10 @@
 import { Fragment } from "react";
-// import { useHistory, useLocation } from "react-router-dom";
 
 import Card from "../../components/UI/Card/Card";
 import PaymentItem from "./PaymentItem";
 import classes from "./List.module.css";
 
 const PaymentList = (props) => {
-  // console.log('paymetn props', props);
   return (
     <Fragment>
       <Card small>

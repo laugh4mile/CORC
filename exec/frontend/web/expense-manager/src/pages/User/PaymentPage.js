@@ -9,13 +9,8 @@ import Page from "../../components/Pagenation/Page";
 import classes from "./list.module.css";
 
 const PaymentPage = () => {
-  const { sendRequest, status, data: loadedPayments, error } = useHttp(
-    getAllPayment,
-    true
-  );
-  const [pageInfo, setPageInfo] = useState({ page: 0, size: 3 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
-
-  // console.log(loadedPayments);
+  const { sendRequest, status, data: loadedPayments, error } = useHttp(getAllPayment, true);
+  const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
   useEffect(() => {
     sendRequest(pageInfo);
@@ -41,10 +36,7 @@ const PaymentPage = () => {
     );
   }
 
-  if (
-    status === "completed" &&
-    (!loadedPayments.content || loadedPayments.content.length === 0)
-  ) {
+  if (status === "completed" && (!loadedPayments.content || loadedPayments.content.length === 0)) {
     return (
       <div className="page">
         <span className="title">결제 내역</span>
@@ -60,7 +52,7 @@ const PaymentPage = () => {
         <PaymentList payments={loadedPayments.content} />
         <Page
           totalElements={loadedPayments.totalElements}
-          blockSize={4}
+          blockSize={5}
           number={loadedPayments.number}
           size={loadedPayments.size}
           onClick={setPageInfo}

@@ -1,47 +1,42 @@
-import ChartJS from 'chart.js';
-import { getColor } from 'utils/colors';
+import ChartJS from "chart.js";
+import { getColor } from "utils/colors";
 
-import bg5Image from 'assets/img/bg/background_1920-5.jpg';
-import bg6Image from 'assets/img/bg/background_1920-6.jpg';
-import bg7Image from 'assets/img/bg/background_1920-7.png';
-import bg19Image from 'assets/img/bg/background_1920-19.jpg';
+import bg5Image from "assets/img/bg/background_1920-5.jpg";
+import bg6Image from "assets/img/bg/background_1920-6.jpg";
+import bg7Image from "assets/img/bg/background_1920-7.png";
+import bg19Image from "assets/img/bg/background_1920-19.jpg";
 
-export const overlayCards = [
-  { imgUrl: bg5Image },
-  { imgUrl: bg6Image },
-  { imgUrl: bg7Image },
-  { imgUrl: bg19Image },
-];
+export const overlayCards = [{ imgUrl: bg5Image }, { imgUrl: bg6Image }, { imgUrl: bg7Image }, { imgUrl: bg19Image }];
 
 export const bgCards = [
-  { color: 'primary' },
-  { color: 'secondary' },
-  { color: 'info' },
-  { color: 'warning' },
-  { color: 'danger' },
-  { color: 'success' },
+  { color: "primary" },
+  { color: "secondary" },
+  { color: "info" },
+  { color: "warning" },
+  { color: "danger" },
+  { color: "success" },
 ];
 
 export const gradientCards = [
-  { color: 'primary' },
-  { color: 'secondary' },
-  { color: 'info' },
-  { color: 'warning' },
-  { color: 'danger' },
-  { color: 'success' },
+  { color: "primary" },
+  { color: "secondary" },
+  { color: "info" },
+  { color: "warning" },
+  { color: "danger" },
+  { color: "success" },
 ];
 
 export const chartjs = {
   line1Props: {
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          label: 'My First dataset',
-          borderColor: getColor('secondary'),
-          backgroundColor: getColor('secondary'),
+          label: "My First dataset",
+          borderColor: getColor("secondary"),
+          backgroundColor: getColor("secondary"),
           data: [0, 13, 22, 34, 46, 35, 30],
-          fill: 'origin',
+          fill: "origin",
         },
       ],
     },
@@ -73,14 +68,14 @@ export const chartjs = {
 
   line2Props: {
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          label: 'My First dataset',
-          borderColor: '#6a82fb',
-          backgroundColor: '#bcc7ff',
+          label: "My First dataset",
+          borderColor: "#6a82fb",
+          backgroundColor: "#bcc7ff",
           data: [0, 13, 22, 34, 46, 35, 30],
-          fill: 'origin',
+          fill: "origin",
         },
       ],
     },
@@ -112,14 +107,14 @@ export const chartjs = {
 
   line3Props: {
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          label: 'My First dataset',
-          borderColor: '#6a82fb',
-          backgroundColor: '#bcc7ff',
+          label: "My First dataset",
+          borderColor: "#6a82fb",
+          backgroundColor: "#bcc7ff",
           data: [0, 13, 22, 34, 46, 35, 30],
-          fill: 'origin',
+          fill: "origin",
         },
       ],
     },
@@ -127,9 +122,6 @@ export const chartjs = {
       tooltips: {
         intersect: false,
       },
-      // animation: {
-      //   duration: 0,
-      // },
       scales: {
         xAxes: [
           {
@@ -152,130 +144,77 @@ export const chartjs = {
 
 export const chartJsGradient = {
   line1Props: {
-    data: canvas => {
-      const ctx = canvas.getContext('2d');
+    data: (canvas) => {
+      const ctx = canvas.getContext("2d");
       let gradient = ctx.createLinearGradient(0, 0, 0, 240);
-      gradient.addColorStop(
-        0,
-        ChartJS.helpers
-          .color('#00c5dc')
-          .alpha(0.7)
-          .rgbString()
-      );
-      gradient.addColorStop(
-        1,
-        ChartJS.helpers
-          .color('#f2feff')
-          .alpha(0)
-          .rgbString()
-      );
+      gradient.addColorStop(0, ChartJS.helpers.color("#00c5dc").alpha(0.7).rgbString());
+      gradient.addColorStop(1, ChartJS.helpers.color("#f2feff").alpha(0).rgbString());
 
       return {
         labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'January',
-          'February',
-          'March',
-          'April',
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "January",
+          "February",
+          "March",
+          "April",
         ],
         datasets: [
           {
-            label: 'Sales Stats',
+            label: "Sales Stats",
             backgroundColor: gradient, // Put the gradient here as a fill color
-            borderColor: '#0dc8de',
+            borderColor: "#0dc8de",
 
-            pointBackgroundColor: ChartJS.helpers
-              .color('#ffffff')
-              .alpha(0)
-              .rgbString(),
-            pointBorderColor: ChartJS.helpers
-              .color('#ffffff')
-              .alpha(0)
-              .rgbString(),
-            pointHoverBackgroundColor: '#fc5c7d',
-            pointHoverBorderColor: ChartJS.helpers
-              .color('#000000')
-              .alpha(0.2)
-              .rgbString(),
+            pointBackgroundColor: ChartJS.helpers.color("#ffffff").alpha(0).rgbString(),
+            pointBorderColor: ChartJS.helpers.color("#ffffff").alpha(0).rgbString(),
+            pointHoverBackgroundColor: "#fc5c7d",
+            pointHoverBorderColor: ChartJS.helpers.color("#000000").alpha(0.2).rgbString(),
 
             //fill: 'start',
             data: [
-              20,
-              10,
-              18,
-              15,
-              26,
-              18,
-              15,
-              22,
-              16,
-              12,
-              12,
-              13,
-              10,
-              18,
-              14,
-              24,
-              16,
-              12,
-              19,
-              21,
-              16,
-              14,
-              21,
-              21,
-              13,
-              15,
-              22,
-              24,
-              21,
-              11,
-              14,
-              19,
-              21,
-              17,
+              20, 10, 18, 15, 26, 18, 15, 22, 16, 12, 12, 13, 10, 18, 14, 24, 16, 12, 19, 21, 16, 14, 21, 21, 13, 15, 22, 24, 21, 11, 14,
+              19, 21, 17,
             ],
           },
         ],
       };
     },
-    type: 'line',
+    type: "line",
     options: {
       title: {
         display: false,
       },
       tooltips: {
         intersect: false,
-        mode: 'nearest',
+        mode: "nearest",
         xPadding: 10,
         yPadding: 10,
         caretPadding: 10,
@@ -286,7 +225,7 @@ export const chartJsGradient = {
       responsive: true,
       maintainAspectRatio: false,
       hover: {
-        mode: 'index',
+        mode: "index",
       },
       scales: {
         xAxes: [
@@ -295,7 +234,7 @@ export const chartJsGradient = {
             gridLines: false,
             scaleLabel: {
               display: true,
-              labelString: 'Month',
+              labelString: "Month",
             },
           },
         ],
@@ -305,7 +244,7 @@ export const chartJsGradient = {
             gridLines: false,
             scaleLabel: {
               display: true,
-              labelString: 'Value',
+              labelString: "Value",
             },
             ticks: {
               beginAtZero: true,

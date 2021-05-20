@@ -6,7 +6,6 @@ import RequestedStoreItem from "./RequestedStoreItem";
 import classes from "./List.module.css";
 
 const RequestedStoreList = (props) => {
-  console.log("RequestedStoreList", props);
   return (
     <Fragment>
       <Card small>

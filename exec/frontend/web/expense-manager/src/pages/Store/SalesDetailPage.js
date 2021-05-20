@@ -6,11 +6,7 @@ import StoreSales from "../../components/Store/StoreSales";
 import Card from "../../components/UI/Card/Card";
 import LoadingSpinner from "../../components/UI/LoadingSpinner/LoadingSpinner";
 import useHttp from "../../hooks/use-http";
-import {
-  getSingleStore,
-  getStorePayment,
-  modifyStore,
-} from "../../lib/api-store";
+import { getSingleStore, getStorePayment, modifyStore } from "../../lib/api-store";
 import Page from "../../components/Pagenation/Page";
 
 import classes from "./SalesDetailPage.module.css";
@@ -43,23 +39,11 @@ const SalesDetailPage = () => {
   const infoActiveStyle = () => (infoStyle ? classes.active : "");
   const logActiveStyle = () => (logStyle ? classes.active : "");
 
-  const { sendRequest: sendModifyStore, status: modifyStatus } = useHttp(
-    modifyStore
-  );
+  const { sendRequest: sendModifyStore, status: modifyStatus } = useHttp(modifyStore);
 
-  const {
-    sendRequest: sendSingleStore,
-    status: storeStatus,
-    data: loadedStore,
-    error: storeError,
-  } = useHttp(getSingleStore, true);
+  const { sendRequest: sendSingleStore, status: storeStatus, data: loadedStore, error: storeError } = useHttp(getSingleStore, true);
 
-  const {
-    sendRequest: sendStorePayment,
-    status: paymentStatus,
-    data: loadedPayment,
-    error: paymentError,
-  } = useHttp(getStorePayment, true);
+  const { sendRequest: sendStorePayment, status: paymentStatus, data: loadedPayment, error: paymentError } = useHttp(getStorePayment, true);
 
   useEffect(() => {
     sendSingleStore(storeId);
@@ -67,10 +51,7 @@ const SalesDetailPage = () => {
   }, [sendSingleStore, sendStorePayment, storeId, pageInfo]);
 
   useEffect(() => {
-    // modifyStatus = 'completed';
     if (modifyStatus === "completed") {
-      // 임시 prompt
-      // alert('가맹점 수정 완료');
       history.goBack();
     }
   }, [modifyStatus, history]);
@@ -104,10 +85,7 @@ const SalesDetailPage = () => {
     );
   }
 
-  if (
-    storeError === "completed" &&
-    (!loadedStore || loadedStore.length === 0)
-  ) {
+  if (storeError === "completed" && (!loadedStore || loadedStore.length === 0)) {
     return (
       <div className="page">
         <span className="title">가맹점 목록</span>
@@ -116,10 +94,7 @@ const SalesDetailPage = () => {
     );
   }
 
-  if (
-    paymentError === "completed" &&
-    (!loadedPayment.content || loadedPayment.content.length === 0)
-  ) {
+  if (paymentError === "completed" && (!loadedPayment.content || loadedPayment.content.length === 0)) {
     return (
       <div className="page">
         <span className="title">가맹점 목록</span>
@@ -139,23 +114,15 @@ const SalesDetailPage = () => {
         목록으로
       </span>
       <article className={classes.tabs}>
-        <span
-          className={`${classes.tab} ${infoActiveStyle()}`}
-          onClick={infoClickHandler}
-        >
+        <span className={`${classes.tab} ${infoActiveStyle()}`} onClick={infoClickHandler}>
           가맹점 정보
         </span>
-        <span
-          className={`${classes.tab} ${logActiveStyle()}`}
-          onClick={logClickHandler}
-        >
+        <span className={`${classes.tab} ${logActiveStyle()}`} onClick={logClickHandler}>
           {storeName}의 판매 내역
         </span>
       </article>
       <Card type={"nofit"}>
-        {infoStyle && (
-          <StoreInfo {...loadedStore} onModifyStore={addUserHandler} />
-        )}
+        {infoStyle && <StoreInfo {...loadedStore} onModifyStore={addUserHandler} />}
         {logStyle && <StoreSales logs={loadedPayment.content} />}
         {logStyle && loadedPayment.content.length !== 0 && (
           <Page

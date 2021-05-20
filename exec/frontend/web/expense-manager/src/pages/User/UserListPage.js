@@ -9,7 +9,6 @@ import Page from "../../components/Pagenation/Page";
 import classes from "./list.module.css";
 
 const UserListPage = () => {
-  // *** 백엔드 연결시 이 주석 부분을 풀 것 ***
   const {
     sendRequest,
     status,

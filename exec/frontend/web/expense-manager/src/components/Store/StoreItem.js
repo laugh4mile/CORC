@@ -5,12 +5,6 @@ import classes from "./Item.module.css";
 const StoreItem = (props) => {
   const history = useHistory();
 
-  // const isAccepted = (accepted) => {
-  //   if (accepted === 0) return "삭제";
-  //   else if (accepted === 1) return "대기";
-  //   else return "활성";
-  // };
-
   const formatMoney = (number) => new Intl.NumberFormat().format(number) + "원";
 
   const trClickHandler = () =>
@@ -30,7 +24,7 @@ const StoreItem = (props) => {
           props.verified ? null : classes["verify-fail"]
         }`}
       >
-        <td style={{ width: "10%" }} className={classes.td}>
+        <td style={{ width: "10%" }}>
           <input
             type="checkbox"
             value={props.storeId}

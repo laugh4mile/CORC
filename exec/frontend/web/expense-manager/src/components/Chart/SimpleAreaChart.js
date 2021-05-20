@@ -1,12 +1,4 @@
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 import classes from "./Chart.module.css";
 import Card from "../UI/Card/Card";
@@ -15,11 +7,8 @@ import "./Chart.css";
 
 const SimpleAreaChart = (props) => {
   return (
-    // <section className={`${classes.card} ${classes.AreaChart}`}>
     <Card small>
-      <span className={`${classes.title} ${classes["title-margin"]}`}>
-        월간 소비량 (원/월)
-      </span>
+      <span className={`${classes.title} ${classes["title-margin"]}`}>월간 소비량 (원/월)</span>
       <AreaChart
         width={props.width}
         height={props.height}
@@ -46,33 +35,15 @@ const SimpleAreaChart = (props) => {
         <YAxis />
         <Tooltip />
         {/* <Legend /> */}
-        <Area
-          type="monotone"
-          dataKey="사용된 금액"
-          stroke="#7986FF"
-          fill="url(#colorUsed)"
-          fillOpacity={0.2}
-        />
-        <Area
-          type="monotone"
-          dataKey="정산된 금액"
-          stroke="#BBCEFF"
-          fill="url(#colorPayback)"
-          fillOpacity={0.3}
-        />
+        <Area type="monotone" dataKey="사용된 금액" stroke="#7986FF" fill="url(#colorUsed)" fillOpacity={0.2} />
+        <Area type="monotone" dataKey="정산된 금액" stroke="#BBCEFF" fill="url(#colorPayback)" fillOpacity={0.3} />
       </AreaChart>
       <section className={classes.legend}>
-        <article
-          className={classes["legend-item"]}
-          style={{ color: "#7986FF" }}
-        >
+        <article className={classes["legend-item"]} style={{ color: "#7986FF" }}>
           <span className={classes["legend-icon"]}>●</span>
           <span className={classes["legend-item-text"]}>사용된 금액</span>
         </article>
-        <article
-          className={classes["legend-item"]}
-          style={{ color: "#BBCEFF" }}
-        >
+        <article className={classes["legend-item"]} style={{ color: "#BBCEFF" }}>
           <span className={classes["legend-icon"]}>●</span>
           <span className={classes["legend-item-text"]}>정산된 금액</span>
         </article>

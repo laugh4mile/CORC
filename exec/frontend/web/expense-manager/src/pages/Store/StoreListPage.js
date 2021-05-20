@@ -9,10 +9,7 @@ import Page from "../../components/Pagenation/Page";
 import classes from "./ListPage.module.css";
 
 const StoreListPage = () => {
-  const { sendRequest, status, data: loadedStores, error } = useHttp(
-    getStores,
-    true
-  );
+  const { sendRequest, status, data: loadedStores, error } = useHttp(getStores, true);
 
   const [pageInfo, setPageInfo] = useState({ page: 0, size: 10 }); // page: 현재 페이지, size: 한 페이지에 출력되는 데이터 갯수
 
@@ -53,13 +50,10 @@ const StoreListPage = () => {
     <div className="page">
       <span className="title">가맹점 목록</span>
       <section className={classes.section}>
-        <StoreList
-          stores={loadedStores.content}
-          page={loadedStores.numberOfElements}
-        />
+        <StoreList stores={loadedStores.content} page={loadedStores.numberOfElements} />
         <Page
           totalElements={loadedStores.totalElements}
-          blockSize={4}
+          blockSize={5}
           number={loadedStores.number}
           size={loadedStores.size}
           onClick={setPageInfo}

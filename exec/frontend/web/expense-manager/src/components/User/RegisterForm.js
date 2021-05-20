@@ -1,86 +1,86 @@
-import { useState, useEffect, Fragment } from 'react';
-import { Prompt } from 'react-router-dom';
+import { useState, useEffect, Fragment } from "react";
+import { Prompt } from "react-router-dom";
 
-import classes from './RegisterForm.module.css';
+import classes from "./RegisterForm.module.css";
 
-import Button from '../UI/Button/Button';
-import Card from '../UI/Card/Card';
-import Input from '../UI/Input/Input';
+import Button from "../UI/Button/Button";
+import Card from "../UI/Card/Card";
+import Input from "../UI/Input/Input";
 
-import { getCities, getRegions } from '../../lib/api-user';
+import { getCities, getRegions } from "../../lib/api-user";
 
 const RegisterForm = (props) => {
   const [isEntering, setIsEntering] = useState(false);
 
-  const [enteredEmployeeNum, setEmployeeNum] = useState('');
-  const [enteredEmail, setEmail] = useState('');
-  const [enteredPassword, setPassword] = useState('');
-  const [enteredName, setName] = useState('');
-  const [enteredContact, setContact] = useState('');
+  const [enteredEmployeeNum, setEmployeeNum] = useState("");
+  const [enteredEmail, setEmail] = useState("");
+  const [enteredPassword, setPassword] = useState("");
+  const [enteredName, setName] = useState("");
+  const [enteredContact, setContact] = useState("");
   const [enteredPosition, setPosition] = useState({
-    enteredDepartment: '',
-    enteredRole: '',
+    enteredDepartment: "",
+    enteredRole: "",
   });
-  const [enteredLimit, setLimit] = useState('');
+  const [enteredLimit, setLimit] = useState("");
   const [enteredArea, setArea] = useState({
-    enteredCity: '',
-    enteredBorough: '',
+    enteredCity: "",
+    enteredBorough: "",
   });
   const [enteredDays, setDays] = useState([]);
   const [cities, setCities] = useState([]);
   const [guguns, setGuguns] = useState([]);
 
   const days = [
-    { id: 1, value: '월' },
-    { id: 2, value: '화' },
-    { id: 3, value: '수' },
-    { id: 4, value: '목' },
-    { id: 5, value: '금' },
-    { id: 6, value: '토' },
-    { id: 7, value: '일' },
+    { id: 1, value: "월" },
+    { id: 2, value: "화" },
+    { id: 3, value: "수" },
+    { id: 4, value: "목" },
+    { id: 5, value: "금" },
+    { id: 6, value: "토" },
+    { id: 7, value: "일" },
   ];
 
   const departments = [
-    { id: 10, value: '인사부' },
-    { id: 20, value: '총무부' },
-    { id: 30, value: '디지털 개발부' },
+    { id: 10, value: "인사부" },
+    { id: 20, value: "총무부" },
+    { id: 30, value: "디지털 개발부" },
   ];
 
   const changeHandler = (event) => {
     setIsEntering(true);
     const { value, name } = event.target;
     switch (name) {
-      case 'email':
+      case "email":
         setEmail(value);
         break;
-      case 'password':
+      case "password":
         setPassword(value);
         break;
-      case 'employeeNum':
+      case "employeeNum":
         setEmployeeNum(value);
         break;
-      case 'name':
+      case "name":
         setName(value);
         break;
-      case 'contact':
+      case "contact":
         setContact(value);
         break;
-      case 'department':
+      case "department":
         setPosition({ ...enteredPosition, enteredDepartment: value });
         break;
-      case 'role':
+      case "role":
         setPosition({ ...enteredPosition, enteredRole: value });
         break;
-      case 'limit':
+      case "limit":
         setLimit(value);
         break;
-      case 'city':
+      case "city":
         setArea({ ...enteredArea, enteredCity: value });
         break;
-      case 'borough':
+      case "borough":
         setArea({ ...enteredArea, enteredBorough: value });
         break;
-      case 'day':
+      case "day":
         const findIdx = enteredDays.indexOf(value);
         if (findIdx > -1) enteredDays.splice(findIdx, 1);
         else enteredDays.push(value);
@@ -96,11 +96,11 @@ const RegisterForm = (props) => {
     event.preventDefault();
     setIsEntering(false);
 
-    let transformedDays = '';
+    let transformedDays = "";
     for (let i = 1; i <= 7; i++) {
       const findIdx = enteredDays.indexOf(i.toString());
-      if (findIdx > -1) transformedDays += '1';
-      else transformedDays += '0';
+      if (findIdx > -1) transformedDays += "1";
+      else transformedDays += "0";
     }
 
     const userData = {
@@ -117,14 +117,10 @@ const RegisterForm = (props) => {
       cardLimit: enteredLimit,
     };
 
-    console.log(userData);
-    console.log('props', props);
     props.onAddUser(userData);
   };
 
-  const formFocusedHandler = () => {
-    // setIsEntering(true);
-  };
+  const formFocusedHandler = () => {};
 
   useEffect(() => {
     getCities()
@@ -133,7 +129,7 @@ const RegisterForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (enteredArea.enteredCity !== '') {
+    if (enteredArea.enteredCity !== "") {
       getRegions(enteredArea.enteredCity)
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));
@@ -143,26 +139,13 @@ const RegisterForm = (props) => {
 
   return (
     <Fragment>
-      <Prompt
-        when={isEntering}
-        message={(location) =>
-          '사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다.'
-        }
-      />
-      <Card type={'nofit'}>
+      <Prompt when={isEntering} message={(location) => "사용자 등록 페이지에서 벗어나시겠습니까? 입력된 데이터는 손실될 수 있습니다."} />
+      <Card type={"nofit"}>
         <form onFocus={formFocusedHandler} onSubmit={submitHandler}>
           <div className={classes.container}>
             <article className={classes.section}>
               <div>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  value={enteredEmail}
-                  onChange={changeHandler}
-                  label="아이디"
-                />
+                <Input type="email" id="email" name="email" required value={enteredEmail} onChange={changeHandler} label="아이디" />
               </div>
               <div>
                 <Input
@@ -187,15 +170,7 @@ const RegisterForm = (props) => {
                 />
               </div>
               <div>
-                <Input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  value={enteredName}
-                  onChange={changeHandler}
-                  label="이름"
-                />
+                <Input type="text" id="name" name="name" required value={enteredName} onChange={changeHandler} label="이름" />
               </div>
               <div>
                 <Input
@@ -229,14 +204,7 @@ const RegisterForm = (props) => {
                       </option>
                     ))}
                   </select>
-                  <select
-                    type="text"
-                    id="role"
-                    name="role"
-                    required
-                    value={enteredPosition.enteredRole}
-                    onChange={changeHandler}
-                  >
+                  <select type="text" id="role" name="role" required value={enteredPosition.enteredRole} onChange={changeHandler}>
                     <option value="">직위</option>
                     <option value="수석">수석</option>
                     <option value="선임">선임</option>
@@ -259,14 +227,7 @@ const RegisterForm = (props) => {
               <div>
                 <label className={classes.label}>지역</label>
                 <div className={classes.control}>
-                  <select
-                    type="text"
-                    id="city"
-                    name="city"
-                    required
-                    value={enteredArea.enteredCity}
-                    onChange={changeHandler}
-                  >
+                  <select type="text" id="city" name="city" required value={enteredArea.enteredCity} onChange={changeHandler}>
                     <option value="">시/도</option>
                     {cities.map((city) => (
                       <option key={city.sidoCode} value={city.sidoCode}>
@@ -274,14 +235,7 @@ const RegisterForm = (props) => {
                       </option>
                     ))}
                   </select>
-                  <select
-                    type="text"
-                    id="borough"
-                    name="borough"
-                    required
-                    value={enteredArea.enteredBorough}
-                    onChange={changeHandler}
-                  >
+                  <select type="text" id="borough" name="borough" required value={enteredArea.enteredBorough} onChange={changeHandler}>
                     <option value="">구/군</option>
                     {guguns.map((gugun) => (
                       <option key={gugun.gugunCode} value={gugun.gugunCode}>
@@ -295,18 +249,8 @@ const RegisterForm = (props) => {
                 <label className={classes.label}>사용 가능 요일</label>
                 <div className={classes.control}>
                   {days.map((day) => (
-                    <label
-                      className={`${classes.label} ${classes.checkbox}`}
-                      key={day.id}
-                    >
-                      <input
-                        className={classes.checkboxStyles}
-                        type="checkbox"
-                        // id="day"
-                        name="day"
-                        value={day.id}
-                        onChange={changeHandler}
-                      />
+                    <label className={`${classes.label} ${classes.checkbox}`} key={day.id}>
+                      <input className={classes.checkboxStyles} type="checkbox" name="day" value={day.id} onChange={changeHandler} />
                       <span>{day.value}</span>
                     </label>
                   ))}

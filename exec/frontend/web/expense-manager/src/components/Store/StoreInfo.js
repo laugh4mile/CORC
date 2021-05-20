@@ -1,17 +1,17 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from "react";
 
-import classes from './StoreInfo.module.css';
+import classes from "./StoreInfo.module.css";
 
-import Button from '../UI/Button/Button';
-import Input from '../UI/Input/Input';
+import Button from "../UI/Button/Button";
+import Input from "../UI/Input/Input";
 
-import { getCities, getRegions } from '../../lib/api-user';
+import { getCities, getRegions } from "../../lib/api-user";
 
 const StoreInfo = (props) => {
   const [isEntering, setIsEntering] = useState(false);
   const [enteredCrNum, setCrNum] = useState(props.crNum);
   const [enteredEmail, setEmail] = useState(props.email);
-  const [enteredPassword, setPassword] = useState('');
+  const [enteredPassword, setPassword] = useState("");
   const [enteredName, setName] = useState(props.storeName);
   const [enteredContact, setContact] = useState(props.contact);
   const [enteredArea, setArea] = useState({
@@ -30,37 +30,37 @@ const StoreInfo = (props) => {
   const changeHandler = (event) => {
     const { value, name } = event.target;
     switch (name) {
-      case 'email':
+      case "email":
         setEmail(value);
         break;
-      case 'password':
+      case "password":
         setPassword(value);
         break;
-      case 'crNum':
+      case "crNum":
         setCrNum(value);
         break;
-      case 'name':
+      case "name":
         setName(value);
         break;
-      case 'contact':
+      case "contact":
         setContact(value);
         break;
-      case 'city':
+      case "city":
         setArea({ ...enteredArea, enteredCity: value });
         break;
-      case 'borough':
+      case "borough":
         setArea({ ...enteredArea, enteredBorough: value });
         break;
-      case 'category':
+      case "category":
         setCategory(value);
         break;
-      case 'accepted':
+      case "accepted":
         setAccepted(value);
         break;
-      case 'account':
+      case "account":
         setAccount(value);
         break;
-      case 'bank':
+      case "bank":
         setBank(value);
         break;
       default:
@@ -86,9 +86,6 @@ const StoreInfo = (props) => {
       bankName: enteredBank,
     };
 
-    console.log('storeData', storeData);
-    console.log('props', props);
-
     props.onModifyStore(storeData);
   };
 
@@ -99,7 +96,7 @@ const StoreInfo = (props) => {
   }, []);
 
   useEffect(() => {
-    if (enteredArea.enteredCity != '') {
+    if (enteredArea.enteredCity != "") {
       getRegions(enteredArea.enteredCity)
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));
@@ -121,16 +118,7 @@ const StoreInfo = (props) => {
         <div className={classes.container}>
           <article className={classes.section}>
             <div>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={enteredEmail}
-                onChange={changeHandler}
-                label="아이디"
-                disabled
-              />
+              <Input type="email" id="email" name="email" required value={enteredEmail} onChange={changeHandler} label="아이디" disabled />
             </div>
             <div>
               <Input
@@ -156,16 +144,7 @@ const StoreInfo = (props) => {
               />
             </div>
             <div>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={enteredName}
-                onChange={changeHandler}
-                label="가맹점명"
-                disabled
-              />
+              <Input type="text" id="name" name="name" required value={enteredName} onChange={changeHandler} label="가맹점명" disabled />
             </div>
             <div>
               <Input
@@ -196,34 +175,16 @@ const StoreInfo = (props) => {
             <div>
               <label className={classes.label}>지역</label>
               <div className={classes.control}>
-                <select
-                  type="text"
-                  id="city"
-                  name="city"
-                  required
-                  value={enteredArea.enteredCity}
-                  onChange={changeHandler}
-                >
-                  <option value={enteredArea.enteredCityCode}>
-                    {enteredArea.enteredCity}
-                  </option>
+                <select type="text" id="city" name="city" required value={enteredArea.enteredCity} onChange={changeHandler}>
+                  <option value={enteredArea.enteredCityCode}>{enteredArea.enteredCity}</option>
                   {cities.map((city) => (
                     <option key={city.sidoCode} value={city.sidoCode}>
                       {city.sidoName}
                     </option>
                   ))}
                 </select>
-                <select
-                  type="text"
-                  id="borough"
-                  name="borough"
-                  required
-                  value={enteredArea.enteredBorough}
-                  onChange={changeHandler}
-                >
-                  <option value={enteredArea.enteredBoroughCode}>
-                    {enteredArea.enteredBorough}
-                  </option>
+                <select type="text" id="borough" name="borough" required value={enteredArea.enteredBorough} onChange={changeHandler}>
+                  <option value={enteredArea.enteredBoroughCode}>{enteredArea.enteredBorough}</option>
                   {guguns.map((gugun) => (
                     <option key={gugun.gugunCode} value={gugun.gugunCode}>
                       {gugun.gugunName}
@@ -233,16 +194,7 @@ const StoreInfo = (props) => {
               </div>
             </div>
             <div>
-              <Input
-                type="text"
-                id="bank"
-                name="bank"
-                required
-                value={enteredBank}
-                onChange={changeHandler}
-                label="은행명"
-                disabled
-              />
+              <Input type="text" id="bank" name="bank" required value={enteredBank} onChange={changeHandler} label="은행명" disabled />
             </div>
             <div>
               <Input
