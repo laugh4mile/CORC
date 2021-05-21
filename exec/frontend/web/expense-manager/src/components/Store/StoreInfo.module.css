@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.control {
+  display: flex;
+}
+
+.label {
+  margin-top: 1rem;
+  padding-left: 0.7rem;
+  font-size: 0.85rem;
+  color: #3f3f42;
+  font-weight: bold;
+}
+
+.checkbox {
+  padding-left: 0;
+}
+
+.control .label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+select {
+  margin-bottom: 3rem;
+  background-color: #ecf0fb;
+  color: #3f3f42;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  margin: 0.25rem;
+  margin-bottom: 0.9rem;
+}
+
+select:focus {
+  outline: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin: 3rem auto 1rem auto;
+}
+
+.buttons button {
+  margin: 0 1rem;
+}
+
+form {
+  width: 100%;
+}
+
+.checkboxStyles [type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* default STYLES */
+.checkboxStyles [type='checkbox'] + span {
+  cursor: pointer;
+  color: #7986ff;
+  background: #e8f1ff;
+  font-size: 0.875rem;
+  line-height: 2.5rem;
+  text-align: center;
+  height: 2.5rem;
+  margin: 0 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.checkboxStyles [type='checkbox']:checked + span {
+  color: white;
+  background-color: #7986ff;
+}

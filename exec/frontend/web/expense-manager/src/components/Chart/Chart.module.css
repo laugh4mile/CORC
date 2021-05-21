@@ -1,0 +1,158 @@
+.card {
+    background: #ffffff;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+    border-radius: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.section {
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    /* margin-top: 2rem; */
+}
+
+.title-margin {
+    /* margin-top: 1rem; */
+    margin-bottom: 2rem;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-right: 3rem;
+    width: max-content;
+}
+
+.peer {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background-color: white;
+    /* width: fit-content; */
+    text-align: center;
+    padding: 0.5rem 1.25rem;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+    border-radius: 1.25rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem 0.5 1rem;
+    box-sizing: border-box;
+}
+
+.icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 1rem;
+    margin-left: 3rem;
+    margin-right: 2rem;
+}
+
+.offline {
+    color: #DC493A;
+}
+
+.online {
+    color: #3EC300;
+}
+
+/* For desktop: */
+.col-1 {
+    width: 8.33%;
+}
+
+.col-2 {
+    width: 16.66%;
+}
+
+.col-3 {
+    width: 25%;
+}
+
+.col-4 {
+    width: 33.33%;
+}
+
+.col-5 {
+    width: 41.66%;
+}
+
+.col-6 {
+    width: 50%;
+}
+
+.col-7 {
+    width: 58.33%;
+}
+
+.col-8 {
+    width: 66.66%;
+}
+
+.col-9 {
+    width: 75%;
+}
+
+.col-10 {
+    width: 83.33%;
+}
+
+.col-11 {
+    width: 91.66%;
+}
+
+.col-12 {
+    width: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+
+    /* For mobile phones: */
+    [class*="col-"] {
+        width: 100%;
+    }
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    /* padding: 1.5rem 1rem; */
+    /* margin-top: 0; */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0.5rem;
+}
+
+.legend-icon {
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+    width: fit-content;
+}
+
+.legend-item-text {
+    font-weight: 600;
+}

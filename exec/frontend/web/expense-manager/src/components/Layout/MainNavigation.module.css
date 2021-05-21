@@ -1,0 +1,79 @@
+.header {
+  width: 18vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  color: #a5a5a8;
+  background-color: white;
+  position: fixed;
+}
+
+.header-title {
+  margin: 1rem auto 0;
+  width: fit-content;
+  background: -webkit-linear-gradient(top left, #32499a, #7986ff, #d3deff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.75rem;
+  font-family: "BMDOHYEON";
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  margin-left: auto;
+  justify-content: center;
+  outline: none;
+}
+
+.nav .title {
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-left: 4rem;
+}
+
+.nav a,
+.nav-item {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0.5rem auto;
+  margin-left: 2rem;
+  color: #a5a5a8;
+  transition: 0.3s ease-out;
+}
+
+.nav .icon {
+  width: 40%;
+  cursor: pointer;
+}
+
+.nav-item:hover,
+.nav a:hover,
+.nav a:active,
+.nav a.active {
+  font-weight: 700;
+  color: #7986ff;
+}
+
+.nav a:hover path {
+  cursor: pointer;
+}
+
+.nav-item:hover .icon path,
+.nav a:hover .icon path,
+.nav a:active .icon path,
+.nav a.active .icon path {
+  fill: #7986ff;
+}
+
+
+.divider {
+  border-bottom: 2px solid #a5a5a8;
+  width: 75%;
+  margin: 1rem auto -1rem auto;
+}

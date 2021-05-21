@@ -1,0 +1,92 @@
+.tr {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    transition: .2s ease-out;
+    border-radius: 0.5rem;
+    color: #3F3F42;
+}
+
+.tr:hover {
+    background-color: #ecf0fb;
+}
+
+.td {
+    width: 100%;
+    text-align: center;
+    margin: 0 0.25rem;
+}
+
+.td-flex {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    padding-left: 0.5rem;
+    width: 20%;
+    cursor: pointer;
+}
+
+.icon path {
+    stroke: #3F3F42;
+}
+
+.link {
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.2s ease-out;
+}
+
+.link:hover {
+    color: #7986FF;
+}
+
+.tr .checkbox {
+    width: 10rem;
+}
+
+.tr .align-right {
+    text-align: right;
+}
+
+.text-sm {
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-left {
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.text-right {
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.font-normal {
+    font-weight: normal;
+}
+
+.font-bold {
+    font-weight: 600;
+}
+
+.date {
+    color: #696A6E;
+    font-weight: normal;
+}
+
+.deleted {
+    color: #FF6161;
+}
+
+.active {
+    color: #44C167;
+}
+
+.inactive {
+    color: #FFDB5A;
+}

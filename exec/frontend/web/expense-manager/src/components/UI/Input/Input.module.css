@@ -1,0 +1,59 @@
+.control {
+    position: relative;
+    margin-top: 1.75rem;
+}
+
+.input {
+    background: none;
+    background-color: #ecf0fb;
+    color: #696A6E;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.7rem 1rem;
+    display: block;
+    border: none;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    color: #3F3F42;
+}
+
+.input:focus~.label {
+    top: -1.5rem;
+    font-size: 0.85rem;
+    color: #3f3f42;
+    font-weight: bold;
+}
+
+.input:disabled {
+    color: #3f3f42;
+    background-color: white;
+    font-weight: 600;
+}
+
+
+input[type="password"] {
+    letter-spacing: 0.3em;
+}
+
+.label {
+    color: #a5a5a8;
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 0.6rem;
+    top: 0.6rem;
+    transition: 300ms ease all;
+}
+
+.shrink {
+    top: -1.5rem;
+    font-size: 0.85rem;
+    color: #3f3f42;
+    font-weight: bold;
+}

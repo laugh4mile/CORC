@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+}
+
+body {
+    background-color: #f9fbff;
+    min-height: 100vh;
+}
+
+.main {
+    margin-left: 18vw;
+}

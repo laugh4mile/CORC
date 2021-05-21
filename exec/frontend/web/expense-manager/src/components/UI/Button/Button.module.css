@@ -1,0 +1,84 @@
+.button {
+    min-width: 165px;
+    width: auto;
+    letter-spacing: 0.5px;
+    line-height: 1.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    background-color: #7986ff;
+    color: white;
+    text-transform: uppercase;
+    font-family: "Spoqa Han Sans Neo", sans-serif;
+    font-weight: bolder;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease-out;
+}
+
+.button:hover {
+    background-color: #32499a;
+}
+
+.button-small {
+    text-decoration: none;
+    line-height: 1.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #7986ff;
+    color: white;
+    text-transform: uppercase;
+    font-family: "Spoqa Han Sans Neo", sans-serif;
+    font-weight: bolder;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease-out;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 4rem;
+}
+
+.button-small:hover {
+    background-color: #32499a;
+}
+
+.sub {
+    color: #7986FF;
+    background-color: #E8F1FF;
+}
+
+.sub:hover {
+    background-color: #D3DEFF;
+}
+
+.margin-fit {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+.allow {
+    color: white;
+    background-color: #44C167;
+    transition: all 0.3s ease-out;
+}
+
+.allow:hover {
+    color: white;
+    background-color: #3B9654;
+}
+
+
+.deny {
+    color: white;
+    background-color: #FF6161;
+    transition: all 0.3s ease-out;
+}
+
+.deny:hover {
+    color: white;
+    background-color: #D24747;
+}

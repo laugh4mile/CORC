@@ -1,0 +1,24 @@
+.tr {
+  display: flex;
+  padding: 0.5rem 0;
+  color: #2a2a2c;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.tr th {
+  width: 100%;
+  text-align: center;
+  margin: 0 0.25rem;
+}
+
+.tr .checkbox {
+  width: 10rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}

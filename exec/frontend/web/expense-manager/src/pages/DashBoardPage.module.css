@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    color: #3F3F42;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    align-items: center;
+    /* justify-content: center; */
+}
+
+.article {
+    display: flex;
+}
+
+.section-center {
+    width: 66%;
+}
+
+.section-right {
+    width: 33%;
+    margin-right: 1.5rem;
+}
+
+.section-center div {
+    /* display: flex; */
+    width: auto;
+}
+
+.spinner {
+    display: flex;
+    margin-top: 12rem;
+    justify-content: center;
+    align-items: center;
+}

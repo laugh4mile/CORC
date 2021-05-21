@@ -1,38 +1,90 @@
-.App {
-  text-align: center;
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+
+@font-face {
+  font-family: "BMDOHYEON";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+.spoqa-han-sans {
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+  font-weight: 500;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.dohyeon {
+  font-family: "BMDOHYEON";
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.noto-sans-KR {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.Quicksand {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.bg-primary-100 {
+  background-color: #f9fbff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  margin: 0;
+}
+
+.page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.title {
+  color: #7986FF;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 700;
+  padding: 5rem;
+  padding-bottom: 3rem;
+}
+
+.btn {
+  text-decoration: none;
+  line-height: 1.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #7986ff;
   color: white;
+  text-transform: uppercase;
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+  font-weight: bolder;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease-out;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 4rem;
 }
 
-.App-link {
-  color: #61dafb;
+.btn:hover {
+  background-color: #32499a;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sub {
+  color: #7986FF;
+  background-color: #E8F1FF;
+}
+
+.sub:hover {
+  background-color: #D3DEFF;
 }

@@ -1,0 +1,79 @@
+.receipt {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    color: #3F3F42;
+}
+
+.storeName {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: #2A2A2C;
+    font-weight: 600;
+}
+
+.date {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #696A6E;
+}
+
+.items {
+    padding-left: 0;
+    margin-top: 2rem;
+}
+
+.item {
+    display: flex;
+    /* justify-content: space-between; */
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.product {
+    text-align: left;
+    /* width: 8rem; */
+}
+
+.price {
+    width: 70%;
+    text-align: right;
+}
+
+.amount {
+    width: 30%;
+    text-align: right;
+}
+
+.sum {
+    width: 70%;
+    text-align: right;
+    font-weight: 600;
+}
+
+.total {
+    display: flex;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid #A5A5A8;
+}
+
+.totalTitle {
+    text-align: left;
+}
+
+.totalPrice {
+    text-align: right;
+}
