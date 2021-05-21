@@ -1,0 +1,51 @@
+.card {
+  background: #ffffff;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  padding: 2rem;
+  /* padding-right: 4rem; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+}
+
+.card-full {
+  background: #ffffff;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.nofit {
+  width: auto;
+  margin: 2rem 4rem;
+  padding-right: 2rem;
+}
+
+.unset {
+  width: unset;
+  display: unset;
+  position: unset;
+}
+
+.small {
+  flex: 1 auto;
+  width: auto;
+  margin: 0.5rem 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  justify-content: start;
+  align-items: center;
+}

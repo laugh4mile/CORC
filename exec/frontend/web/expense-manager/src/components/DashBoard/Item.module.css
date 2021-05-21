@@ -1,0 +1,77 @@
+.item {}
+
+.tr {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  transition: 0.2s ease-out;
+  border-radius: 0.5rem;
+  color: #3f3f42;
+}
+
+.tr:hover {
+  background-color: #ecf0fb;
+}
+
+.td {
+  width: 100%;
+  text-align: center;
+  margin: 0 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.td-flex {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 40%;
+  cursor: pointer;
+}
+
+.link {
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease-out;
+}
+
+.link:hover {
+  color: #7986ff;
+}
+
+.tr .checkbox {
+  width: 10rem;
+}
+
+.tr .align-right {
+  text-align: right;
+}
+
+.text-sm {
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.font-normal {
+  font-weight: normal;
+}
+
+.date {
+  color: #696a6e;
+  font-weight: normal;
+}
+
+.deleted {
+  color: #ff6161;
+}
+
+.active {
+  color: #44c167;
+}
+
+.inactive {
+  color: #ffdb5a;
+}

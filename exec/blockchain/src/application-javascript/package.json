@@ -1,0 +1,23 @@
+{
+    "name": "asset-transfer-basic",
+    "version": "1.0.0",
+    "description": "Asset-transfer-basic application implemented in JavaScript",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon app.js"
+    },
+    "author": "Hyperledger",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "express": "^4.17.1",
+        "fabric-ca-client": "^2.2.4",
+        "fabric-network": "^2.2.4",
+        "morgan": "^1.10.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7",
+        "swagger-jsdoc": "^6.0.0",
+        "swagger-ui-express": "^4.1.6"
+    }
+}

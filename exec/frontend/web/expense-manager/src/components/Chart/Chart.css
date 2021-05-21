@@ -1,0 +1,14 @@
+.recharts-legend-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.recharts-default-legend {
+    display: flex;
+    width: 50%;
+    margin-right: 0;
+}
+
+.recharts-surface {
+    overflow: visible;
+}

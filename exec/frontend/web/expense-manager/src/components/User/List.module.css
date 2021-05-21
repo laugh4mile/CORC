@@ -1,0 +1,53 @@
+.tr {
+    display: flex;
+    padding: 0.5rem 0;
+    color: #2a2a2c;
+}
+
+.tr th {
+    width: 100%;
+    text-align: center;
+    margin: 0 0.25rem;
+}
+
+.tr .checkbox {
+    width: 10rem;
+}
+
+.section {
+    display: flex;
+    width: fit-content;
+    justify-content: end;
+    /* margin-right: 0; */
+    margin-left: auto;
+    padding-left: auto;
+    /* padding-right: 4rem; */
+}
+
+.form {
+    margin: 0;
+}
+
+.linkBtn {
+    text-decoration: none;
+    line-height: 1.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #7986ff;
+    color: white;
+    text-transform: uppercase;
+    font-family: "Spoqa Han Sans Neo", sans-serif;
+    font-weight: bolder;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease-out;
+    width: fit-content;
+    display: flex;
+}
+
+.linkBtn:hover {
+    color: white;
+    background-color: #32499a;
+}

@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "코르크 Business",
+    "slug": "CORC_B",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/corcb_squared.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ssafy.CORC_B",
+      "versionCode": 1,
+      "icon": "./assets/corcb_rounded.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/corcb_rounded.png",
+        "backgroundColor": "#7986FF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
