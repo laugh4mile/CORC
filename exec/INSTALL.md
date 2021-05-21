@@ -315,5 +315,5 @@ yarn start
 # CORC 임직원용 apk 다운로드 링크
 https://expo.io/artifacts/3d9bf803-b7cd-4353-9a95-6c36341b2e4e
 # CORC 가맹점용 apk 다운로드 링크
-https://expo.io/artifacts/15a59cb5-bea1-4abf-be5f-88578bbd1d2f
+https://expo.io/artifacts/47caa041-2642-4d6c-ad13-a0ee19ef1405
 ```
