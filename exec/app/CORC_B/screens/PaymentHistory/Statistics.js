@@ -214,52 +214,46 @@ const Statistics = () => {
           />
         </View>
       ) : itemList.length > 0 ? (
-        <>
-          <Card style={styles.pieChart}>
-            <PieChart
-              style={{ marginTop: "10%" }}
-              data={itemList}
-              width={pieWidth}
-              height={pieHeight}
-              chartConfig={chartConfig}
-              accessor={"amount"}
-              backgroundColor={"transparent"}
-              center={[10, 0]}
-              absolute
-            />
-            <View style={{ alignItems: "center" }}>
-              <Text style={styles.basisText}>[판매 수량 기준]</Text>
-            </View>
-          </Card>
-          <Card style={{ ...styles.pieChart, flex: 14.1 }}>
-            <PieChart
-              style={{ marginTop: "10%" }}
-              data={itemList}
-              width={pieWidth}
-              height={pieHeight}
-              chartConfig={chartConfig}
-              accessor={"priceSum"}
-              backgroundColor={"transparent"}
-              center={[10, 0]}
-            />
-            <View
-              style={{
-                alignItems: "flex-end",
-                paddingRight: screenWidth*0.055,
-                marginBottom: screenHeight*0.02,
-              }}
-            >
-              <Text style={styles.totalText}>
-                총{" "}
-                <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text>{" "}
-                원
-              </Text>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
-            </View>
-          </Card>
-        </>
+        <View style={styles.pieChart}>
+          <PieChart
+            style={{ marginTop: "10%", alignSelf: "center" }}
+            data={itemList}
+            width={pieWidth}
+            height={pieHeight}
+            chartConfig={chartConfig}
+            accessor={"amount"}
+            backgroundColor={"transparent"}
+            absolute
+          />
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.basisText}>[판매 수량 기준]</Text>
+          </View>
+          <PieChart
+            style={{ marginTop: "10%", alignSelf: "center" }}
+            data={itemList}
+            width={pieWidth}
+            height={pieHeight}
+            chartConfig={chartConfig}
+            accessor={"priceSum"}
+            backgroundColor={"transparent"}
+          />
+          <View
+            style={{
+              alignItems: "flex-end",
+              paddingRight: screenWidth * 0.16,
+              marginBottom: screenHeight * 0.02,
+            }}
+          >
+            <Text style={styles.totalText}>
+              {"총 "}
+              <Text style={styles.totalMoneyText}>{formatMoney(total)}</Text>
+              {" 원"}
+            </Text>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.basisText}>[총 판매 가격 기준]</Text>
+          </View>
+        </View>
       ) : (
         <View style={styles.noContent}>
           <Text style={styles.noContentText}>판매 내역이 없습니다.</Text>
@@ -323,7 +317,7 @@ const styles = StyleSheet.create({
     // height: 34,
   },
   pieChart: {
-    flex: 12,
+    flex: 24,
     marginBottom: "7%",
     justifyContent: "flex-start",
   },

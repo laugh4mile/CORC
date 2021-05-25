@@ -1,17 +1,17 @@
-import { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from "react";
 
-import classes from './StoreInfo.module.css';
+import classes from "./StoreInfo.module.css";
 
-import Button from '../UI/Button/Button';
-import Input from '../UI/Input/Input';
+import Button from "../UI/Button/Button";
+import Input from "../UI/Input/Input";
 
-import { getCities, getRegions } from '../../lib/api-user';
+import { getCities, getRegions } from "../../lib/api-user";
 
 const StoreInfo = (props) => {
   const [isEntering, setIsEntering] = useState(false);
   const [enteredCrNum, setCrNum] = useState(props.crNum);
   const [enteredEmail, setEmail] = useState(props.email);
-  const [enteredPassword, setPassword] = useState('');
+  const [enteredPassword, setPassword] = useState("");
   const [enteredName, setName] = useState(props.storeName);
   const [enteredContact, setContact] = useState(props.contact);
   const [enteredArea, setArea] = useState({
@@ -28,37 +28,37 @@ const StoreInfo = (props) => {
   const changeHandler = (event) => {
     const { value, name } = event.target;
     switch (name) {
-      case 'email':
+      case "email":
         setEmail(value);
         break;
-      case 'password':
+      case "password":
         setPassword(value);
         break;
-      case 'crNum':
+      case "crNum":
         setCrNum(value);
         break;
-      case 'name':
+      case "name":
         setName(value);
         break;
-      case 'contact':
+      case "contact":
         setContact(value);
         break;
-      case 'city':
+      case "city":
         setArea({ ...enteredArea, enteredCity: value });
         break;
-      case 'borough':
+      case "borough":
         setArea({ ...enteredArea, enteredBorough: value });
         break;
-      case 'category':
+      case "category":
         setCategory(value);
         break;
-      case 'accepted':
+      case "accepted":
         setAccepted(value);
         break;
-      case 'account':
+      case "account":
         setAccount(value);
         break;
-      case 'bank':
+      case "bank":
         setBank(value);
         break;
       default:
@@ -94,7 +94,7 @@ const StoreInfo = (props) => {
   }, []);
 
   useEffect(() => {
-    if (enteredArea.enteredCity != '') {
+    if (enteredArea.enteredCity != "") {
       getRegions(enteredArea.enteredCity)
         .then((rs) => setGuguns(rs))
         .catch((err) => console.log(err));

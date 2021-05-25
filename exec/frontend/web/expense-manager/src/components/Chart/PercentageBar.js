@@ -1,3 +1,4 @@
+import React from "react";
 import Card from "../../components/UI/Card/Card";
 
 import classes from "./PercentageBar.module.css";

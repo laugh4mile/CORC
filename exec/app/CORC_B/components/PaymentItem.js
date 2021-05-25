@@ -68,20 +68,30 @@ const Payment = ({ payment }) => {
                 {payment.paymentitem.map((item) => (
                   <View
                     key={item.paymentItemId.toString()}
-                    style={{ ...styles.modalTextBothSides, flex: 1 }}
+                    style={{ ...styles.modalTextBothSides }}
                   >
-                    <Text style={styles.modalScrollItemFont}>
+                    <Text style={{ flex: 3.3, fontSize: 17 }}>
                       {item.productName} x {item.amount}
                     </Text>
-                    <Text style={styles.modalScrollItemFont}>
+                    <Text
+                      style={{ flex: 1.9, fontSize: 17, textAlign: "right" }}
+                    >
                       ￦ {formatMoney(item.price * item.amount)}
                     </Text>
                   </View>
                 ))}
               </ScrollView>
               <View style={styles.modalTextBothSides}>
-                <Text style={styles.modalMoneyFont}>Total</Text>
-                <Text style={styles.modalMoneyFont}>
+                <Text style={{ ...styles.modalMoneyFont, flex: 3.3 }}>
+                  Total
+                </Text>
+                <Text
+                  style={{
+                    ...styles.modalMoneyFont,
+                    flex: 1.9,
+                    textAlign: "right",
+                  }}
+                >
                   ￦ {formatMoney(payment.total)}
                 </Text>
               </View>
@@ -106,10 +116,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   itemNameFont: {
+    flex: 3.3,
     fontSize: 16,
   },
   moneyFont: {
+    flex: 1.9,
     fontWeight: "bold",
+    textAlign: "right",
     fontSize: 16,
   },
   priceFont: {

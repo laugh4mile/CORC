@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 
 import PaymentItem from "./PaymentItem";
 import Card from "../UI/Card/Card";
@@ -12,6 +12,7 @@ const PaymentList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
+              <th style={{ width: "30%", fontSize: "0.875rem" }}>상태</th>
               <th style={{ width: "40%" }}>거래번호</th>
               <th>업종</th>
               <th>상호명</th>
