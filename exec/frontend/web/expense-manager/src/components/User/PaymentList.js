@@ -12,7 +12,6 @@ const PaymentList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: "30%", fontSize: "0.875rem" }}>상태</th>
               <th style={{ width: "40%" }}>거래번호</th>
               <th>업종</th>
               <th>상호명</th>
@@ -20,6 +19,7 @@ const PaymentList = (props) => {
               <th>상세 내용</th>
               <th style={{ width: "60%" }}>날짜</th>
               <th style={{ width: "60%" }}>금액</th>
+              <th style={{ width: "30%" }}>검증</th>
             </tr>
           </thead>
           <tbody>

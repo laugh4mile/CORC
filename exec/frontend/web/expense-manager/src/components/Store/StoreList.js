@@ -79,6 +79,7 @@ const StoreList = (props) => {
                 <th style={{ width: "40%" }}>업종코드</th>
                 <th style={{ width: "60%" }}>지역</th>
                 <th style={{ width: "60%" }}>미정산 금액</th>
+                <th style={{ width: "30%" }}>검증</th>
               </tr>
             </thead>
             {props.stores.map((store) => (
