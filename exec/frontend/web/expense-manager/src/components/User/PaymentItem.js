@@ -14,7 +14,12 @@ const PaymentItem = (props) => {
   const showModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const totalPrice = () => props.paymentitem.reduce((accumulatedQuantity, item) => accumulatedQuantity + item.price * item.amount, 0);
+  const totalPrice = () =>
+    props.paymentitem.reduce(
+      (accumulatedQuantity, item) =>
+        accumulatedQuantity + item.price * item.amount,
+      0
+    );
 
   const paymentContents = (items) => {
     let resultStr = `${items[0].productName} ✕ ${items[0].amount}`;
@@ -29,21 +34,47 @@ const PaymentItem = (props) => {
         <Receipt {...props} />
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
-      <tr className={`${classes.tr} ${props.verified ? null : classes["verify-fail"]}`}>
+      <tr
+        className={`${classes.tr} ${
+          props.verified ? null : classes["verify-fail"]
+        }`}
+      >
+        <td
+          style={{ width: "30%" }}
+          className={`${classes.td} ${
+            props.verified ? classes.online : classes.offline
+          }`}
+        >
+          ●
+        </td>
         <td style={{ width: "40%" }} className={`${classes.td}`}>
           {props.paymentId}
         </td>
-        <td className={`${classes.td} ${classes["text-sm"]} ${classes["font-normal"]}`}>{props.store.category.categoryName}</td>
+        <td
+          className={`${classes.td} ${classes["text-sm"]} ${classes["font-normal"]}`}
+        >
+          {props.store.category.categoryName}
+        </td>
         <td className={`${classes.td}`}>{props.store.storeName}</td>
-        <td className={`${classes.td}`}>{`${props.store.sido.sidoName} ${props.store.gugun.gugunName}`}</td>
+        <td
+          className={`${classes.td}`}
+        >{`${props.store.sido.sidoName} ${props.store.gugun.gugunName}`}</td>
         <td className={`${classes.td} ${classes["td-flex"]}`}>
-          <span className={`${classes["text-right"]} ${classes["text-sm"]}`}>{paymentContents(props.paymentitem)}</span>
+          <span className={`${classes["text-right"]} ${classes["text-sm"]}`}>
+            {paymentContents(props.paymentitem)}
+          </span>
           <ReceiptIcon className={classes.icon} onClick={showModal} />
         </td>
-        <td style={{ width: "60%" }} className={`${classes.td} ${classes["text-sm"]} ${classes.date}`}>
+        <td
+          style={{ width: "60%" }}
+          className={`${classes.td} ${classes["text-sm"]} ${classes.date}`}
+        >
           {props.date.slice(0, 10)}
         </td>
-        <td style={{ width: "60%" }} className={`${classes.td} ${classes["font-bold"]} ${classes["align-right"]}`}>
+        <td
+          style={{ width: "60%" }}
+          className={`${classes.td} ${classes["font-bold"]} ${classes["align-right"]}`}
+        >
           {formatMoney(props.total)}
         </td>
       </tr>

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Button from "../../components/UI/Button/Button";
@@ -148,7 +148,8 @@ const UserList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: "10%" }}>
+              <th style={{ width: "30%", fontSize: "0.875rem" }}>상태</th>
+              <th style={{ width: "15%" }}>
                 <input
                   type="checkbox"
                   name="status"

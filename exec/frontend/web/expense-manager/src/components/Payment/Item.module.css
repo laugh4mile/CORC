@@ -98,3 +98,11 @@
 .verify-fail {
   background-color: rgb(235, 235, 235);
 }
+
+.offline {
+  color: #DC493A;
+}
+
+.online {
+  color: #3EC300;
+}
