@@ -23,12 +23,9 @@ const sortUsers = (users, ascending) => {
 };
 
 const UserList = (props) => {
-  const { sendRequest: sendStatus, status: userStatusStatus } =
-    useHttp(userStatus);
-  const { sendRequest: sendCardLimit, status: cardLimitStatus } =
-    useHttp(modifyCardLimit);
-  const { sendRequest: resetRequest, status: resetStatus } =
-    useHttp(resetBalance);
+  const { sendRequest: sendStatus, status: userStatusStatus } = useHttp(userStatus);
+  const { sendRequest: sendCardLimit, status: cardLimitStatus } = useHttp(modifyCardLimit);
+  const { sendRequest: resetRequest, status: resetStatus } = useHttp(resetBalance);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [checkItems, setCheckItems] = useState([]);
@@ -128,14 +125,7 @@ const UserList = (props) => {
         <Button small sub fit name="allow" value="3" onClick={showModal}>
           한도 수정
         </Button>
-        <Button
-          small
-          sub
-          fit
-          name="allow"
-          value=""
-          onClick={submitResetHandler}
-        >
+        <Button small sub fit name="allow" value="" onClick={submitResetHandler}>
           잔액 초기화
         </Button>
         <article style={{ marginLeft: "0.5rem", width: "fit-content" }}>
@@ -148,7 +138,6 @@ const UserList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: "30%", fontSize: "0.875rem" }}>상태</th>
               <th style={{ width: "15%" }}>
                 <input
                   type="checkbox"
@@ -156,13 +145,7 @@ const UserList = (props) => {
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  checked={
-                    props.page === 0
-                      ? false
-                      : checkItems.length === props.page
-                      ? true
-                      : false
-                  }
+                  checked={props.page === 0 ? false : checkItems.length === props.page ? true : false}
                 />
               </th>
               <th>사번</th>
@@ -173,17 +156,12 @@ const UserList = (props) => {
               <th>한도</th>
               <th>상태</th>
               <th>마지막 접속일</th>
+              <th style={{ width: "30%" }}>검증</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <UserItem
-                key={user.userId}
-                {...user}
-                index={index}
-                handleSingleCheck={handleSingleCheck}
-                checkItems={checkItems}
-              />
+              <UserItem key={user.userId} {...user} index={index} handleSingleCheck={handleSingleCheck} checkItems={checkItems} />
             ))}
           </tbody>
         </table>

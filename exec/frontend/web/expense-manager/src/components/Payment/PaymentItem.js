@@ -60,63 +60,34 @@ const PaymentItem = (props) => {
         <Receipt {...props} />
       </Modal>
       {modalIsOpen ? <Backdrop show={modalIsOpen} closed={closeModal} /> : null}
-      <tr
-        className={`${classes.tr}  ${
-          props.verified ? null : classes["verify-fail"]
-        }`}
-      >
-        <td
-          style={{ width: "30%" }}
-          className={`${classes.td} ${
-            props.verified ? classes.online : classes.offline
-          }`}
-        >
-          ●
-        </td>
+      <tr className={`${classes.tr}  ${props.verified ? null : classes["verify-fail"]}`}>
         <td style={{ width: "10%" }} className={classes.td}>
           <input
             type="checkbox"
             value={props.paymentId}
             name="paymentId"
-            onChange={(e) =>
-              props.handleSingleCheck(
-                e.target.checked,
-                props.paymentId,
-                props.index
-              )
-            }
+            onChange={(e) => props.handleSingleCheck(e.target.checked, props.paymentId, props.index)}
             // checkItems에 data.id가 있으면 체크 아니면 체크 해제
             checked={props.checkItems.includes(props.paymentId) ? true : false}
           />
         </td>
-        <td
-          className={`${classes.td} ${classes["text-center"]} ${classes.link}`}
-          onClick={trClickHandler}
-        >
+        <td className={`${classes.td} ${classes["text-center"]} ${classes.link}`} onClick={trClickHandler}>
           {props.store.storeName}
         </td>
         <td style={{ width: "40%" }} className={classes.td}>
           {props.user.userName}
         </td>
-        <td
-          style={{ width: "50%" }}
-          className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}
-        >
+        <td style={{ width: "50%" }} className={`${classes.td} ${classes["text-right"]} ${classes["font-bold"]}`}>
           {formatMoney(props.total)}
         </td>
-        <td
-          style={{ width: "40%" }}
-          className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}
-        >
+        <td style={{ width: "40%" }} className={`${classes.td} ${classes.date} ${classes["text-sm"]}`}>
           {props.date.slice(0, 10)}
         </td>
-        <td
-          style={{ width: "20%" }}
-          className={`${classes.td} ${acceptedStyle(props.status)} ${
-            classes["font-bold"]
-          }`}
-        >
+        <td style={{ width: "20%" }} className={`${classes.td} ${acceptedStyle(props.status)} ${classes["font-bold"]}`}>
           {isAccepted(props.status)}
+        </td>
+        <td style={{ width: "30%", fontSize: "0.5rem" }} className={`${classes.td} ${props.verified ? classes.online : classes.offline}`}>
+          ●
         </td>
       </tr>
     </Fragment>

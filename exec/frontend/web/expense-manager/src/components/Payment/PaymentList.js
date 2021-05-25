@@ -9,8 +9,7 @@ import useHttp from "../../hooks/use-http";
 import classes from "./List.module.css";
 
 const PaymentList = (props) => {
-  const { sendRequest: sendStatus, status: userStatusStatus } =
-    useHttp(paymentStatus);
+  const { sendRequest: sendStatus, status: userStatusStatus } = useHttp(paymentStatus);
 
   const [checkItems, setCheckItems] = useState([]);
   const [paymentIdx, setPaymentIdx] = useState([]);
@@ -78,7 +77,6 @@ const PaymentList = (props) => {
         <table>
           <thead>
             <tr className={classes.tr}>
-              <th style={{ width: "30%", fontSize: "0.875rem" }}>상태</th>
               <th style={{ width: "10%" }}>
                 <input
                   type="checkbox"
@@ -86,13 +84,7 @@ const PaymentList = (props) => {
                   onChange={(e) => handleAllCheck(e.target.checked)}
                   // checkItems의 개수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                   // 하나라도 빼면 체크 박스 해제
-                  checked={
-                    props.page === 0
-                      ? false
-                      : checkItems.length === props.page
-                      ? true
-                      : false
-                  }
+                  checked={props.page === 0 ? false : checkItems.length === props.page ? true : false}
                 />
               </th>
               <th>가맹점명</th>
@@ -100,6 +92,7 @@ const PaymentList = (props) => {
               <th style={{ width: "50%" }}>결제 금액</th>
               <th style={{ width: "40%" }}>결제 날짜</th>
               <th style={{ width: "20%" }}>승인 여부</th>
+              <th style={{ width: "30%" }}>검증</th>
             </tr>
           </thead>
           <tbody>
